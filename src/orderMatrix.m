@@ -6,6 +6,9 @@ function S = orderMatrix(F, x)
 %   depends on the k-th order derivative of x_j(t).
 %   If F_i does not depend on any derivative of x_j(t), the entry is set to
 %   -Inf.
+%   The output is intended to be passed to the "hungarian" function.
+%
+%   See Also: hungarian
 
 [F, x, ~] = normalizeDAEInput(F, x);
 
