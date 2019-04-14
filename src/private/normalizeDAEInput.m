@@ -4,6 +4,9 @@ function [F, x, t] = normalizeDAEInput(F, x)
 validateattributes(F, {'sym'}, {'vector'}, mfilename, 'F', 1);
 validateattributes(x, {'sym'}, {'vector'}, mfilename, 'x', 2);
 
+% check F
+assert(~isa(F, 'symfun'), 'F must not be a symbolic function. Maybe forgetting (t).');
+
 % move RHS to LHS
 for i = 1:length(F)
     op = char(feval(symengine, 'op', F(i), 0));

@@ -24,6 +24,7 @@ for i = 1:m
     walk(tree, 0);
 end
 
+
 % walk expression tree
 function walk(node, order)
     l = length(node);
