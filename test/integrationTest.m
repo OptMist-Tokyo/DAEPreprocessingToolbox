@@ -18,7 +18,8 @@ classdef integrationTest < matlab.unittest.TestCase
             testCase.verifyEqual(p, [0; 0; 2]);
             testCase.verifyEqual(q, [2, 2, 0]);
             
-            %D = systemJacobian(F, x, p, q)
+            D = systemJacobian(F, x, p, q);
+            testCase.verifyEqual(D, [m 0 -y(t)/L; 0 m -z(t)/L; 2*y(t) 2*z(t) 0]);
         end
     end
 end

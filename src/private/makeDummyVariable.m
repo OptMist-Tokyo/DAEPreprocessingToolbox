@@ -1,13 +1,14 @@
 function symvar = makeDummyVariable(symfun, F)
 
-% Make a dummy symbolic variable representing symfun. The name of the dummy
+% Replace symfun in F with a dummy symbolic variable. The name of the dummy
 % varaible is determined so that it does not appear in F.
 
 % parse symfun and make the stem of new varaible name
 tree = feval(symengine, 'prog::exprlist', symfun);
 if strcmp(char(tree(1)), 'diff')
+    order = length(tree) - 2;
     tmp = tree(2);
-    stem = ['D', char(tmp(1)), repmat(char(tree(end)), 1, length(tree) - 2)];
+    stem = ['D', char(tmp(1)), repmat(char(tree(end)), 1, order)];
 else
     stem = char(tree(1));
 end
@@ -19,7 +20,7 @@ for i = 1:length(F)
     walk(tree);
 end
 
-% make unique
+% make the name unique in F
 k = 1;
 name = stem;
 while isKey(usednames, name)

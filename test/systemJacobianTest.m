@@ -21,12 +21,12 @@ classdef systemJacobianTest < matlab.unittest.TestCase
         end
         
         function test2(testCase)
-            syms y(s) z(s)
+            syms Dys(s) y(s)
             F = [
-                y(s) + diff(z(s))
-                z(s)
+                Dys(s) + diff(y(s))
+                y(s)
             ];
-            x = [y, z];
+            x = [Dys, y];
             p = [0; 1];
             q = [0, 1];
             actSolution = systemJacobian(F, x, p, q);

@@ -11,14 +11,14 @@ function [optval, s, t, p, q] = hungarian(M)
 %       subject to  q_j - p_i >= M(i, j)                    (1 <= i, j <= n)
 %                   q_j and p_i are nonnegative integers    (1 <= i, j <= n)
 %
-%   Return values:
+%   Return Values:
 %       - optval : the optimal value. If M has no perfect matching, this is
 %                  set to -Inf.
-%       - s      : the i-th row is assigned to the s(i)-th column
-%       - t      : the j-th column is assigned to the t(j)-th row
+%       -      s : the i-th row is assigned to the s(i)-th column
+%       -      t : the j-th column is assigned to the t(j)-th row
 %                  (t is the inverse of s as a permutation)
-%       - p      : optimal dual solution in rows
-%       - q      : optimal dual solution in columns
+%       -      p : optimal dual solution in rows
+%       -      q : optimal dual solution in columns
 %
 %   See Also: orderMatrix, systemJacobian
 
