@@ -20,7 +20,7 @@ function [optval, s, t, p, q] = hungarian(M)
 %       - p      : optimal dual solution in rows
 %       - q      : optimal dual solution in columns
 %
-%   See Also: orderMatrix
+%   See Also: orderMatrix, systemJacobian
 
 validateattributes(M, {'numeric'}, {'2d', 'square', 'nonnan', 'real'}, mfilename, 'M');
 assert(isinteger(M) || all(all(M ~= Inf(class(M)))), 'Expected M not to contain Inf.');
