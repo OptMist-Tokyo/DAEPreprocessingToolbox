@@ -3,7 +3,8 @@ function D = systemJacobian(F, x, p, q)
 % systemJacobian    Matrix storing partial differentiations
 %
 %   Return the system Jacobian D whose (i, j)-th entry is the derivative of
-%   F(i)^(p(i)) by x(j)^(q(j)).
+%   F(i)^(p(i)) by x(j)^(q(j)). If F is an equation system, the RHS are to be
+%   transposed to the LHS.
 %
 %   See Also: hungarian
 

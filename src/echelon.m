@@ -82,5 +82,5 @@ varargout{1} = R;
 varargout{2} = colperm;
 varargout{3} = rank;
 if options.ReturnPivots
-    varargout{4} = pivots;
+    varargout{4} = unique(pivots);
 end

@@ -21,8 +21,10 @@ classdef integrationTest < matlab.unittest.TestCase
             D = systemJacobian(F, x, p, q);
             testCase.verifyEqual(D, [m 0 -y(t)/L; 0 m -z(t)/L; 2*y(t) 2*z(t) 0]);
             
-            [~, ~, rank] = echelon(D);
-            testCase.verifyEqual(rank, 3);
+            [r, I, J] = findEliminatingSubsystem(D, p);
+            testCase.verifyEqual(r, 0);
+            testCase.verifyEqual(I, []);
+            testCase.verifyEqual(J, []);
         end
         
         function roboticArm(testCase)
@@ -65,8 +67,10 @@ classdef integrationTest < matlab.unittest.TestCase
                   cos(x1(t)) + cos(x1(t) + x3(t)), 0,  cos(x1(t) + x3(t)),                                              0,                                            0
             ]);
             
-            [~, ~, rank] = echelon(D);
-            testCase.verifyEqual(rank, 4);
+            [r, I, J] = findEliminatingSubsystem(D, p);
+            testCase.verifyEqual(r, 1);
+            testCase.verifyEqual(I, [3; 4; 5]);
+            testCase.verifyEqual(J, [1, 3, 4]);
         end
         
         function transistorAmplifier(testCase)
@@ -115,19 +119,10 @@ classdef integrationTest < matlab.unittest.TestCase
                    0,   0,  0,   0,   0,  0, -C5,  C5
             ]);
             
-            [R, colperm, rank] = echelon(D);
-            testCase.verifyEqual(R, [
-                 C1,  0,  0,  0,  0, -C1,   0,   0
-                  0, C2,  0,  0,  0,   0,   0,   0
-                  0,  0, C3,  0,  0,   0, -C3,   0
-                  0,  0,  0, C4,  0,   0,   0,   0
-                  0,  0,  0,  0, C5,   0,   0, -C5
-                  0,  0,  0,  0,  0,   0,   0,   0
-                  0,  0,  0,  0,  0,   0,   0,   0
-                  0,  0,  0,  0,  0,   0,   0,   0
-            ]);
-            testCase.verifyEqual(colperm, [1 3 4 6 7 2 5 8]);
-            testCase.verifyEqual(rank, 5);
+            [r, I, J] = findEliminatingSubsystem(D, p);
+            testCase.verifyEqual(r, 1);
+            testCase.verifyEqual(I, 2);
+            testCase.verifyEqual(J, 1);
         end
         
         function ringModulator(testCase)
@@ -184,8 +179,10 @@ classdef integrationTest < matlab.unittest.TestCase
             testCase.verifyEqual(q, [1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
             
             D = systemJacobian(F, x, p, q);
-            [~, ~, rank] = echelon(D);
-            testCase.verifyEqual(rank, 14);
+            [r, I, J] = findEliminatingSubsystem(D, p);
+            testCase.verifyEqual(r, 3);
+            testCase.verifyEqual(I, [4; 5; 6]);
+            testCase.verifyEqual(J, [3, 4, 5]);
         end
     end
 end
