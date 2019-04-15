@@ -77,6 +77,7 @@ for b = 1:min(m, n)
     rank = rank + 1;
 end
 
+% set return values
 varargout{1} = R;
 varargout{2} = colperm;
 varargout{3} = rank;
