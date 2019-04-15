@@ -20,6 +20,9 @@ classdef integrationTest < matlab.unittest.TestCase
             
             D = systemJacobian(F, x, p, q);
             testCase.verifyEqual(D, [m 0 -y(t)/L; 0 m -z(t)/L; 2*y(t) 2*z(t) 0]);
+            
+            [~, ~, rank] = echelon(D);
+            testCase.verifyEqual(rank, 3);
         end
     end
 end
