@@ -1,12 +1,12 @@
-function df = diffByFunction(f, symfun)
+function df = diffByFunction(f, dx)
 
-% Differentiate f by symfun(t). This function does not work well if symfun is
-% not differentiated but F has derivatives of symfun.
+% Differentiate f by dx(t). This function does not work well if dx is not
+% differentiated but F has derivatives of dx.
 
 validateattributes(f, {'sym'}, {'vector'}, mfilename, 'f', 1);
-validateattributes(symfun, {'sym'}, {'scalar'}, mfilename, 'symfun', 2);
+validateattributes(dx, {'sym'}, {'vector'}, mfilename, 'dx', 2);
 
-symvar = makeDummyVariable(symfun, f);
-f = subs(f, symfun, symvar);
-df = diff(f, symvar);
-df = subs(df, symvar, symfun);
+vars = makeDummyVariable(dx, f);
+f = subs(f, dx, vars);
+df = jacobian(f, vars);
+df = subs(df, vars, dx);

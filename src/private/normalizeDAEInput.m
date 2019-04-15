@@ -23,11 +23,10 @@ end
 
 % extract the independent varaible t
 c = children(x);
-if iscell(c)
-    t = c{1};
-else
-    t = c;
+if ~iscell(c)
+    c = {c};
 end
+t = c{1};
 
 % check t
 assert(length(t) == 1, 'Input x is invalid.');

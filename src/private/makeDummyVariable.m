@@ -1,16 +1,42 @@
-function symvar = makeDummyVariable(symfun, F)
+function vars = makeDummyVariable(dx, F)
 
-% Replace symfun in F with a dummy symbolic variable. The name of the dummy
-% varaible is determined so that it does not appear in F.
+% Make dummy variables representing dx. The name of the dummy varaible is
+% determined so that it does not appear in F.
 
-% parse symfun and make the stem of new varaible name
-tree = feval(symengine, 'prog::exprlist', symfun);
-if strcmp(char(tree(1)), 'diff')
-    order = length(tree) - 2;
-    tmp = tree(2);
-    stem = ['D', char(tmp(1)), repmat(char(tree(end)), 1, order)];
-else
-    stem = char(tree(1));
+validateattributes(dx, {'sym'}, {'vector'}, mfilename, 'dx', 1);
+validateattributes(F, {'sym'}, {'vector'}, mfilename, 'F', 2);
+
+if isempty(dx)
+    vars = zeros(1, 0, 'sym');
+    return;
+end
+
+% extract the independent varaible t
+c = children(dx);
+if ~iscell(c)
+    c = {c};
+end
+t = c{1};
+t = t(end);
+
+% convert symfun to sym
+if isa(dx, 'symfun')
+    dx = dx(t);
+end
+t = char(t);
+
+% parse symfun and make the stem of new varaible names
+n = length(dx);
+stem = cell(0);
+for j = 1:n
+    tree = feval(symengine, 'prog::exprlist', dx(j));
+    if strcmp(char(tree(1)), 'diff')
+        order = length(tree) - 2;
+        tmp = tree(2);
+        stem{j} = ['D', char(tmp(1)), repmat(t, 1, order)];
+    else
+        stem{j} = char(tree(1));
+    end
 end
 
 % collect used names
@@ -21,15 +47,19 @@ for i = 1:length(F)
 end
 
 % make the name unique in F
-k = 1;
-name = stem;
-while isKey(usednames, name)
-    name = sprintf('%s%d', name, k);
-    k = k + 1;
+name = cell(0);
+for j = 1:n
+    k = 1;
+    name{j} = stem{j};
+    while isKey(usednames, name{j})
+        name{j} = sprintf('%s%d', name{j}, k);
+        k = k + 1;
+    end
+    usednames(name{j}) = 0;
 end
 
 % convert to symbolic variable
-symvar = sym(name);
+vars = sym(name);
 
 
 % function for walking expression tree

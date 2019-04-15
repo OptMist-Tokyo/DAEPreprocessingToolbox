@@ -11,7 +11,7 @@ function varargout = findEliminatingSubsystem(D, p, varargin)
 
 validateattributes(D, {'sym'}, {'2d'}, mfilename, 'D');
 [m, ~] = size(D);
-assert(m == length(p), 'Row size of D and the length of p do not match.')
+validateattributes(p, {'numeric'}, {'vector', 'integer', 'nonnegative', 'numel', m}, mfilename, 'p');
 
 % parse parameters
 parser = inputParser;
