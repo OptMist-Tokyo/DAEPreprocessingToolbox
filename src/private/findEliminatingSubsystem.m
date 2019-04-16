@@ -7,7 +7,8 @@ function varargout = findEliminatingSubsystem(D, p, varargin)
 %     - (C2): rank D([I r], :) = m
 %     - (C3): p(r) ≦ p(i) for all i in I
 %
-% If 'ReturnPivots' is true, also return the set of used pivots.
+% Parameters:
+%     - ReturnPivots : Return the set of used pivots if ReturnPivots is true.
 
 validateattributes(D, {'sym'}, {'2d'}, mfilename, 'D');
 [m, ~] = size(D);

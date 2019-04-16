@@ -1,10 +1,21 @@
-function vars = makeDummyVariable(dx, F)
+function vars = makeDummyVariable(dx, F, varargin)
 
 % Make dummy variables representing dx. The name of the dummy varaible is
 % determined so that it does not appear in F.
+%
+% Parameters:
+%     - Prefix : Prefix of the name of dummy variables.
+%     - Output : Return symbolic functions if Output is set to 'symfun'.
 
 validateattributes(dx, {'sym'}, {'vector'}, mfilename, 'dx', 1);
 validateattributes(F, {'sym'}, {'vector'}, mfilename, 'F', 2);
+
+% parse parameters
+parser = inputParser;
+addParameter(parser, 'Prefix', '', @isvarname);
+addParameter(parser, 'Output', 'sym', @(x) any(validatestring(x, {'sym', 'symfun'})));
+parser.parse(varargin{:});
+options = parser.Results;
 
 if isempty(dx)
     vars = zeros(1, 0, 'sym');
@@ -37,6 +48,7 @@ for j = 1:n
     else
         stem{j} = char(tree(1));
     end
+    stem{j} = [options.Prefix, stem{j}];
 end
 
 % collect used names
@@ -58,8 +70,15 @@ for j = 1:n
     usednames(name{j}) = 0;
 end
 
-% convert to symbolic variable
-vars = sym(name);
+% convert to symbolic variable or symbolic functions
+if strcmp(options.Output, 'sym')
+    vars = sym(name);
+else
+    vars = zeros(1, n, 'sym');
+    for j = 1:n
+        vars(j) = str2sym([name{j}, '(', t, ')']);
+    end
+end
 
 
 % function for walking expression tree

@@ -10,21 +10,15 @@ validateattributes(p, {'numeric'}, {'vector', 'integer', 'nonnegative', 'numel',
 validateattributes(q, {'numeric'}, {'vector', 'integer', 'nonnegative', 'numel', n}, mfilename, 'q', 4);
 validateattributes(r, {'numeric'}, {'scalar', 'integer', 'positive', '<=', m}, mfilename, 'r', 5);
 validateattributes(I, {'numeric'}, {'vector', 'integer', 'positive', '<=', m}, mfilename, 'I', 6);
-validateattributes(J, {'numeric'}, {'vector', 'integer', 'positive', '<=', n}, mfilename, 'J', 7);
+M = length(I);
+validateattributes(J, {'numeric'}, {'vector', 'integer', 'positive', '<=', n, 'numel', M}, mfilename, 'J', 7);
 assert(all(I ~= r) && all(p(r) <= p(I)));
 
 % prepare equations to be solved
-F_I = [];
-for i = I
-    F_I = [F_I; diff(F(i), t, p(i) - p(r))];
-end
+F_I = arrayfun(@(i) diff(F(i), t, p(i) - p(r)), I).';
 
-x_J = [];
-for j = J
-    x_J = [x_J, diff(x(j), q(j) - p(r))];
-end
-
-% change symfun to variable (to use 'solve' function)
+% prepare varaibles for which wll be solved
+x_J = arrayfun(@(j) diff(x(j), q(j) - p(r)), J);
 vars = makeDummyVariable(x_J, F_I);
 F_I = subs(F_I, x_J, vars);
 

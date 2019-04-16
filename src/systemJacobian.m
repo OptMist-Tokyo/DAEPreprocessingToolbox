@@ -18,17 +18,10 @@ D = zeros(m, n, 'sym');
 
 for i = 1:m
     feasible = find(q >= p(i));
-    N = length(feasible);
-    dx = zeros(1, N, 'sym');
-    for k = 1:N
-        j = feasible(k);
-        dx(k) = diff(x(j), q(j) - p(i));
-    end
-    
-    % call diffByFunction once for performance
+    dx = arrayfun(@(j) diff(x(j), q(j) - p(i)), feasible);
     dFi = diffByFunction(F(i), dx);
-
-    for k = 1:N
+    
+    for k = 1:length(feasible)
         D(i, feasible(k)) = dFi(k);
     end
 end
