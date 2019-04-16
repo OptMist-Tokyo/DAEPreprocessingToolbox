@@ -17,7 +17,7 @@ S = -Inf(m, n);
 
 % convert to chars
 varnames = arrayfun(@char, x, 'UniformOutput', false);
-prefix = ['(', char(t), ')'];
+suffix = ['(', char(t), ')'];
 
 for i = 1:m
     tree = feval(symengine, 'prog::exprlist', F(i));
@@ -33,7 +33,7 @@ function walk(node, order)
     if strcmp(op, 'diff')
         order = l - 2;
     else
-        j = find(strcmp(varnames, strcat(op, prefix)), 1);
+        j = find(strcmp(varnames, strcat(op, suffix)), 1);
         if ~isempty(j)
             S(i, j) = max(S(i, j), order);
         end

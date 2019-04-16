@@ -4,8 +4,8 @@ function [F, x, t] = normalizeDAEInput(F, x, varargin)
 % If `Transposition` is true, equations in F will be transposed.
 
 % check arguments
-validateattributes(F, {'sym'}, {'vector'}, mfilename, 'F', 1);
-validateattributes(x, {'sym'}, {'vector'}, mfilename, 'x', 2);
+validateattributes(F, {'sym'}, {'column'}, mfilename, 'F', 1);
+validateattributes(x, {'sym'}, {'row'}, mfilename, 'x', 2);
 
 % parse parameters
 parser = inputParser;

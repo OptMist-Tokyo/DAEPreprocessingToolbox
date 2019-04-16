@@ -1,7 +1,7 @@
 classdef systemJacobianTest < matlab.unittest.TestCase
     methods (Test)
         function test0(testCase)
-            actSolution = systemJacobian(zeros(0, 1, 'sym'), zeros(1, 0, 'sym'), zeros(0, 1), zeros(1, 0));
+            actSolution = systemJacobian(zeros(0, 1, 'sym'), zeros(1, 0, 'sym'), zeros(1, 0), zeros(1, 0));
             expSolution = zeros(0, 0, 'sym');
             testCase.verifyEqual(actSolution, expSolution);
         end

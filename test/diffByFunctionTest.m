@@ -1,7 +1,7 @@
 classdef diffByFunctionTest < matlab.unittest.TestCase
     methods (Test)
         function test0(testCase)
-            actSolution = diffByFunction(zeros(1, 0, 'sym'), zeros(1, 0, 'sym'));
+            actSolution = diffByFunction(zeros(0, 1, 'sym'), zeros(1, 0, 'sym'));
             expSolution = zeros(0, 'sym');
             testCase.verifyEqual(actSolution, expSolution);
         end

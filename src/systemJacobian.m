@@ -11,8 +11,10 @@ function D = systemJacobian(F, x, p, q)
 [F, x, ~] = normalizeDAEInput(F, x, 'Transposition', true);
 m = length(F);
 n = length(x);
-validateattributes(p, {'numeric'}, {'vector', 'integer', 'nonnegative', 'numel', m}, mfilename, 'p', 3);
-validateattributes(q, {'numeric'}, {'vector', 'integer', 'nonnegative', 'numel', n}, mfilename, 'q', 4);
+validateattributes(p, {'numeric'}, {'row', 'integer', 'nonnegative'}, mfilename, 'p', 3);
+validateattributes(q, {'numeric'}, {'row', 'integer', 'nonnegative'}, mfilename, 'q', 4);
+assert(m == length(p), 'Inconsistency between sizes of F and p.');
+assert(n == length(q), 'Inconsistency between sizes of x and q.');
 
 D = zeros(m, n, 'sym');
 

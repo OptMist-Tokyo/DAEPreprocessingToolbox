@@ -7,8 +7,8 @@ function vars = makeDummyVariable(dx, F, varargin)
 %     - Prefix : Prefix of the name of dummy variables.
 %     - Output : Return symbolic functions if Output is set to 'symfun'.
 
-validateattributes(dx, {'sym'}, {'vector'}, mfilename, 'dx', 1);
-validateattributes(F, {'sym'}, {'vector'}, mfilename, 'F', 2);
+validateattributes(dx, {'sym'}, {'row'}, mfilename, 'dx', 1);
+validateattributes(F, {'sym'}, {'column'}, mfilename, 'F', 2);
 
 % parse parameters
 parser = inputParser;
