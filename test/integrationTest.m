@@ -15,7 +15,7 @@ classdef integrationTest < matlab.unittest.TestCase
             testCase.verifyEqual(S, [2 -Inf 0; -Inf 2 0; 0 0 -Inf]);
             
             [~, ~, ~, p, q] = hungarian(S);
-            testCase.verifyEqual(p, [0; 0; 2]);
+            testCase.verifyEqual(p, [0, 0, 2]);
             testCase.verifyEqual(q, [2, 2, 0]);
             
             D = systemJacobian(F, x, p, q);
@@ -55,7 +55,7 @@ classdef integrationTest < matlab.unittest.TestCase
             ]);
             
             [~, ~, ~, p, q] = hungarian(S);
-            testCase.verifyEqual(p, [0; 0; 0; 2; 2]);
+            testCase.verifyEqual(p, [0, 0, 0, 2, 2]);
             testCase.verifyEqual(q, [2, 2, 2, 0, 0]);
             
             D = systemJacobian(F, x, p, q);
@@ -69,7 +69,7 @@ classdef integrationTest < matlab.unittest.TestCase
             
             [r, I, J] = findEliminatingSubsystem(D, p);
             testCase.verifyEqual(r, 1);
-            testCase.verifyEqual(I, [3; 4; 5]);
+            testCase.verifyEqual(I, [3, 4, 5]);
             testCase.verifyEqual(J, [1, 3, 4]);
         end
         
@@ -104,7 +104,7 @@ classdef integrationTest < matlab.unittest.TestCase
             ]);
             
             [~, ~, ~, p, q] = hungarian(S);
-            testCase.verifyEqual(p, [0; 0; 0; 0; 0; 0; 0; 0]);
+            testCase.verifyEqual(p, [0, 0, 0, 0, 0, 0, 0, 0]);
             testCase.verifyEqual(q, [1, 1, 1, 1, 1, 1, 1, 1]);
             
             D = systemJacobian(F, x, p, q);
@@ -175,13 +175,13 @@ classdef integrationTest < matlab.unittest.TestCase
             ]);
             
             [~, ~, ~, p, q] = hungarian(S);
-            testCase.verifyEqual(p, [0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0]);
+            testCase.verifyEqual(p, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
             testCase.verifyEqual(q, [1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
             
             D = systemJacobian(F, x, p, q);
             [r, I, J] = findEliminatingSubsystem(D, p);
             testCase.verifyEqual(r, 3);
-            testCase.verifyEqual(I, [4; 5; 6]);
+            testCase.verifyEqual(I, [4, 5, 6]);
             testCase.verifyEqual(J, [3, 4, 5]);
         end
     end

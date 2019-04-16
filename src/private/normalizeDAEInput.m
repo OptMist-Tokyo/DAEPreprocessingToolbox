@@ -1,17 +1,28 @@
-function [F, x, t] = normalizeDAEInput(F, x)
+function [F, x, t] = normalizeDAEInput(F, x, varargin)
+
+% Normalize DAE input.
+% If `Transposition` is true, equations in F will be transposed.
 
 % check arguments
 validateattributes(F, {'sym'}, {'vector'}, mfilename, 'F', 1);
 validateattributes(x, {'sym'}, {'vector'}, mfilename, 'x', 2);
 
+% parse parameters
+parser = inputParser;
+addParameter(parser, 'Transposition', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
+parser.parse(varargin{:});
+options = parser.Results;
+
 % check F
 assert(~isa(F, 'symfun'), 'F must not be a symbolic function. Maybe forgetting (t).');
 
 % move RHS to LHS
-for i = 1:length(F)
-    op = char(feval(symengine, 'op', F(i), 0));
-    if strcmp(op, '_SYM_equal')
-        F(i) = lhs(F(i)) - rhs(F(i));
+if options.Transposition
+    for i = 1:length(F)
+        op = char(feval(symengine, 'op', F(i), 0));
+        if strcmp(op, '_SYM_equal')
+            F(i) = lhs(F(i)) - rhs(F(i));
+        end
     end
 end
 

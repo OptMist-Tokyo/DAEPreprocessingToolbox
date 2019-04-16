@@ -8,7 +8,7 @@ function D = systemJacobian(F, x, p, q)
 %
 %   See Also: hungarian
 
-[F, x, ~] = normalizeDAEInput(F, x);
+[F, x, ~] = normalizeDAEInput(F, x, 'Transposition', true);
 m = length(F);
 n = length(x);
 validateattributes(p, {'numeric'}, {'vector', 'integer', 'nonnegative', 'numel', m}, mfilename, 'p', 3);

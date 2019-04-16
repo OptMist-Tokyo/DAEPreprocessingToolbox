@@ -1,17 +1,17 @@
-function [tf, simplified] = isZero(f)
+function [tf, simplified] = isZero(A)
 
-% Determine if a symbolic expression f should be treated as zero.
-% Also return a simplified formula of f.
+% Determine if each entry of a symbolic matrix A should be treated as zero.
+% Also return a simplified formula of A.
 
-validateattributes(f, {'sym'}, {'2d'}, mfilename, 'f');
+validateattributes(A, {'sym'}, {'2d'}, mfilename, 'A');
 
-[m, n] = size(f);
+[m, n] = size(A);
 tf = true(m, n);
-simplified = f;
+simplified = zeros(m, n, 'sym');
 
 for i = 1:m
     for j = 1:n
-        simplified(i, j) = simplify(f(i, j), 'IgnoreAnalyticConstraints', true, 'Steps', 5);
+        simplified(i, j) = simplify(A(i, j), 'IgnoreAnalyticConstraints', true, 'Steps', 5);
         tf(i, j) = isAlways(simplified(i, j) == 0, 'Unknown', 'false');
     end
 end

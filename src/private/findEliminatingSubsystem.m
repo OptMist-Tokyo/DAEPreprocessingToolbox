@@ -52,7 +52,7 @@ I = setdiff(circuit, r);
 
 % back to the original indices
 r = rowperm(r);
-I = sort(rowperm(I)).';
+I = sort(rowperm(I));
 
 % determine J
 if options.ReturnPivots

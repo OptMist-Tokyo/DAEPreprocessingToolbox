@@ -5,7 +5,7 @@ classdef hungarianTest < matlab.unittest.TestCase
             [v, s, t, p, q] = hungarian(M);
             
             % check if s and t are permutations on {1,....,n}
-            if any(sort(s).' ~= 1:n) || any(sort(t) ~= 1:n)
+            if any(sort(s) ~= 1:n) || any(sort(t) ~= 1:n)
                 tf = false;
                 return;
             end

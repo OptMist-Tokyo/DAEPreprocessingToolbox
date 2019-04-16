@@ -1,8 +1,8 @@
 classdef echelonTest < matlab.unittest.TestCase
     methods (Test)
         function test0(testCase)
-            [R, colperm, rank] = echelon(zeros(0, 0, 'sym'));
-            testCase.verifyEqual(R, zeros(0, 0, 'sym'));
+            [R, colperm, rank] = echelon(zeros(0, 'sym'));
+            testCase.verifyEqual(R, zeros(0, 'sym'));
             testCase.verifyEqual(colperm, zeros(1, 0));
             testCase.verifyEqual(rank, 0);
         end

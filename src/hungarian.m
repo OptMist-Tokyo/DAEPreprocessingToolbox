@@ -29,9 +29,9 @@ assert(isinteger(M) || all(all(M ~= Inf(class(M)))), 'Expected M not to contain 
 
 % initialize variables
 optval = -Inf;
-s = -ones(n, 1);
+s = -ones(1, n);
 t = -ones(1, n);
-p = zeros(n, 1, class(M));
+p = zeros(1, n, class(M));
 q = max(M);
 if any(isinf(q))
     return;
