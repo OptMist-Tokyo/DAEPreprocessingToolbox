@@ -8,6 +8,7 @@ function D = systemJacobian(F, x, p, q)
 %
 %   See Also: hungarian
 
+% check input
 [F, x, ~] = normalizeDAEInput(F, x, 'Transposition', true);
 m = length(F);
 n = length(x);
@@ -19,10 +20,12 @@ assert(n == length(q), 'Inconsistency between sizes of x and q.');
 D = zeros(m, n, 'sym');
 
 for i = 1:m
+    % differentiate
     feasible = find(q >= p(i));
     dx = arrayfun(@(j) diff(x(j), q(j) - p(i)), feasible);
     dFi = diffByFunction(F(i), dx);
     
+    % substitte back to D
     for k = 1:length(feasible)
         D(i, feasible(k)) = dFi(k);
     end

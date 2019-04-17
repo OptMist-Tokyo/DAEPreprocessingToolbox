@@ -9,39 +9,5 @@ function S = orderMatrix(F, x)
 %
 %   See Also: hungarian
 
-[F, x, t] = normalizeDAEInput(F, x);
-
-m = length(F);
-n = length(x);
-S = -Inf(m, n);
-
-% convert to chars
-varnames = arrayfun(@char, x, 'UniformOutput', false);
-suffix = ['(', char(t), ')'];
-
-for i = 1:m
-    tree = feval(symengine, 'prog::exprlist', F(i));
-    walk(tree, 0);
-end
-
-
-% walk expression tree
-function walk(node, order)
-    l = length(node);
-    op = char(node(1));
-    
-    if strcmp(op, 'diff')
-        order = l - 2;
-    else
-        j = find(strcmp(varnames, strcat(op, suffix)), 1);
-        if ~isempty(j)
-            S(i, j) = max(S(i, j), order);
-        end
-    end
-    
-    for k = 2:l
-        walk(node(k), order)
-    end
-end
-
-end
+readMuPAD('OrderMatrix.mu');
+S = double(feval(symengine, 'orderMatrix', F, x));

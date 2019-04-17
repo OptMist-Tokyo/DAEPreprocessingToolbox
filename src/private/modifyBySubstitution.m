@@ -16,6 +16,7 @@ validateattributes(J, {'numeric'}, {'row', 'integer', 'positive', '<=', n}, mfil
 assert(length(I) == length(J), 'Inconsistency between sizes of I and J.');
 assert(all(I ~= r) && all(p(r) <= p(I)));
 
+
 % prepare equations to be solved
 F_I = arrayfun(@(i) diff(F(i), t, p(i) - p(r)), I).';
 

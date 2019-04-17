@@ -7,12 +7,10 @@ validateattributes(A, {'sym'}, {'2d'}, mfilename, 'A');
 
 [m, n] = size(A);
 tf = true(m, n);
-simplified = zeros(m, n, 'sym');
+simplified = simplifyExpression(A);
 
 for i = 1:m
     for j = 1:n
-        simplified(i, j) = simplify(A(i, j), 'IgnoreAnalyticConstraints', true, 'Steps', 5);
         tf(i, j) = isAlways(simplified(i, j) == 0, 'Unknown', 'false');
     end
 end
-
