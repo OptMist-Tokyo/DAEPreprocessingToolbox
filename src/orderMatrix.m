@@ -9,5 +9,5 @@ function S = orderMatrix(F, x)
 %
 %   See Also: hungarian
 
-readMuPAD('OrderMatrix.mu');
+readMuPADScript('OrderMatrix.mu');
 S = double(feval(symengine, 'orderMatrix', F, x));

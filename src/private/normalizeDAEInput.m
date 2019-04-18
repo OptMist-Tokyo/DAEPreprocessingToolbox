@@ -1,7 +1,7 @@
 function [F, x, t] = normalizeDAEInput(F, x, varargin)
 
 % Normalize DAE input.
-% If `Transposition` is true, equations in F will be transposed.
+% If 'Transposition' is true, equations in F will be transposed.
 
 % check arguments
 validateattributes(F, {'sym'}, {'column'}, mfilename, 'F', 1);
@@ -57,4 +57,4 @@ for j = 1:n
     assert(length(tree) == 2 && isequal(tree(2), t), 'Input x is invalid.');
 end
 
-assert(length(unique(arrayfun(@char, x, 'UniformOutput', false))) == n, 'Input x contains the same variables.');
+assert(length(unique(arrayfun(@char, x, 'UniformOutput', false))) == n, 'Input x contains duplicated variables.');

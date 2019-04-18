@@ -1,4 +1,4 @@
-function readMuPAD(fname)
+function readMuPADScript(fname)
 
 % management function for reading MuPAD scripts.
 
