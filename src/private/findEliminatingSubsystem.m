@@ -1,4 +1,4 @@
-function varargout = findEliminatingSubsystem(D, p, varargin)
+function [r, I, J] = findEliminatingSubsystem(D, p)
 
 % findEliminatingSubsystem  Find (r, I, J) satisfying (C1)--(C3) in the paper.
 %
@@ -6,70 +6,18 @@ function varargout = findEliminatingSubsystem(D, p, varargin)
 %     - (C1): D(I, J) is nonsingular
 %     - (C2): rank D([I r], :) = m
 %     - (C3): p(r) ≦ p(i) for all i in I
-%
-% Parameters:
-%     - ReturnPivots : Return the set of used pivots if ReturnPivots is true.
 
+% check input
+narginchk(2, 2);
 validateattributes(D, {'sym'}, {'2d'}, mfilename, 'D');
 [m, ~] = size(D);
 validateattributes(p, {'numeric'}, {'vector', 'integer', 'nonnegative', 'numel', m}, mfilename, 'p');
 
-% parse parameters
-parser = inputParser;
-addParameter(parser, 'ReturnPivots', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
-parser.parse(varargin{:});
-options = parser.Results;
+% call MuPAD
+loadMuPADPackage;
+out = feval(symengine, 'daepp::findEliminatingSubsystem', D, p);
 
-% column operations
-[A, rowperm, rank] = echelon(D.');
-A = A.';
-
-% the case where D is nonsingular
-if rank == m
-    varargout{1} = 0;
-    varargout{2} = [];
-    varargout{3} = [];
-    if options.ReturnPivots
-        varargout{4} = zeros(1, 0, 'sym');
-    end
-    return;
-end
-
-% find a circuit [I r] (in permuted indices)
-circuit = 1:m;
-for i = (rank+1):m
-    [is0, simplified] = isZero(A(i, :));
-    A(i, :) = simplified;
-    circuitCand = [find(~is0), i];
-    if length(circuitCand) < length(circuit)
-        circuit = circuitCand;
-    end
-end
-
-% separate r from circuit
-rcand = circuit(p(rowperm(circuit)) == min(p(rowperm(circuit))));
-r = rcand(1);
-I = setdiff(circuit, r);
-
-% back to the original indices
-r = rowperm(r);
-I = sort(rowperm(I));
-
-% determine J
-if options.ReturnPivots
-    [~, rowperm, rank, pivots] = echelon(D(I, :), varargin{:});
-else
-    [~, rowperm, rank] = echelon(D(I, :));
-end
-
-assert(rank == length(I));
-J = sort(rowperm(1:rank));
-
-% set return values
-varargout{1} = r;
-varargout{2} = I;
-varargout{3} = J;
-
-if options.ReturnPivots
-    varargout{4} = pivots;
-end
+% restore return values
+r = double(out(1));
+I = double(out(2));
+J = double(out(3));

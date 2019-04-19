@@ -5,9 +5,7 @@ local m, n, optval, s, t, p, q, updateSlack, r, slack, slackid, prev,
       findAugmentingPath, v, nextv, jj;
 begin
     // convert to matrix
-    if not testtype(M, matrix) then
-        M := matrix([M]);
-    end_if;
+    M := symobj::tomatrix(M);
     
     // check input
     if testargs() then

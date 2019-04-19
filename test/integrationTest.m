@@ -24,8 +24,8 @@ classdef integrationTest < matlab.unittest.TestCase
             
             [r, I, J] = findEliminatingSubsystem(D, p);
             testCase.verifyEqual(r, 0);
-            testCase.verifyEqual(I, []);
-            testCase.verifyEqual(J, []);
+            testCase.verifyEqual(I, zeros(1, 0));
+            testCase.verifyEqual(J, zeros(1, 0));
         end
         
         function modifiedPendulum(testCase)
@@ -220,11 +220,11 @@ classdef integrationTest < matlab.unittest.TestCase
             testCase.verifyEqual(p, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
             testCase.verifyEqual(q, [1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
             
-            %D = systemJacobian(F, x, p, q);
-            %[r, I, J] = findEliminatingSubsystem(D, p);
-            %testCase.verifyEqual(r, 3);
-            %testCase.verifyEqual(I, [4, 5, 6]);
-            %testCase.verifyEqual(J, [3, 4, 5]);
+            D = systemJacobian(F, x, p, q);
+            [r, I, J] = findEliminatingSubsystem(D, p);
+            testCase.verifyEqual(r, 3);
+            testCase.verifyEqual(I, [4, 5, 6]);
+            testCase.verifyEqual(J, [3, 4, 5]);
         end
     end
 end
