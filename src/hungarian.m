@@ -22,11 +22,13 @@ function [optval, s, t, p, q] = hungarian(M)
 %
 %   See Also: orderMatrix, systemJacobian
 
+narginchk(1, 1);
 validateattributes(M, {'double'}, {'2d', 'square', 'nonnan', 'real'}, mfilename, 'M');
 assert(isinteger(M) || all(all(M ~= Inf(class(M)))), 'Expected M not to contain Inf.');
 
-readMuPADScript('hungarian.mu');
-out = feval(symengine, 'hungarian', M);
+loadMuPADPackage;
+out = feval(symengine, 'daepp::hungarian', M);
+
 optval = double(out(1));
 s = double(out(2));
 t = double(out(3));

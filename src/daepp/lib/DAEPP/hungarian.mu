@@ -1,28 +1,31 @@
-/*
-  Compute a maximum assignment for an n x n cost matrix M by the Hungarian
-  method. Also return an optimal solution (p1, ..., pn, q1, ..., qn) of the
-  following dual problem:
-  
-      minimize    (q_1 + ... + q_n) - (p_1 + ... + p_n)
-      subject to  q_j - p_i >= M(i, j)                    (1 <= i, j <= n)
-                  q_j and p_i are nonnegative integers    (1 <= i, j <= n)
-  
-  Return Values:
-      - optval : the optimal value. If M has no perfect matching, this is set to
-                 -Inf.
-      -      s : the i-th row is assigned to the s(i)-th column
-      -      t : the j-th column is assigned to the t(j)-th row
-                 (t is the inverse of s as a permutation)
-      -      p : optimal dual solution in rows
-      -      q : optimal dual solution in columns
-*/
+// MuPAD implementation for hungarian.m
 
-hungarian := proc(M)
-local n, optval, s, t, p, q, updateSlack, r, slack, slackid, prev,
-      findAugmentingPath, v, nextv, jj;
+daepp::hungarian := proc(M)
+local m, n, optval, s, t, p, q, updateSlack, r, slack, slackid, prev,
+      findAugmentingPath, v, nextv, ii, jj;
 begin
-    if domtype(M) <> Dom::Matrix() then
+    // convert to matrix
+    if not testtype(M, matrix) then
         M := matrix([M]);
+    end_if;
+    
+    // check input
+    if testargs() then
+        if args(0) <> 1 then
+            error("One argument expected.");
+        end_if;
+        [m, n] := linalg::matdim(M);
+        if m <> n then
+            error("Square matrix expected.");
+        end_if;
+        for ii from 1 to n do
+            for jj from 1 to n do
+                v := M[ii, jj];
+                if not (testtype(v, DOM_INT) || (testtype(v, stdlib::Infinity) && is(v = -infinity))) then
+                    error("Matrix entries are expected to be integer or -infinity.");
+                end_if;
+            end_for;
+        end_for;
     end_if;
     
     // initialize variables

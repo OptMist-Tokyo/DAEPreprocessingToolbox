@@ -3,7 +3,7 @@ function F = modifyBySubstitution(F, x, p, q, r, I, J)
 % Modify DAE system by the substitution method.
 
 % check inputs
-[F, x, t] = normalizeDAEInput(F, x);
+[F, x, t] = checkInput(F, x);
 validateattributes(p, {'numeric'}, {'row', 'integer', 'nonnegative'}, mfilename, 'p', 3);
 validateattributes(q, {'numeric'}, {'row', 'integer', 'nonnegative'}, mfilename, 'q', 4);
 m = length(F);

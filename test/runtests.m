@@ -7,6 +7,10 @@ addpath('../src');
 mkdir('private');
 copyfile('../src/private', 'private');
 
+% recall loadMuPADPackage
+clear loadMuPADPackage
+loadMuPADPackage;
+
 % run tests
 suiteClass = TestSuite.fromFolder(pwd);
 result = run(suiteClass);

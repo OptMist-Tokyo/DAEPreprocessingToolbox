@@ -16,9 +16,9 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             syms y1(t) constz
             actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
             testCase.verifyEqual(actSolution, [
-                log(y(t)) == t
-                constz + y1(t) == 0
-                log(y1(t)) == t
+                log(y(t)) - t
+                constz + y1(t)
+                log(y1(t)) - t
             ]);
         end
         
@@ -38,18 +38,18 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             syms y1(t)
             actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
             testCase.verifyEqual(actSolution, [
-                log(y(t)) == t
-                y1(t) == 0
-                log(y1(t)) == t
+                log(y(t)) - t
+                y1(t)
+                log(y1(t)) - t
             ]);
         end
         
         function test3(testCase)
             syms y(t) z(t) w(t)
             F = [
-                y(t) + diff(z(t)) == t^2
-                diff(y(t)) - diff(z(t), 2) == 2*t
-                diff(y(t)) + diff(z(t), 2) == w(t)
+                y(t) + diff(z(t)) - t^2
+                diff(y(t)) - diff(z(t), 2) - 2*t
+                diff(y(t)) + diff(z(t), 2) - w(t)
             ];
             x = [y, z, w];
             p = [2, 1, 1];
@@ -61,11 +61,11 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             syms Dyt(t) Dztt(t) constw
             actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
             testCase.verifyEqual(actSolution, [
-                y(t) + diff(z(t)) == t^2
-                diff(y(t)) - diff(z(t), 2) == 2*t
-                Dyt(t) + Dztt(t) == constw
-                Dyt(t) + Dztt(t) == 2*t
-                Dyt(t) - Dztt(t) == 2*t
+                y(t) + diff(z(t)) - t^2
+                diff(y(t)) - diff(z(t), 2) - 2*t
+                Dyt(t) + Dztt(t) - constw
+                Dyt(t) + Dztt(t) - 2*t
+                Dyt(t) - Dztt(t) - 2*t
             ]);
         end
         
@@ -86,11 +86,11 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             syms Dyt(t) Dztt(t)
             actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
             testCase.verifyEqual(actSolution, [
-                y(t) + diff(z(t)) == t^2
-                diff(y(t)) - diff(z(t), 2) == 2*t
-                Dyt(t) + Dztt(t) == 0
-                Dyt(t) + Dztt(t) == 2*t
-                Dyt(t) - Dztt(t) == 2*t
+                y(t) + diff(z(t)) - t^2
+                diff(y(t)) - diff(z(t), 2) - 2*t
+                Dyt(t) + Dztt(t) - 0
+                Dyt(t) + Dztt(t) - 2*t
+                Dyt(t) - Dztt(t) - 2*t
             ]);
         end
     end
