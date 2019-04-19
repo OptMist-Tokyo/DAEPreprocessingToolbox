@@ -2,7 +2,7 @@
 
 daepp::hungarian := proc(M)
 local m, n, optval, s, t, p, q, updateSlack, r, slack, slackid, prev,
-      findAugmentingPath, v, nextv, ii, jj;
+      findAugmentingPath, v, nextv, jj;
 begin
     // convert to matrix
     if not testtype(M, matrix) then
@@ -18,14 +18,9 @@ begin
         if m <> n then
             error("Square matrix expected.");
         end_if;
-        for ii from 1 to n do
-            for jj from 1 to n do
-                v := M[ii, jj];
-                if not (testtype(v, DOM_INT) || (testtype(v, stdlib::Infinity) && is(v = -infinity))) then
-                    error("Matrix entries are expected to be integer or -infinity.");
-                end_if;
-            end_for;
-        end_for;
+        if not _and((testtype(v, DOM_INT) || (testtype(v, stdlib::Infinity) && v = -infinity)) $ v in M) then
+            error("Matrix entries are expected to be integer or -infinity.");
+        end_if;
     end_if;
     
     // initialize variables
@@ -134,10 +129,6 @@ begin
     end_for;
     
     // compute the optimal value
-    optval := 0;
-    for i from 1 to n do
-        optval := optval + M[i, contains(s, i)];
-    end_for;
-    
+    optval := _plus(M[i, contains(s, i)] $ i = 1..n);
     [optval, s, t, p, q];
 end_proc;

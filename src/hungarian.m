@@ -22,13 +22,16 @@ function [optval, s, t, p, q] = hungarian(M)
 %
 %   See Also: orderMatrix, systemJacobian
 
+% check input
 narginchk(1, 1);
 validateattributes(M, {'double'}, {'2d', 'square', 'nonnan', 'real'}, mfilename, 'M');
 assert(isinteger(M) || all(all(M ~= Inf(class(M)))), 'Expected M not to contain Inf.');
 
+% call MuPAD
 loadMuPADPackage;
 out = feval(symengine, 'daepp::hungarian', M);
 
+% restore return values
 optval = double(out(1));
 s = double(out(2));
 t = double(out(3));

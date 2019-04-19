@@ -9,8 +9,10 @@ function S = orderMatrix(eqs, vars)
 %
 %   See Also: hungarian
 
+% check input
 narginchk(2, 2);
 [eqs, vars, ~] = checkInput(eqs, vars);
 
+% call MuPAD
 loadMuPADPackage;
 S = double(feval(symengine, 'daepp::orderMatrix', eqs, vars));

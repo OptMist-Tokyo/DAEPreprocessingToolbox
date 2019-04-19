@@ -9,11 +9,16 @@ daepp::interface := {
     hold(checkInput),
     hold(hungarian),
     hold(orderMatrix),
+    hold(systemJacobian),
     null()
 };
 
 autoload(daepp::checkInput);
 autoload(daepp::hungarian);
 autoload(daepp::orderMatrix);
+autoload(daepp::systemJacobian);
+
+// helper
+autoload(daepp::toList);
 
 null();
