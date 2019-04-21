@@ -95,5 +95,16 @@ classdef hungarianTest < matlab.unittest.TestCase
             v = hungarian(M);
             testCase.verifyEqual(v, -Inf);
         end
+        
+        function test8(testCase)
+            M = [
+                   0     0     0     1  -Inf
+                -Inf     0     0  -Inf     1
+                   0     0     0  -Inf  -Inf
+                   1  -Inf  -Inf     0  -Inf
+                -Inf     1     1  -Inf     0
+            ];
+            testCase.verifyThat(hungarianTest.check(M), matlab.unittest.constraints.IsTrue);
+        end
     end
 end

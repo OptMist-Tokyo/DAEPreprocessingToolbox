@@ -3,6 +3,9 @@
 daepp::orderMatrix := proc(eqs, vars)
 local m, n, t, sub;
 begin
+    // convert to list
+    [eqs, vars] := map([eqs, vars], symobj::tolist);
+
     // check input
     if testargs() then
         if args(0) <> 2 then

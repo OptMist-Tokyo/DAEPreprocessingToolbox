@@ -4,7 +4,7 @@ daepp::systemJacobian := proc(eqs, vars, p, q /*, t */)
 local t, m, n, D, i, J, dxJp, dummy, subseqs, backsubseqs, eq, k;
 begin
     // convert to list
-    [p, q] := [symobj::tolist(p), symobj::tolist(q)];
+    [eqs, vars, p, q] := map([eqs, vars, p, q], symobj::tolist);
     
     // check input
     if testargs() then
@@ -32,6 +32,8 @@ begin
     // retrive t
     if args(0) = 4 then
         [eqs, vars, t] := daepp::checkInput(eqs, vars);
+    else
+        t := args(5);
     end_if;
     
     [m, n] := [nops(eqs), nops(vars)];

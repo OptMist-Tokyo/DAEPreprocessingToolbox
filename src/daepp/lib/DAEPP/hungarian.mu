@@ -127,6 +127,6 @@ begin
     end_for;
     
     // compute the optimal value
-    optval := _plus(M[i, contains(s, i)] $ i = 1..n);
+    optval := _plus(M[i, s[i]] $ i = 1..n);
     [optval, s, t, p, q];
 end_proc;
