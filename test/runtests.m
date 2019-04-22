@@ -8,6 +8,7 @@ mkdir('private');
 copyfile('../src/private', 'private');
 
 % recall loadMuPADPackage
+reset(symengine);
 clear loadMuPADPackage
 loadMuPADPackage;
 

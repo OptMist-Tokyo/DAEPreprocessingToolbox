@@ -4,19 +4,23 @@ daepp::hungarian := proc(M)
 local m, n, optval, s, t, p, q, updateSlack, r, slack, slackid, prev,
       findAugmentingPath, v, nextv, jj;
 begin
+    // check number of arguments
+    if testargs() then
+        if args(0) <> 1 then
+            error("One argument expected.");
+        end_if;
+    end_if;
+    
     // convert to matrix
     M := symobj::tomatrix(M);
     
     // check input
     if testargs() then
-        if args(0) <> 1 then
-            error("One argument expected.");
-        end_if;
         [m, n] := linalg::matdim(M);
         if m <> n then
             error("Square matrix expected.");
         end_if;
-        if not _and((testtype(v, DOM_INT) || (testtype(v, stdlib::Infinity) && v = -infinity)) $ v in M) then
+        if not _and((testtype(v, Type::Union(DOM_INT, stdlib::Infinity)) && v <> infinity) $ v in M) then
             error("Matrix entries are expected to be integer or -infinity.");
         end_if;
     end_if;

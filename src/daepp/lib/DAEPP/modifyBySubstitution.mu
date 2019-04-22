@@ -1,16 +1,20 @@
 // MuPAD implementation for modifyBySubstiution.m
 
 daepp::modifyBySubstitution := proc(eqs, vars, p, q, r, II, JJ /*, t */)
-local m, n, t, vars_J, dummy, eqs_I, out;
+local m, n, t, vars_J, dummy, eqs_I, subseq, out;
 begin
-    // convert to list
-    [eqs, vars, p, q, II, JJ] := map([eqs, vars, p, q, II, JJ], symobj::tolist);
-    
-    // check input
+    // check number of arguments
     if testargs() then
         if args(0) < 7 || 8 < args(0) then
             error("Seven or eight arguments expected.");
         end_if;
+    end_if;
+    
+    // convert to lists
+    [eqs, vars, p, q, II, JJ] := map([eqs, vars, p, q, II, JJ], symobj::tolist);
+    
+    // check input
+    if testargs() then
         [eqs, vars, t] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
         if args(0) = 8 && t <> args(8) then
             error("Inconsistency of time variable.");
@@ -64,7 +68,8 @@ begin
     vars_J := [symobj::diff(vars[j], t, q[j] - p[r]) $ j in JJ];
     dummy := [genident() $ j in JJ];
     eqs_I := [symobj::diff(eqs[i], t, p[i] - p[r]) $ i in II];
-    [eqs_r, eqs_I] := map([eqs[r], eqs_I], eq -> subs(eq, [vars_J[k] = dummy[k] $ k = 1..nops(JJ)]));
+    subseq := [vars_J[k] = dummy[k] $ k = 1..nops(JJ)];
+    [eqs_r, eqs_I] := map([eqs[r], eqs_I], eq -> subs(eq, subseq));
     
     // solve
     out := solve(eqs_I, dummy, Real, IgnoreSpecialCases, IgnoreAnalyticConstraints);
@@ -73,8 +78,7 @@ begin
     end_if;
     
     // substitute
-    eqs[r] := subs(eqs_r, out[1]);
-    eqs[r] := simplify(eqs[r], IgnoreAnalyticConstraints);
+    eqs[r] := simplify(subs(eqs_r, out[1]), IgnoreAnalyticConstraints);
     
     eqs;
 end_proc;

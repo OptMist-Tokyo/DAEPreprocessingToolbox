@@ -1,96 +1,96 @@
 classdef modifyByAugmentationTest < matlab.unittest.TestCase
     methods (Test)
         function test1(testCase)
-            syms y(t) z(t)
+            syms var1(t) var2(t)
             F = [
-                log(y(t)) == t
-                z(t) + y(t) == 0
+                log(var1(t)) == t
+                var2(t) + var1(t) == 0
             ];
-            x = [y, z];
+            x = [var1, var2];
             p = [0, 0];
             q = [0, 0];
             r = 2;
             I = 1;
             J = 1;
             
-            syms y1(t) constz
             actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
+            syms var11(t) constvar2
             testCase.verifyEqual(actSolution, [
-                log(y(t)) - t
-                constz + y1(t)
-                log(y1(t)) - t
+                log(var1(t)) - t
+                constvar2 + var11(t)
+                log(var11(t)) - t
             ]);
         end
         
         function test2(testCase)
-            syms y(t) z(t)
+            syms var3(t) var4(t)
             F = [
-                log(y(t)) == t
-                z(t) + y(t) == 0
+                log(var3(t)) == t
+                var4(t) + var3(t) == 0
             ];
-            x = [y, z];
+            x = [var3, var4];
             p = [0, 0];
             q = [0, 0];
             r = 2;
             I = 1;
             J = 1;
             
-            syms y1(t)
             actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
+            syms var31(t)
             testCase.verifyEqual(actSolution, [
-                log(y(t)) - t
-                y1(t)
-                log(y1(t)) - t
+                log(var3(t)) - t
+                var31(t)
+                log(var31(t)) - t
             ]);
         end
         
         function test3(testCase)
-            syms y(t) z(t) w(t)
+            syms var5(t) var6(t) var7(t)
             F = [
-                y(t) + diff(z(t)) - t^2
-                diff(y(t)) - diff(z(t), 2) - 2*t
-                diff(y(t)) + diff(z(t), 2) - w(t)
+                var5(t) + diff(var6(t)) - t^2
+                diff(var5(t)) - diff(var6(t), 2) - 2*t
+                diff(var5(t)) + diff(var6(t), 2) - var7(t)
             ];
-            x = [y, z, w];
+            x = [var5, var6, var7];
             p = [2, 1, 1];
             q = [2, 3, 1];
             r = 3;
             I = [1, 2];
             J = [1, 2];
             
-            syms Dyt(t) Dztt(t) constw
             actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
+            syms Dvar5t(t) Dvar6tt(t) constvar7
             testCase.verifyEqual(actSolution, [
-                y(t) + diff(z(t)) - t^2
-                diff(y(t)) - diff(z(t), 2) - 2*t
-                Dyt(t) + Dztt(t) - constw
-                Dyt(t) + Dztt(t) - 2*t
-                Dyt(t) - Dztt(t) - 2*t
+                var5(t) + diff(var6(t)) - t^2
+                diff(var5(t)) - diff(var6(t), 2) - 2*t
+                Dvar5t(t) + Dvar6tt(t) - constvar7
+                Dvar5t(t) + Dvar6tt(t) - 2*t
+                Dvar5t(t) - Dvar6tt(t) - 2*t
             ]);
         end
         
         function test4(testCase)
-            syms y(t) z(t) w(t)
+            syms var8(t) var9(t) var10(t)
             F = [
-                y(t) + diff(z(t)) == t^2
-                diff(y(t)) - diff(z(t), 2) == 2*t
-                diff(y(t)) + diff(z(t), 2) == w(t)
+                var8(t) + diff(var9(t)) - t^2
+                diff(var8(t)) - diff(var9(t), 2) - 2*t
+                diff(var8(t)) + diff(var9(t), 2) - var10(t)
             ];
-            x = [y, z, w];
+            x = [var8, var9, var10];
             p = [2, 1, 1];
             q = [2, 3, 1];
             r = 3;
             I = [1, 2];
             J = [1, 2];
             
-            syms Dyt(t) Dztt(t)
             actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
+            syms Dvar8t(t) Dvar9tt(t)
             testCase.verifyEqual(actSolution, [
-                y(t) + diff(z(t)) - t^2
-                diff(y(t)) - diff(z(t), 2) - 2*t
-                Dyt(t) + Dztt(t) - 0
-                Dyt(t) + Dztt(t) - 2*t
-                Dyt(t) - Dztt(t) - 2*t
+                var8(t) + diff(var9(t)) - t^2
+                diff(var8(t)) - diff(var9(t), 2) - 2*t
+                Dvar8t(t) + Dvar9tt(t)
+                Dvar8t(t) + Dvar9tt(t) - 2*t
+                Dvar8t(t) - Dvar9tt(t) - 2*t
             ]);
         end
     end

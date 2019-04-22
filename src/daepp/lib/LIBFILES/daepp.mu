@@ -9,6 +9,7 @@ daepp::interface := {
     hold(checkInput),
     hold(findEliminatingSubsystem),
     hold(hungarian),
+    hold(modifyByAugmentation),
     hold(modifyBySubstitution),
     hold(orderMatrix),
     hold(systemJacobian),
@@ -18,6 +19,7 @@ daepp::interface := {
 autoload(daepp::checkInput);
 autoload(daepp::findEliminatingSubsystem);
 autoload(daepp::hungarian);
+autoload(daepp::modifyByAugmentation);
 autoload(daepp::modifyBySubstitution);
 autoload(daepp::orderMatrix);
 autoload(daepp::systemJacobian);

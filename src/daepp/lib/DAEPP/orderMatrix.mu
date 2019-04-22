@@ -3,14 +3,18 @@
 daepp::orderMatrix := proc(eqs, vars)
 local m, n, t, sub;
 begin
-    // convert to list
-    [eqs, vars] := map([eqs, vars], symobj::tolist);
-
-    // check input
+    // check number of arguments
     if testargs() then
         if args(0) <> 2 then
             error("List of equations and list of variables expected.");
         end_if;
+    end_if;
+    
+    // convert to lists
+    [eqs, vars] := map([eqs, vars], symobj::tolist);
+    
+    // check input
+    if testargs() then
         [eqs, vars, t] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
     end_if;
     

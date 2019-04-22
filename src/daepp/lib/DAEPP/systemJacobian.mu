@@ -3,14 +3,18 @@
 daepp::systemJacobian := proc(eqs, vars, p, q /*, t */)
 local t, m, n, D, i, J, dxJp, dummy, subseqs, backsubseqs, eq, k;
 begin
-    // convert to list
-    [eqs, vars, p, q] := map([eqs, vars, p, q], symobj::tolist);
-    
-    // check input
+    // check number of arguments
     if testargs() then
         if args(0) < 4 || 5 < args(0) then
             error("Four or five arguments expected.");
         end_if;
+    end_if;
+    
+    // convert to lists
+    [eqs, vars, p, q] := map([eqs, vars, p, q], symobj::tolist);
+    
+    // check input
+    if testargs() then
         [eqs, vars, t] := daepp::checkInput(eqs, vars);
         if args(0) = 5 && t <> args(5) then
             error("Inconsistency of time variable.");

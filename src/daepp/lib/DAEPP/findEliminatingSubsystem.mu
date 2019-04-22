@@ -3,14 +3,16 @@
 daepp::findEliminatingSubsystem := proc(D, p)
 local m, n, A, rank, det, pivrow, nonpiv, circuit, i, circuitCand, pmin, rcand, r, II, JJ;
 begin
+    // check number of arguments
+    if args(0) <> 2 then
+        error("Two arguments expected.");
+    end_if;
+    
     // convert to matrix and list
     [D, p] := [symobj::tomatrix(D), symobj::tolist(p)];
-
+    
     // check input
     if testargs() then
-        if args(0) <> 2 then
-            error("Two arguments expected.");
-        end_if;
         if linalg::nrows(D) <> nops(p) then
             error("Inconsistency between sizes of rows in M and p.");
         end_if;

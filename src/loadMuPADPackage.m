@@ -5,6 +5,7 @@ function loadMuPADPackage
 %   Load MuPAD package 'daepp' with reload prevension. To force reloading,
 %   reset the loaded flag by 'clear loadMuPADPackage' before calling.
 
+narginchk(0, 0);
 persistent loaded;
 
 if isempty(loaded)
