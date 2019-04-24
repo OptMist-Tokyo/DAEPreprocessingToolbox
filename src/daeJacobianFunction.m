@@ -20,8 +20,8 @@ out = feval(symengine, 'daepp::daeJacobianFunction', eqs, vars, t);
 % get return values
 J = out(1);
 JP = out(2);
-Y = out(3);
-YP = out(4);
+Y = out(3).';
+YP = out(4).';
 
 % convert to matlab function
 varsAndParams = [{t, Y, YP} params];
