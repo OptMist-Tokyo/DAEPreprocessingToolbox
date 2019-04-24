@@ -7,6 +7,7 @@ daepp::info := "Library for DAE preprocessing";
 
 daepp::interface := {
     hold(checkInput),
+    hold(daeJacobianFunction),
     hold(findEliminatingSubsystem),
     hold(hungarian),
     hold(modifyByAugmentation),
@@ -18,6 +19,7 @@ daepp::interface := {
 };
 
 autoload(daepp::checkInput);
+autoload(daepp::daeJacobianFunction);
 autoload(daepp::findEliminatingSubsystem);
 autoload(daepp::hungarian);
 autoload(daepp::modifyByAugmentation);
