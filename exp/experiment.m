@@ -1,10 +1,10 @@
-function experiment(eqns, vars, y0est, yp0est, tspan)
+function experiment(eqns, vars, y0est, yp0est, tspan, method)
 
 nOrigVars = length(eqns);
 
 % Step 1. Preprocess DAEs
 fprintf('Preprocess DAEs.\n');
-[eqns, vars] = preprocessDAE(eqns, vars, 'Method', 'substitution');
+[eqns, vars] = preprocessDAE(eqns, vars, 'Method', method, 'Constants', 'zero');
 
 % Step 2. Reduce Differential Order (do nothing for this DAE because there is no higher order derivatives)
 fprintf('Reduce Differential Order.\n');
