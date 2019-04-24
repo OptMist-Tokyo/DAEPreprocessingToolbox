@@ -35,6 +35,7 @@ function varargout = preprocessDAE(eqs, vars, varargin)
 %     (ISSAC 2019).
 
 % check input
+narginchk(2, Inf);
 [eqs, vars, t] = checkInput(eqs, vars);
 
 % parse parameters
