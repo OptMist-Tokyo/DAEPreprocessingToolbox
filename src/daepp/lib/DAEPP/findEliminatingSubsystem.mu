@@ -52,5 +52,5 @@ begin
     [A, rank, det, JJ] := linalg::gaussJordan(linalg::submatrix(D, II, [j $ j = 1..n]), All);
     JJ := sort(coerce(JJ, DOM_LIST));
     
-    return(r, II, JJ);
+    [r, II, JJ];
 end_proc;

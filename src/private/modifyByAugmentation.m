@@ -3,11 +3,14 @@ function [newEqs, newVars, consts] = modifyByAugmentation(eqs, vars, p, q, r, I,
 % Modify DAE system by the augmentation method.
 %
 % Parameters:
-%     - Constants   : How represent constants in the new DAE. If Constants is
-%                     'sym' (default), the contants are represented by symbolic
-%                     objects and the relation to original varaibles is written
-%                     in the return value 'constR'. If Constants is 'zero', 0 is
-%                     substituted for all constants.
+%     - Constants   : 'sym' (default) or 'zero'
+%           Designate how represent constants which will be introduced in the
+%           augmentation method. If Constants is 'sym', the contants are
+%           represented by symbolic objects and returns a vector of introduced
+%           constants as the third return value. If Constants is 'zero', 0 will
+%           be substituted for all constants. Designating 'zero' would return
+%           a simplier DAE but may cause a failure if 0 is out of the domain of
+%           DAEs.
 
 % check inputs
 [eqs, vars, t] = checkInput(eqs, vars);

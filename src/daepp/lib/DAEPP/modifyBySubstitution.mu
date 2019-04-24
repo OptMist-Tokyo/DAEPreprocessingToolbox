@@ -1,7 +1,7 @@
 // MuPAD implementation for modifyBySubstiution.m
 
-daepp::modifyBySubstitution := proc(eqs, vars, p, q, r, II, JJ /*, t */)
-local m, n, t, vars_J, dummy, eqs_I, subseq, out;
+daepp::modifyBySubstitution := proc(eqs, vars, p, q, r, II, JJ /*, tVar */)
+local m, n, tVar, vars_J, dummy_J, circuit, S, T, vars_T, dummy_T, eqs_I, subseq, out;
 begin
     // check number of arguments
     if testargs() then
@@ -15,8 +15,8 @@ begin
     
     // check input
     if testargs() then
-        [eqs, vars, t] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
-        if args(0) = 8 && t <> args(8) then
+        [eqs, vars, tVar] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
+        if args(0) = 8 && tVar <> args(8) then
             error("Inconsistency of time variable.");
         end_if;
         
@@ -57,28 +57,49 @@ begin
         end_if;
     end;
     
-    // retrive t
+    n := nops(vars);
+    
+    // retrive tVar
     if args(0) = 7 then
-        [eqs, vars, t] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
     else
-        t := args(8);
+        tVar := args(8);
     end_if;
     
-    // prepare equations and variables
-    vars_J := [symobj::diff(vars[j], t, q[j] - p[r]) $ j in JJ];
-    dummy := [genident() $ j in JJ];
-    eqs_I := [symobj::diff(eqs[i], t, p[i] - p[r]) $ i in II];
-    subseq := [vars_J[k] = dummy[k] $ k = 1..nops(JJ)];
+    // prepare variables
+    vars_J := [symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in JJ];
+    dummy_J := [genident() $ j in JJ];
+    
+    // prepare variables to be canceled
+    circuit := append(II, r);
+    S := daepp::orderMatrix([eqs[i] $ i in circuit], vars);
+    T := select([j $ j = 1..n],
+        j -> max(S[k, j] + p[circuit[k]] $ k = 1..nops(circuit)) = q[j] && contains(JJ, j) = 0);
+    vars_T := [symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in T];
+    dummy_T := [genident() $ j in T];
+    
+    // prepare equations
+    eqs_I := [symobj::diff(eqs[i], tVar, p[i] - p[r]) $ i in II];
+    subseq := [vars_J[k] = dummy_J[k] $ k = 1..nops(JJ)] . [vars_T[k] = dummy_T[k] $ k = 1..nops(T)];
     [eqs_r, eqs_I] := map([eqs[r], eqs_I], eq -> subs(eq, subseq));
     
     // solve
-    out := solve(eqs_I, dummy, Real, IgnoreSpecialCases, IgnoreAnalyticConstraints);
+    out := solve(eqs_I, dummy_J, IgnoreSpecialCases, IgnoreAnalyticConstraints);
     if testtype(out, piecewise) then
         out := out[1];
     end_if;
     
+    if nops(out) = 0 then
+        error("Could not solve equation system. Try augmenting method.");
+    end_if;
+    
     // substitute
-    eqs[r] := simplify(subs(eqs_r, out[1]), IgnoreAnalyticConstraints);
+    eqs[r] := subs(eqs_r, out[1]);
+    eqs[r] := simplify(collect(eqs[r], dummy_T), IgnoreAnalyticConstraints);
+    
+    if has(eqs[r], dummy_T) then
+        error("Something wrong: variables did not cancel.");
+    end_if;
     
     eqs;
 end_proc;

@@ -12,6 +12,7 @@ daepp::interface := {
     hold(modifyByAugmentation),
     hold(modifyBySubstitution),
     hold(orderMatrix),
+    hold(preprocessDAE),
     hold(systemJacobian),
     null()
 };
@@ -22,6 +23,7 @@ autoload(daepp::hungarian);
 autoload(daepp::modifyByAugmentation);
 autoload(daepp::modifyBySubstitution);
 autoload(daepp::orderMatrix);
+autoload(daepp::preprocessDAE);
 autoload(daepp::systemJacobian);
 
 null();

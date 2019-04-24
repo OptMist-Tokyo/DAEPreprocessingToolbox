@@ -13,13 +13,14 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             I = 1;
             J = 1;
             
-            actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
-            syms var11(t) constvar2
-            testCase.verifyEqual(actSolution, [
+            [newEqs, newVars, consts] = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
+            syms constvar2
+            testCase.verifyEqual(newEqs, [
                 log(var1(t)) - t
-                constvar2 + var11(t)
-                log(var11(t)) - t
+                constvar2 + newVars(end)
+                log(newVars(end)) - t
             ]);
+            testCase.verifyEqual(consts, constvar2);
         end
         
         function test2(testCase)
@@ -35,12 +36,11 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             I = 1;
             J = 1;
             
-            actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
-            syms var31(t)
-            testCase.verifyEqual(actSolution, [
+            [newEqs, newVars] = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
+            testCase.verifyEqual(newEqs, [
                 log(var3(t)) - t
-                var31(t)
-                log(var31(t)) - t
+                newVars(end)
+                log(newVars(end)) - t
             ]);
         end
         
@@ -58,15 +58,17 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             I = [1, 2];
             J = [1, 2];
             
-            actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
+            [newEqs, newVars, consts] = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
             syms Dvar5t(t) Dvar6tt(t) constvar7
-            testCase.verifyEqual(actSolution, [
+            testCase.verifyEqual(newEqs, [
                 var5(t) + diff(var6(t)) - t^2
                 diff(var5(t)) - diff(var6(t), 2) - 2*t
                 Dvar5t(t) + Dvar6tt(t) - constvar7
                 Dvar5t(t) + Dvar6tt(t) - 2*t
                 Dvar5t(t) - Dvar6tt(t) - 2*t
             ]);
+            testCase.verifyEqual(newVars, [var5(t), var6(t), var7(t), Dvar5t(t), Dvar6tt(t)]);
+            testCase.verifyEqual(consts, constvar7);
         end
         
         function test4(testCase)
@@ -83,15 +85,16 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             I = [1, 2];
             J = [1, 2];
             
-            actSolution = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
+            [newEqs, newVars] = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
             syms Dvar8t(t) Dvar9tt(t)
-            testCase.verifyEqual(actSolution, [
+            testCase.verifyEqual(newEqs, [
                 var8(t) + diff(var9(t)) - t^2
                 diff(var8(t)) - diff(var9(t), 2) - 2*t
                 Dvar8t(t) + Dvar9tt(t)
                 Dvar8t(t) + Dvar9tt(t) - 2*t
                 Dvar8t(t) - Dvar9tt(t) - 2*t
             ]);
+            testCase.verifyEqual(newVars, [var8(t), var9(t), var10(t), Dvar8t(t), Dvar9tt(t)]);
         end
     end
 end

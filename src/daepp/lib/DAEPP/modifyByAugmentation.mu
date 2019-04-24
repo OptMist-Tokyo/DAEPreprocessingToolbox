@@ -1,13 +1,13 @@
 // MuPAD implementation for modifyByAugmentation.m
 
-daepp::modifyByAugmentation := proc(eqs, vars, p, q, r, II, JJ /*, t */)
-local hast, oparg, options, m, n, t, eqsIndets, genVar, vars_J, newVars_J,
+daepp::modifyByAugmentation := proc(eqs, vars, p, q, r, II, JJ /*, tVar */)
+local hast, oparg, options, m, n, tVar, eqsIndets, genVar, vars_J, newVars_J,
       circuit, S, T, vars_T, consts, eqs_I, subseq;
 begin
     // check number of arguments
     if testargs() then
         if args(0) < 7 then
-            error("At least Seven arguments expected.");
+            error("At least seven arguments expected.");
         end_if;
     end_if;
     
@@ -21,8 +21,8 @@ begin
     
     // check input
     if testargs() then
-        [eqs, vars, t] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
-        if hast && t <> args(oparg - 1) then
+        [eqs, vars, tVar] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
+        if hast && tVar <> args(oparg - 1) then
             error("Inconsistency of time variable.");
         end_if;
         
@@ -65,11 +65,11 @@ begin
     
     n := nops(vars);
     
-    // retrive t
+    // retrive tVar
     if not hast then
-        [eqs, vars, t] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
     else
-        t := args(oparg - 1);
+        tVar := args(oparg - 1);
     end_if;
     
     // procedure for naming new variables
@@ -88,7 +88,7 @@ begin
             // make new var
             newVar := DOM_IDENT(newName);
             if domtype(eval(newVar)) <> DOM_IDENT ||
-               showprop(newVar(t)) <> [] ||
+               showprop(newVar(tVar)) <> [] ||
                showprop(newVar) <> [] ||
                contains(eqsIndets, newVar) then
                 newVar := genident(newName);
@@ -98,18 +98,18 @@ begin
         end_proc;
     
     // prepare new variables
-    vars_J := [symobj::diff(vars[j], t, q[j] - p[r]) $ j in JJ];
-    newVars_J := [genVar(vars[j], q[j] - p[r], "")(t) $ j in JJ];
+    vars_J := [symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in JJ];
+    newVars_J := [genVar(vars[j], q[j] - p[r], "")(tVar) $ j in JJ];
     
     // prepare constants
     circuit := append(II, r);
     S := daepp::orderMatrix([eqs[i] $ i in circuit], vars);
     T := select([j $ j = 1..n],
-        j -> max(S[k, j] + p[circuit[k]] $ k in 1..nops(circuit)) = q[j] && contains(JJ, j) = 0);
+        j -> max(S[k, j] + p[circuit[k]] $ k = 1..nops(circuit)) = q[j] && contains(JJ, j) = 0);
     if nops(T) = 0 then
         error("Something wrong: T is empty.");
     end_if;
-    vars_T := [symobj::diff(vars[j], t, q[j] - p[r]) $ j in T];
+    vars_T := [symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in T];
     
     case options[Constants]
         of "sym" do 
@@ -119,11 +119,11 @@ begin
             consts := [0 $ nops(T)];
             break;
         otherwise
-            error("Invalid parameter of Constants.");
+            error("Invalid parameter of 'Constants'.");
     end_case;
     
     // prepare equations and variables
-    eqs_I := [symobj::diff(eqs[i], t, p[i] - p[r]) $ i in II];
+    eqs_I := [symobj::diff(eqs[i], tVar, p[i] - p[r]) $ i in II];
     
     // substitute
     subseq := [vars_J[k] = newVars_J[k] $ k = 1..nops(JJ)]

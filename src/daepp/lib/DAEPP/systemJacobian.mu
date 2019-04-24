@@ -1,7 +1,7 @@
 // MuPAD implementation for systemJacobian.m
 
-daepp::systemJacobian := proc(eqs, vars, p, q /*, t */)
-local t, m, n, D, i, J, dxJp, dummy, subseqs, backsubseqs, eq, k;
+daepp::systemJacobian := proc(eqs, vars, p, q /*, tVar */)
+local tVar, m, n, D, i, J, dxJp, dummy, subseqs, backsubseqs, eq, k;
 begin
     // check number of arguments
     if testargs() then
@@ -15,8 +15,8 @@ begin
     
     // check input
     if testargs() then
-        [eqs, vars, t] := daepp::checkInput(eqs, vars);
-        if args(0) = 5 && t <> args(5) then
+        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
+        if args(0) = 5 && tVar <> args(5) then
             error("Inconsistency of time variable.");
         end_if;
         if nops(eqs) <> nops(p) then
@@ -33,11 +33,11 @@ begin
         end_if;
     end_if;
     
-    // retrive t
+    // retrive tVar
     if args(0) = 4 then
-        [eqs, vars, t] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
     else
-        t := args(5);
+        tVar := args(5);
     end_if;
     
     [m, n] := [nops(eqs), nops(vars)];
@@ -46,7 +46,7 @@ begin
     for i from 1 to m do
         // create dummy variables
         J := [select(j $ j = 1..n, j -> q[j] >= p[i])];
-        dxJp := [symobj::diff(vars[j], t, q[j] - p[i]) $ j in J];
+        dxJp := [symobj::diff(vars[j], tVar, q[j] - p[i]) $ j in J];
         dummy := [genident() $ j in J];
         subseqs := [dxJp[k] = dummy[k] $ k = 1..nops(J)];
         backsubseqs := map(subseqs, s -> op(s, 2) = op(s, 1));

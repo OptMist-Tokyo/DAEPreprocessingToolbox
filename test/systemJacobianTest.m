@@ -7,16 +7,16 @@ classdef systemJacobianTest < matlab.unittest.TestCase
         end
         
         function test1(testCase)
-            syms xxx(t) y(t) f(t)
+            syms z(t) y(t) f(t)
             F = [
-                xxx(t)^2 + diff(xxx(t))^2 + y(t) + diff(f(t), 3)
-                diff(xxx(t)) + y(t) + diff(y(t), 5) + f(t)
+                z(t)^2 + diff(z(t))^2 + y(t) + diff(f(t), 3)
+                diff(z(t)) + y(t) + diff(y(t), 5) + f(t)
             ];
-            x = [xxx, y];
+            x = [z, y];
             p = [0, 0];
             q = [1, 5];
             actSolution = systemJacobian(F, x, p, q);
-            expSolution = [2*diff(xxx(t), t), 0; 1, 1];
+            expSolution = [2*diff(z(t), t), 0; 1, 1];
             testCase.verifyEqual(actSolution, expSolution);
         end
         

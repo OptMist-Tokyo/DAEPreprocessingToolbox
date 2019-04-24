@@ -3,7 +3,7 @@ classdef modifyBySubstitutionTest < matlab.unittest.TestCase
         function test1(testCase)
             syms y(t) z(t)
             F = [
-                log(y(t)) == t
+                log(y(t) + z(t)) == t
                 z(t) + y(t) == 0
             ];
             x = [y, z];
@@ -14,17 +14,17 @@ classdef modifyBySubstitutionTest < matlab.unittest.TestCase
             J = 1;
             actSolution = modifyBySubstitution(F, x, p, q, r, I, J);
             testCase.verifyEqual(actSolution, [
-                log(y(t)) - t
-                z(t) + exp(t)
+                log(y(t) + z(t)) - t
+                exp(t)
             ]);
         end
         
         function test2(testCase)
             syms y(t) z(t) w(t)
             F = [
-                y(t) + diff(z(t)) == t^2
+                y(t) + diff(z(t)) == t^2 + w(t)
                 diff(y(t)) - diff(z(t), 2) == 2*t
-                diff(y(t)) + diff(z(t), 2) == w(t)
+                diff(y(t)) + diff(z(t), 2) == diff(w(t))
             ];
             x = [y, z, w];
             p = [2, 1, 1];
@@ -34,9 +34,9 @@ classdef modifyBySubstitutionTest < matlab.unittest.TestCase
             J = [1, 2];
             actSolution = modifyBySubstitution(F, x, p, q, r, I, J);
             testCase.verifyEqual(actSolution, [
-                y(t) + diff(z(t)) - t^2
+                y(t) + diff(z(t)) - t^2 - w(t)
                 diff(y(t)) - diff(z(t), 2) - 2*t
-                2*t - w(t)
+                2*t
             ]);
         end
     end
