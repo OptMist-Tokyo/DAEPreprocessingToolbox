@@ -46,12 +46,10 @@ begin
         [v, ss, tt, p, q] := daepp::hungarian(S);
         
         if v = -infinity then
-            warning("Order matrix of DAE has no perfect matching.");
-            break;
+            error("Order matrix of DAE has no perfect matching.");
         end_if;
         if value <= v then
-            warning("The optimal value of the assignment problem does not decrease.");
-            break;
+            error("The optimal value of the assignment problem does not decrease.");
         end_if;
         value := v;
         

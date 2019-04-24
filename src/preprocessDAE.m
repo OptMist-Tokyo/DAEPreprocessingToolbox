@@ -50,7 +50,11 @@ table = feval(symengine, 'table', entries);
 
 % call MuPAD
 loadMuPADPackage;
-out = feval(symengine, 'daepp::preprocessDAE', eqs, vars, t, table);
+try
+    out = feval(symengine, 'daepp::preprocessDAE', eqs, vars, t, table);
+catch ME
+    throw(ME);
+end
 
 % restore return values
 varargout{1} = out(1).';
