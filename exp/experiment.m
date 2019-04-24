@@ -15,6 +15,7 @@ fprintf('Reduce Differential Order.\n');
 if ~isLowIndexDAE(eqns, vars)
     fprintf('DAE is high-index. Try index reduction.\n') % this will be printed
     [eqns, vars] = reduceDAEIndex(eqns, vars);
+    [eqns, vars] = reduceRedundancies(eqns, vars);
     
     if isLowIndexDAE(eqns, vars)
         fprintf('Index is successfully reduced.\n');
@@ -36,8 +37,7 @@ F = daeFunction(eqns, vars);
 
 
 % Step 5. Find Initial Conditions For Solvers
-opt = odeset();
-%opt = odeset('jacobian', provide_jacobian(DAEs, DAEvars));
+opt = odeset('jacobian', daeJacobianFunction(eqns, vars));
 [y0, yp0] = decic(F, 0, y0est, [], yp0est, [], opt);
 
 
