@@ -1,4 +1,10 @@
 classdef modifyBySubstitutionTest < matlab.unittest.TestCase
+    methods (Static)
+    function newEqs = modifyBySubstitution(eqs, vars, p, q, r, I, J)
+            loadMuPADPackage;
+            newEqs = feval(symengine, 'daepp::modifyBySubstitution', eqs, vars, p, q, r, I, J).';
+        end
+    end
     methods (Test)
         function test1(testCase)
             syms y(t) z(t)
@@ -12,7 +18,7 @@ classdef modifyBySubstitutionTest < matlab.unittest.TestCase
             r = 2;
             I = 1;
             J = 1;
-            actSolution = modifyBySubstitution(F, x, p, q, r, I, J);
+            actSolution = modifyBySubstitutionTest.modifyBySubstitution(F, x, p, q, r, I, J);
             testCase.verifyEqual(actSolution, [
                 log(y(t) + z(t)) - t
                 exp(t)
@@ -32,7 +38,7 @@ classdef modifyBySubstitutionTest < matlab.unittest.TestCase
             r = 3;
             I = [1, 2];
             J = [1, 2];
-            actSolution = modifyBySubstitution(F, x, p, q, r, I, J);
+            actSolution = modifyBySubstitutionTest.modifyBySubstitution(F, x, p, q, r, I, J);
             testCase.verifyEqual(actSolution, [
                 y(t) + diff(z(t)) - t^2 - w(t)
                 diff(y(t)) - diff(z(t), 2) - 2*t

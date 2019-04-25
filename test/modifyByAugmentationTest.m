@@ -1,4 +1,29 @@
 classdef modifyByAugmentationTest < matlab.unittest.TestCase
+    methods (Static)
+        function [newEqs, newVars, consts] = modifyByAugmentation(eqs, vars, p, q, r, I, J, varargin)
+            % parse parameters
+            parser = inputParser;
+            addParameter(parser, 'Constants', 'sym', @(x) any(validatestring(x, {'zero', 'sym'})));
+            parser.parse(varargin{:});
+            options = parser.Results;
+            
+            % pack options into MuPAD table
+            entries = evalin(symengine, ['Constants = "', options.Constants, '"']);
+            table = feval(symengine, 'table', entries);
+            
+            % call MuPAD
+            loadMuPADPackage;
+            out = feval(symengine, 'daepp::modifyByAugmentation', eqs, vars, p, q, r, I, J, table);
+            
+            % restore return values
+            newEqs = out(1).';
+            newVars = out(2);
+            if length(out) >= 3
+                consts = out(3);
+            end
+        end
+    end
+    
     methods (Test)
         function test1(testCase)
             syms var1(t) var2(t)
@@ -13,7 +38,7 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             I = 1;
             J = 1;
             
-            [newEqs, newVars, consts] = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
+            [newEqs, newVars, consts] = modifyByAugmentationTest.modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
             syms constvar2
             testCase.verifyEqual(newEqs, [
                 log(var1(t)) - t
@@ -36,7 +61,7 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             I = 1;
             J = 1;
             
-            [newEqs, newVars] = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
+            [newEqs, newVars] = modifyByAugmentationTest.modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
             testCase.verifyEqual(newEqs, [
                 log(var3(t)) - t
                 newVars(end)
@@ -58,7 +83,7 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             I = [1, 2];
             J = [1, 2];
             
-            [newEqs, newVars, consts] = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
+            [newEqs, newVars, consts] = modifyByAugmentationTest.modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'sym');
             syms Dvar5t(t) Dvar6tt(t) constvar7
             testCase.verifyEqual(newEqs, [
                 var5(t) + diff(var6(t)) - t^2
@@ -85,7 +110,7 @@ classdef modifyByAugmentationTest < matlab.unittest.TestCase
             I = [1, 2];
             J = [1, 2];
             
-            [newEqs, newVars] = modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
+            [newEqs, newVars] = modifyByAugmentationTest.modifyByAugmentation(F, x, p, q, r, I, J, 'Constants', 'zero');
             syms Dvar8t(t) Dvar9tt(t)
             testCase.verifyEqual(newEqs, [
                 var8(t) + diff(var9(t)) - t^2

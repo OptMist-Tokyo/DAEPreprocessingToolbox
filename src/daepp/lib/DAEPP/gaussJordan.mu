@@ -30,7 +30,6 @@ begin
     
     // make a constant matrix V
     V := float(subs(A, values));
-    warning(expr2text(V));
     if not _and(type(v) in {DOM_INT, DOM_FLOAT} $ v in V) then
         error("Some assignments are missing.");
     end_if;

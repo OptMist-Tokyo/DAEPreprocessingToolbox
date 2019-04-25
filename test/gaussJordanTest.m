@@ -33,7 +33,7 @@ classdef gaussJordanTest < matlab.unittest.TestCase
         
         function test2(testCase)
             syms y(t) z(t)
-            values = evalin(symengine, '[y(t)=1, z(t)=exp(2)]');
+            values = [y(t) == 1, z(t) == exp(2)];
             [A, rank, pivcol] = gaussJordanTest.gaussJordan([y(t) z(t); y(t) z(t)], values);
             testCase.verifyEqual(A, [y(t)/z(t) 1; 0 0]);
             testCase.verifyEqual(rank, 1);
@@ -42,14 +42,14 @@ classdef gaussJordanTest < matlab.unittest.TestCase
         
         function test3(testCase)
             syms y(t)
-            values = evalin(symengine, '[t=1, diff(y(t), t)=2, y(t)=4]');
+            values = [t == 1, diff(y(t)) == 2, y(t) == 4];
             A = [
                          t diff(y(t))     0
                          0       y(t)  y(t)
                 diff(y(t))          0 -y(t)
             ];
             [A, rank, pivcol] = gaussJordanTest.gaussJordan(A, values);
-            testCase.verifyEqual(A, [0 1 0; 0 0 1; 1 0 0]);
+            testCase.verifyEqual(A, sym([0 1 0; 0 0 1; 1 0 0]));
             testCase.verifyEqual(rank, 3);
             testCase.verifyEqual(pivcol, [2, 3, 1]);
         end

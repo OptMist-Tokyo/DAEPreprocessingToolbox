@@ -1,4 +1,9 @@
-// MuPAD implementation for findEliminatingSubsystem.m
+/*
+  Find a row r, a row subset I not containing r and a column subset J such that
+      - (C1): D(I, J) is nonsingular
+      - (C2): rank D([I r], :) = m
+      - (C3): p(r) ≦ p(i) for all i in I
+*/
 
 daepp::findEliminatingSubsystem := proc(D, p /*, values */)
 local values, m, n, Dt, A, rank, pivrow, nonpiv, circuit, i, circuitCand, pmin,
