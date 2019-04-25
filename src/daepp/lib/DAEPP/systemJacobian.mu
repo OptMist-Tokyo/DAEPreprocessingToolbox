@@ -15,7 +15,7 @@ begin
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
         if args(0) = 5 && tVar <> args(5) then
             error("Inconsistency of time variable.");
         end_if;
@@ -33,9 +33,9 @@ begin
         end_if;
     end_if;
     
-    // retrive tVar
+    // retrieve tVar
     if args(0) = 4 then
-        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
     else
         tVar := args(5);
     end_if;

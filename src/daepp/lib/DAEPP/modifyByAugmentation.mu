@@ -21,7 +21,7 @@ begin
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
         if hast && tVar <> args(oparg - 1) then
             error("Inconsistency of time variable.");
         end_if;
@@ -45,7 +45,7 @@ begin
         if nops(II) <> nops(JJ) then
             error("Inconsistency between sizes of II and JJ.");
         end_if;
-
+        
         if not (testtype(r, DOM_INT) && 1 <= r && r <= m) then
             error("r is invalid index.");
         end_if;
@@ -65,9 +65,9 @@ begin
     
     n := nops(vars);
     
-    // retrive tVar
+    // retrieve tVar
     if not hast then
-        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
     else
         tVar := args(oparg - 1);
     end_if;

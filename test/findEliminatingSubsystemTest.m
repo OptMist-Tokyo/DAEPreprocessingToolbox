@@ -1,7 +1,7 @@
 classdef findEliminatingSubsystemTest < matlab.unittest.TestCase
     methods (Test)
         function test0(testCase)
-            [r, I, J] = findEliminatingSubsystem(zeros(0, 0, 'sym'), zeros(1, 0));
+            [r, I, J] = findEliminatingSubsystem(zeros(0, 'sym'), zeros(1, 0));
             testCase.verifyEqual(r, 0);
             testCase.verifyEqual(I, zeros(1, 0));
             testCase.verifyEqual(J, zeros(1, 0));
@@ -23,10 +23,25 @@ classdef findEliminatingSubsystemTest < matlab.unittest.TestCase
                     0       0  z(t)  2*z(t)
                     0       0 -z(t) -2*z(t)
             ];
-            [r, I, J] = findEliminatingSubsystem(D, [0; 1; 0; 0]);
+            [r, I, J] = findEliminatingSubsystem(D, [0 1 0 0]);
             testCase.verifyEqual(r, 1);
             testCase.verifyEqual(I, 2);
             testCase.verifyEqual(J, 1);
+        end
+        
+        function test3(testCase)
+            syms y(t) z(t)
+            D = sym([
+                1 0 0 0 0
+                0 1 0 0 0
+                1 1 0 0 0
+                0 0 1 0 0
+                0 0 1 0 0
+            ]);
+            [r, I, J] = findEliminatingSubsystem(D, [0 0 0 0 0]);
+            testCase.verifyEqual(r, 4);
+            testCase.verifyEqual(I, 5);
+            testCase.verifyEqual(J, 3);
         end
     end
 end

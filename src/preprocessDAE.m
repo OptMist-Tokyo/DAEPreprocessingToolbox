@@ -36,7 +36,7 @@ function varargout = preprocessDAE(eqs, vars, varargin)
 
 % check input
 narginchk(2, Inf);
-[eqs, vars, t] = checkInput(eqs, vars);
+[eqs, vars, t] = checkDAEInput(eqs, vars);
 
 % parse parameters
 parser = inputParser;

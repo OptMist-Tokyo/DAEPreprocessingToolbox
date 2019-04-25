@@ -10,21 +10,21 @@ begin
         end_if;
     end_if;
     
-    // convert to lists and retrive tVar
+    // convert to lists and retrieve tVar
     [eqs, vars] := map([eqs, vars], symobj::tolist);
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
         S := daepp::orderMatrix(eqs, vars);
         if not _and(v <= 1 $ v in S) then
             error("DAE has higher order derivatives.");
         end_if;
     end_if;
 
-    // retrive tVar
+    // retrieve tVar
     if args(0) = 2 then
-        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
     else
         tVar := args(3);
     end_if;

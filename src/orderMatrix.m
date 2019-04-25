@@ -11,7 +11,7 @@ function S = orderMatrix(eqs, vars)
 
 % check input
 narginchk(2, 2);
-[eqs, vars, ~] = checkInput(eqs, vars);
+[eqs, vars, ~] = checkDAEInput(eqs, vars);
 
 % call MuPAD
 loadMuPADPackage;

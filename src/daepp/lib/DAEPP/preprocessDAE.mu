@@ -23,15 +23,15 @@ begin
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
         if hast && tVar <> args(oparg - 1) then
             error("Inconsistency of time variable.");
         end_if;
     end_if;
     
-    // retrive tVar
+    // retrieve tVar
     if not hast then
-        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
     else
         tVar := args(oparg - 1);
     end_if;

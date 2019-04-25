@@ -4,7 +4,7 @@ function newEqs = modifyBySubstitution(eqs, vars, p, q, r, I, J)
 
 % check inputs
 narginchk(7, 7);
-[eqs, vars, t] = checkInput(eqs, vars);
+[eqs, vars, t] = checkDAEInput(eqs, vars);
 validateattributes(p, {'numeric'}, {'vector', 'integer', 'nonnegative'}, mfilename, 'p', 3);
 validateattributes(q, {'numeric'}, {'vector', 'integer', 'nonnegative'}, mfilename, 'q', 4);
 m = length(eqs);

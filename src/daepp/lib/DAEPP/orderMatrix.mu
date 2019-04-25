@@ -15,7 +15,7 @@ begin
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
     end_if;
     
     [m, n] := [nops(eqs), nops(vars)];
@@ -23,7 +23,7 @@ begin
     // extract subexpressions with 'diff' operator
     sub := map(eqs, eq -> misc::subExpressions(eq, "diff"));
     
-    return(matrix(m, n, proc(i, j)
+    matrix(m, n, proc(i, j)
         local orders;
         begin
             orders := map(select(sub[i], v -> op(v, 1) = vars[j]), v -> nops(v) - 1);
@@ -33,5 +33,4 @@ begin
                 if has(eqs[i], vars[j]) then 0 else -infinity end_if;
             end_if;
         end_proc)
-    );
 end_proc;

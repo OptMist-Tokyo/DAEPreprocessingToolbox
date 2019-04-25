@@ -9,7 +9,7 @@ function jac = daeJacobianFunction(eqs, vars, varargin)
 
 % check input
 narginchk(2, Inf);
-[eqs, vars, t] = checkInput(eqs, vars);
+[eqs, vars, t] = checkDAEInput(eqs, vars);
 params = varargin;
 cellfun(@(p) validateattributes(p, {'sym'}, {'scalar'}, mfilename), params);
 

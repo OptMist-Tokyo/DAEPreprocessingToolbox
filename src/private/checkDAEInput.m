@@ -1,4 +1,4 @@
-function [newEqs, newVars, t] = checkInput(eqs, vars)
+function [newEqs, newVars, t] = checkDAEInput(eqs, vars)
 
 % Check DAE Input.
 
@@ -9,7 +9,11 @@ validateattributes(vars, {'sym'}, {'vector'}, mfilename, 'vars', 2);
 
 % call MuPAD
 loadMuPADPackage;
-out = feval(symengine, 'daepp::checkInput', eqs, vars);
+try
+    out = feval(symengine, 'daepp::checkDAEInput', eqs, vars);
+catch ME
+    throw(ME);
+end
 
 % restore return values
 newEqs = out(1).';

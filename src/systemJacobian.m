@@ -10,7 +10,7 @@ function D = systemJacobian(eqs, vars, p, q)
 
 % check input
 narginchk(4, 4);
-[eqs, vars, t] = checkInput(eqs, vars);
+[eqs, vars, t] = checkDAEInput(eqs, vars);
 m = length(eqs);
 n = length(vars);
 validateattributes(p, {'numeric'}, {'vector', 'integer', 'nonnegative'}, mfilename, 'p', 3);
