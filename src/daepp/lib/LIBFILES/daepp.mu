@@ -11,6 +11,7 @@ daepp::interface := {
     hold(daeJacobianFunction),
     hold(findEliminatingSubsystem),
     hold(gaussJordan),
+    hold(greedyPivoting),
     hold(hungarian),
     hold(modifyByAugmentation),
     hold(modifyBySubstitution),
@@ -25,6 +26,7 @@ autoload(daepp::checkValuesInput);
 autoload(daepp::daeJacobianFunction);
 autoload(daepp::findEliminatingSubsystem);
 autoload(daepp::gaussJordan);
+autoload(daepp::greedyPivoting);
 autoload(daepp::hungarian);
 autoload(daepp::modifyByAugmentation);
 autoload(daepp::modifyBySubstitution);

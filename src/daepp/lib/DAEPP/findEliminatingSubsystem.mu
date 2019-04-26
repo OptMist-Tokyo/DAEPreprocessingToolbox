@@ -3,11 +3,13 @@
       - (C1): D(I, J) is nonsingular
       - (C2): rank D([I r], :) = m
       - (C3): p(r) ≦ p(i) for all i in I
+  
+  V is used to avoid using near-zero pivots.
 */
 
-daepp::findEliminatingSubsystem := proc(D, p /*, values */)
-local values, m, n, Dt, A, rank, pivrow, nonpiv, circuit, i, circuitCand, pmin,
-      rcand, r, II, subD, JJ;
+daepp::findEliminatingSubsystem := proc(D, p /*, V */)
+local V, m, n, A, rank, pivrow, nonpiv, circuit, i, circuitCand,
+      circuitCandSize, c, maxAbsDet, tmpr, tmpII, pmin, rcand, r, II, subD, JJ;
 begin
     // check number of arguments
     if args(0) < 2 || 3 < args(0) then
@@ -16,11 +18,7 @@ begin
     
     // convert to matrix and list
     [D, p] := [symobj::tomatrix(D), symobj::tolist(p)];
-    
-    // retrieve values
-    if args(0) = 3 then
-        values := args(3);
-    end_if;
+    warining(expr2text(D));
     
     // check input
     if testargs() then
@@ -30,16 +28,41 @@ begin
         if not _and((testtype(pi, DOM_INT) && pi >= 0) $ pi in p) then
             error("Entries in p are expected to be nonnegative integers.");
         end_if;
-        if args(0) = 3 then
-            checkValuesInput(values);
+    end_if;
+    
+    // retrieve V
+    if args(0) = 3 then
+        V := args(3);
+        if testargs() then
+            if not _and(testtype(v, Dom::Real) $ v in V) then
+                error("Expected V not contains symbols.");
+            end_if;
         end_if;
     end_if;
     
+    /*
+    // make a constant matrix V
+    if args(0) = 3 then
+        values := args(3);
+        if testargs() then
+            values := daepp::checkValuesInput(values);
+        end_if;
+        
+        V := float(subs(D, values));
+        if not _and(testtype(v, Dom::Real) $ v in V) then
+            error("Some assignments are missing.");
+        end_if;
+    end_if;
+    */
+    
     [m, n] := linalg::matdim(D);
     
-    // row operations
-    Dt := transpose(D);
-    [A, rank, pivrow] := if args(0) = 2 then daepp::gaussJordan(Dt) else daepp::gaussJordan(Dt, values) end_if;
+    // column operations
+    if args(0) = 2 then
+        [A, rank, pivrow] := daepp::gaussJordan(transpose(D));
+    else
+        [A, rank, pivrow] := daepp::gaussJordan(transpose(D), transpose(V));
+    end_if;
     A := transpose(A);
     
     // the case where D is nonsingular
@@ -47,28 +70,56 @@ begin
         return([0, [], []]);
     end_if;
     
-    // find a circuit II union {r}
+    // find circuit candidates
     nonpiv := {i $ i = 1..m} minus {i $ i in pivrow};
-    circuit := {i $ i = 1..m};
+    circuitCand := {};
+    circuitCandSize := m;
     for i in nonpiv do
-        circuitCand := {map(
+        c := {map(
             select(j $ j = 1..n, j -> not linalg::zeroTest(expr(A[i, j]))),
             j -> pivrow[j]
         )} union {i};
-        if nops(circuitCand) < nops(circuit) then
-            circuit := circuitCand;
+        if nops(c) < circuitCandSize then
+            circuitCand := {c};
+            circuitCandSize := nops(c);
+        elif nops(c) = circuitCandSize then
+            circuitCand := circuitCand union {c};
         end_if;
     end_for;
     
-    // separate r from circuit
-    pmin := min(p[i] $ i in circuit);
-    rcand := select(circuit, i -> p[i] = pmin);
-    r := rcand[1]; // TODO
-    II := sort(coerce(circuit minus {r}, DOM_LIST));
+    if args(0) = 2 then
+        // separate r from circuit
+        circuit := circuitCand[1];
+        pmin := min(p[i] $ i in circuit);
+        rcand := select(circuit, i -> p[i] = pmin);
+        r := rcand[1];
+        II := sort(coerce(circuit minus {r}, DOM_LIST))
+    else
+        // find the best circuit in terms that I has the largest absolute value of the determinant
+        maxAbsDet := -1;
+        for circuit in circuitCand do
+            pmin := min(p[i] $ i in circuit);
+            rcand := select(circuit, i -> p[i] = pmin);
+            for tmpr in rcand do
+                tmpII := coerce(circuit minus {tmpr}, DOM_LIST);
+                absDet := daepp::greedyPivoting(linalg::submatrix(V, tmpII, [j $ j = 1..n]))[3];
+                if absDet > maxAbsDet then
+                    maxAbsDet := absDet;
+                    r := tmpr;
+                    II := tmpII;
+                end_if;
+            end_for;
+        end_for;
+        II := sort(coerce(II, DOM_LIST));
+    end_if;
     
     // determine JJ
     subD := linalg::submatrix(D, II, [j $ j = 1..n]);
-    [A, rank, JJ] := if args(0) = 2 then daepp::gaussJordan(subD) else daepp::gaussJordan(subD, values) end_if;
+    if args(0) = 2 then
+        JJ := daepp::gaussJordan(subD)[3];
+    else
+        JJ := daepp::gaussJordan(subD, linalg::submatrix(V, II, [j $ j = 1..n]))[3];
+    end_if;
     JJ := sort(JJ);
     
     [r, II, JJ];

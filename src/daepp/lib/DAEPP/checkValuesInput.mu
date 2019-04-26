@@ -1,5 +1,9 @@
-// Check whether values is in the form
-// [y(t) = 0.5, diff(y(t), t) = 0.2, g = 0.8, ...]
+/*
+  Check whether values is in the form
+  [y(t) = 0.5, diff(y(t), t) = 0.2, g = 0.8, ...]
+  or
+  table([y(t) = 0.5, diff(y(t), t) = 0.2, g = 0.8, ...])
+*/
 
 daepp::checkValuesInput := proc(values)
 local L, R, isValidFunc, tVar;
@@ -9,21 +13,26 @@ begin
         error("One argument expected.");
     end_if;
     
-    // convert to list
-    values := symobj::tolist(values);
-    
     // format check
-    if not _and(type(v) = "_equal" $ v in values) then
-        error("Equations expected.");
+    if not testtype(values, DOM_TABLE) then
+        values := symobj::tolist(values);
+        if not _and(type(v) = "_equal" $ v in values) then
+            error("Equations expected.");
+        end_if;
+        
+        // check LHS
+        L := map(values, lhs);
+        if nops(L) <> nops({op(L)}) then
+            error("Duplicated variables in left hand sides.");
+        end_if;
     end_if;
     
-    L := map(values, lhs);
-    R := map(values, rhs);
+    // convert to table
+    values := table(values);
+    L := lhs(values);
+    R := rhs(values);
     
-    if nops(L) <> nops({op(L)}) then
-        error("Duplicated variables in left hand sides.");
-    end_if;
-    
+    // check LHS
     isValidFunc := f ->
         type(f) = "function" &&
         type(op(f, 0)) in {DOM_IDENT, "index"} &&
@@ -39,6 +48,7 @@ begin
         error("Invalid right hand side.");
     end_if;
     
+    // check RHS
     if not _and(testtype(r, Dom::Real) $ r in R) then
         error("Real values expected in right hand sides.");
     end_if;
