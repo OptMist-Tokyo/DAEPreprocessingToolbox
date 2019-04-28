@@ -13,7 +13,7 @@ classdef systemJacobianTest < matlab.unittest.TestCase
                 diff(z(t)) + y(t) + diff(y(t), 5) + f(t)
             ];
             x = [z, y];
-            actSolution = systemJacobian(F, x, p, q);
+            actSolution = systemJacobian(F, x);
             expSolution = [2*diff(z(t), t), 0; 1, 1];
             testCase.verifyEqual(actSolution, expSolution);
         end
@@ -25,7 +25,7 @@ classdef systemJacobianTest < matlab.unittest.TestCase
                 y(s)
             ];
             x = [Dys, y];
-            actSolution = systemJacobian(F, x, p, q);
+            actSolution = systemJacobian(F, x);
             expSolution = sym([1 1; 0 1]);
             testCase.verifyEqual(actSolution, expSolution);
         end
