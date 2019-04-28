@@ -76,10 +76,10 @@ catch ME
 end
 
 % restore return values
-varargout{1} = out(1).';
-varargout{2} = out(2);
-varargout{3} = double(out(3));
+varargout{1} = out(1).';       % newEqs
+varargout{2} = out(2);         % newVars
+varargout{3} = double(out(3)); % degreeOfFreedom
 
 if strcmp(options.Constants, "sym")
-    varargout{4} = out(4);
+    varargout{4} = out(4);     % constants
 end

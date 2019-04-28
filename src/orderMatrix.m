@@ -15,4 +15,8 @@ narginchk(2, 2);
 
 % call MuPAD
 loadMuPADPackage;
-S = double(feval(symengine, 'daepp::orderMatrix', eqs, vars));
+try
+    S = double(feval(symengine, 'daepp::orderMatrix', eqs, vars));
+catch ME
+    throw(ME);
+end

@@ -15,7 +15,11 @@ cellfun(@(p) validateattributes(p, {'sym'}, {'scalar'}, mfilename), params);
 
 % call MuPAD
 loadMuPADPackage;
-out = feval(symengine, 'daepp::daeJacobianFunction', eqs, vars, t);
+try
+    out = feval(symengine, 'daepp::daeJacobianFunction', eqs, vars, t);
+catch ME
+    throw(ME);
+end
 
 % get return values
 J = out(1);

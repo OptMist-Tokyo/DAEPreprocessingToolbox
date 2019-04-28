@@ -1,8 +1,8 @@
 // MuPAD implementation for preprocessDAE.m
 
 daepp::preprocessDAE := proc(eqs, vars)
-local options, tVar, point, tTmp, dof, consts, S, v, ss, tt, p, q,
-      D, r, II, JJ, newConsts;
+local options, tVar, point, tTmp, dof, consts, S, v, ss, tt, p, q, D, r, II, JJ,
+      newConsts;
 begin
     // check number of arguments
     if testargs() then
@@ -82,13 +82,15 @@ begin
             of "augmentation" do
                 case options[Constants]
                     of "sym" do
-                        [eqs, vars, newConsts]
-                            := daepp::modifyByAugmentation(eqs, vars, p, q, r, II, JJ, tVar, Constants = "sym");
+                        [eqs, vars, newConsts] := daepp::modifyByAugmentation(
+                            eqs, vars, p, q, r, II, JJ, tVar, Constants = "sym"
+                        );
                         consts := consts . newConsts;
                         break;
                     of "zero" do
-                        [eqs, vars]
-                            := daepp::modifyByAugmentation(eqs, vars, p, q, r, II, JJ, tVar, Constants = "zero"); 
+                        [eqs, vars] := daepp::modifyByAugmentation(
+                            eqs, vars, p, q, r, II, JJ, tVar, Constants = "zero"
+                        ); 
                         break;
                     otherwise
                         error("Invalid parameter of 'Constants'.");

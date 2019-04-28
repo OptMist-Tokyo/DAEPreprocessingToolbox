@@ -1,7 +1,7 @@
 // MuPAD implementation for daeJacobianFunction.m
 
 daepp::daeJacobianFunction := proc(eqs, vars /*, tVar */)
-local tVar, S, n, YP, Y, J, JP;
+local tVar, n, YP, Y, J, JP;
 begin
     // check number of arguments
     if testargs() then
@@ -16,8 +16,10 @@ begin
     // check input
     if testargs() then
         [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
-        S := daepp::orderMatrix(eqs, vars);
-        if not _and(v <= 1 $ v in S) then
+        if args(0) = 3 && tVar <> args(3) then
+            error("Inconsistency of time variable.");
+        end_if;
+        if not _and(v <= 1 $ v in daepp::orderMatrix(eqs, vars)) then
             error("DAE has higher order derivatives.");
         end_if;
     end_if;

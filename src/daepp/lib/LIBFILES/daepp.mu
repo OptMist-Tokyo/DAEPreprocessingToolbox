@@ -9,6 +9,7 @@ daepp::interface := {
     hold(checkDAEInput),
     hold(checkPointInput),
     hold(daeJacobianFunction),
+    hold(extractVariableValue),
     hold(findEliminatingSubsystem),
     hold(gaussJordan),
     hold(greedyPivoting),
@@ -24,6 +25,7 @@ daepp::interface := {
 autoload(daepp::checkDAEInput);
 autoload(daepp::checkPointInput);
 autoload(daepp::daeJacobianFunction);
+autoload(daepp::extractVariableValue);
 autoload(daepp::findEliminatingSubsystem);
 autoload(daepp::gaussJordan);
 autoload(daepp::greedyPivoting);

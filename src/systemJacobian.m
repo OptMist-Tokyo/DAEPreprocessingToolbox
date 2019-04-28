@@ -20,4 +20,8 @@ assert(n == length(q), 'Inconsistency between sizes of vars and q.');
 
 % call MuPAD
 loadMuPADPackage;
-D = feval(symengine, 'daepp::systemJacobian', eqs, vars, p, q, t);
+try
+    D = feval(symengine, 'daepp::systemJacobian', eqs, vars, p, q, t);
+catch ME
+    throw(ME);
+end

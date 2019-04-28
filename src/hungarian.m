@@ -29,7 +29,11 @@ assert(isinteger(M) || all(all(M ~= Inf(class(M)))), 'Expected M not to contain 
 
 % call MuPAD
 loadMuPADPackage;
-out = feval(symengine, 'daepp::hungarian', M);
+try
+    out = feval(symengine, 'daepp::hungarian', M);
+catch ME
+    throw(ME);
+end
 
 % restore return values
 optval = double(out(1));

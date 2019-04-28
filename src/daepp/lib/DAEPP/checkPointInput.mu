@@ -34,7 +34,6 @@ begin
             end_if;
         end_if;
         
-        point := table(point);
         pointKeys := lhs(point);
         pointValues := rhs(point);
     else
@@ -74,5 +73,5 @@ begin
     end_if;
     
     // return
-    zip(pointKeys, pointValues, (l, r) -> l = float(r));
+    table(zip(pointKeys, pointValues, (l, r) -> l = float(r)));
 end_proc;
