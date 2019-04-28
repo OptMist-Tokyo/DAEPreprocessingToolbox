@@ -26,23 +26,27 @@ classdef preprocessDAETest < matlab.unittest.TestCase
         end
         
         function roboticArm(testCase)
-            [eqs, vars] = problem.roboticArm;
+            [eqs, vars, pointKeys, pointValues] = problem.roboticArm;
             [~, ~, value] = preprocessDAE(eqs, vars, 'Method', 'substitution');
+            testCase.verifyEqual(value, 0);
+            [~, ~, value] = preprocessDAE(eqs, vars, pointKeys, pointValues, 'Method', 'substitution');
             testCase.verifyEqual(value, 0);
             [~, ~, value] = preprocessDAE(eqs, vars, 'Method', 'augmentation');
             testCase.verifyEqual(value, 0);
         end
         
         function transistorAmplifier(testCase)
-            [eqs, vars] = problem.transistorAmplifier;
+            [eqs, vars, pointKeys, pointValues] = problem.transistorAmplifier;
             [~, ~, value] = preprocessDAE(eqs, vars, 'Method', 'substitution');
+            testCase.verifyEqual(value, 5);
+            [~, ~, value] = preprocessDAE(eqs, vars, pointKeys, pointValues, 'Method', 'substitution');
             testCase.verifyEqual(value, 5);
             [~, ~, value] = preprocessDAE(eqs, vars, 'Method', 'augmentation');
             testCase.verifyEqual(value, 5);
         end
         
         function ringModulator(testCase)
-            [eqs, vars] = problem.ringModulator;
+            [eqs, vars, pointKeys, pointValues] = problem.ringModulator;
             [~, ~, value] = preprocessDAE(eqs, vars, 'Method', 'augmentation');
             testCase.verifyEqual(value, 10);
         end
