@@ -40,21 +40,6 @@ begin
         end_if;
     end_if;
     
-    /*
-    // make a constant matrix V
-    if args(0) = 3 then
-        values := args(3);
-        if testargs() then
-            values := daepp::checkValuesInput(values);
-        end_if;
-        
-        V := float(subs(D, values));
-        if not _and(testtype(v, Dom::Real) $ v in V) then
-            error("Some assignments are missing.");
-        end_if;
-    end_if;
-    */
-    
     [m, n] := linalg::matdim(D);
     
     // column operations
@@ -115,6 +100,7 @@ begin
     
     // determine JJ
     subD := linalg::submatrix(D, II, [j $ j = 1..n]);
+    
     if args(0) = 2 then
         JJ := daepp::gaussJordan(subD)[3];
     else

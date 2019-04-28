@@ -5,7 +5,7 @@
       newA : eliminated matrix
       rank : rank of matrix
       pivcol : the list of column indices such that pivcol[i] is the i-th pivot
-               for all i, that is, the pivcol[i]-th column has 1 for the i-th
+               for all i; that is, the pivcol[i]-th column has 1 for the i-th
                row and 0 for others.
   
   V is used to avoid using near-zero pivots.
@@ -42,15 +42,10 @@ begin
     [m, n] := linalg::matdim(A);
     
     // permute A according to p, q
-    newA := matrix(m, n);
-    for i from 1 to m do
-        for j from 1 to n do
-            newA[p[i], q[j]] := A[i, j];
-        end_for;
-    end_for;
+    A := matrix(m, n, (i, j) -> A[p[i], q[j]]);
     
     // elimination on permuted A
-    [A, rank, pivcol] := linalg::gaussJordan(newA, All)[[1, 2, 4]];
+    [A, rank, pivcol] := linalg::gaussJordan(A, All)[[1, 2, 4]];
     pivcol := sort(coerce(pivcol, DOM_LIST));
     
     // permute back the colums of A

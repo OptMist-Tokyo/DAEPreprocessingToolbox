@@ -7,7 +7,7 @@ daepp::info := "Library for DAE preprocessing";
 
 daepp::interface := {
     hold(checkDAEInput),
-    hold(checkValuesInput),
+    hold(checkPointInput),
     hold(daeJacobianFunction),
     hold(findEliminatingSubsystem),
     hold(gaussJordan),
@@ -22,7 +22,7 @@ daepp::interface := {
 };
 
 autoload(daepp::checkDAEInput);
-autoload(daepp::checkValuesInput);
+autoload(daepp::checkPointInput);
 autoload(daepp::daeJacobianFunction);
 autoload(daepp::findEliminatingSubsystem);
 autoload(daepp::gaussJordan);

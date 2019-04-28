@@ -1,6 +1,6 @@
 function [newEqs, newVars, t] = checkDAEInput(eqs, vars)
 
-% Check DAE Input.
+% Check DAE input.
 
 % check input
 narginchk(2, 2);

@@ -1,7 +1,8 @@
 // MuPAD implementation for preprocessDAE.m
 
-daepp::preprocessDAE := proc(eqs, vars /*, tVar */)
-local tVar, hast, oparg, options, value, consts, S, v, ss, tt, p, q, D, r, II, JJ, newConsts;
+daepp::preprocessDAE := proc(eqs, vars)
+local options, tVar, point, tTmp, dof, consts, S, v, ss, tt, p, q,
+      D, r, II, JJ, newConsts;
 begin
     // check number of arguments
     if testargs() then
@@ -14,29 +15,33 @@ begin
     [eqs, vars] := map([eqs, vars], symobj::tolist);
     
     // get options
-    hast := is(args(0) > 2 && not testtype(args(3), table));
-    oparg := if hast then 4 else 3 end_if;
-    options := prog::getOptions(oparg, [args()], table(
+    options := prog::getOptions(3, [args()], table(
         Method = "augmentation",
-        Constants = "sym"
+        Constants = "sym",
+        TimeVariable = NIL,
+        Point = NIL
     ), TRUE)[1];
+    
+    tVar := options[TimeVariable];
+    point := options[Point];
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
-        if hast && tVar <> args(oparg - 1) then
+        [eqs, vars, tTmp] := daepp::checkDAEInput(eqs, vars);
+        if not tVar in {NIL, tTmp} then
             error("Inconsistency of time variable.");
+        end_if;
+        if point <> NIL then
+            point := daepp::checkPointInput(point);
         end_if;
     end_if;
     
     // retrieve tVar
-    if not hast then
-        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
-    else
-        tVar := args(oparg - 1);
+    if tVar = NIL then
+        tVar := daepp::checkDAEInput(eqs, vars)[3];
     end_if;
     
-    value := infinity;
+    dof := infinity;
     consts := [];
     
     // main loop
@@ -48,18 +53,26 @@ begin
         if v = -infinity then
             error("Order matrix of DAE has no perfect matching.");
         end_if;
-        if value <= v then
+        if dof <= v then
             error("The optimal value of the assignment problem does not decrease.");
         end_if;
-        value := v;
+        dof := v;
         
         // Phase 2: Check the Nonsingularity of System Jacobian
         D := daepp::systemJacobian(eqs, vars, p, q, tVar);
-        [r, II, JJ] := daepp::findEliminatingSubsystem(D, p);
+        if point = NIL then
+            [r, II, JJ] := daepp::findEliminatingSubsystem(D, p);
+        else
+            V := float(subs(D, point));
+            if not _and(testtype(v, Dom::Real) $ v in V) then
+                error("Some assignments are missing.");
+            end_if;
+            [r, II, JJ] := daepp::findEliminatingSubsystem(D, p, V);
+        end_if;
+        
         if r = 0 then
             break;
         end_if;
-        
         
         // Phase 3: Modify DAE
         case options[Method]
@@ -88,8 +101,8 @@ begin
     
     // return
     case options[Constants]
-        of "sym" do [eqs, vars, value, consts]; break;
-        of "zero" do [eqs, vars, value]; break;
+        of "sym" do [eqs, vars, dof, consts]; break;
+        of "zero" do [eqs, vars, dof]; break;
         otherwise error("Invalid parameter of 'Constants'.");
     end_case;
 end_proc;
