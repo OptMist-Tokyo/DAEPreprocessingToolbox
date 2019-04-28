@@ -63,10 +63,7 @@ begin
         if point = NIL then
             [r, II, JJ] := daepp::findEliminatingSubsystem(D, p);
         else
-            V := float(subs(D, point));
-            if not _and(testtype(v, Dom::Real) $ v in V) then
-                error("Some assignments are missing.");
-            end_if;
+            V := daepp::substitutePoint(D, point);
             [r, II, JJ] := daepp::findEliminatingSubsystem(D, p, V);
         end_if;
         
@@ -77,7 +74,9 @@ begin
         // Phase 3: Modify DAE
         case options[Method]
             of "substitution" do 
-                eqs := daepp::modifyBySubstitution(eqs, vars, p, q, r, II, JJ, tVar);
+                eqs := daepp::modifyBySubstitution(
+                    eqs, vars, p, q, r, II, JJ, TimeVariable = tVar, Point = point
+                );
                 break;
             of "augmentation" do
                 case options[Constants]

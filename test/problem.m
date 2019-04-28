@@ -12,7 +12,7 @@ classdef problem
             vars = [y, z, T];
         end
         
-        function [eqs, vars] = modifiedPendulum
+        function [eqs, vars, pointKeys, pointValues] = modifiedPendulum
             syms x1(t) x2(t) x3(t) x4(t) x5(t)
             syms g positive
             
@@ -24,6 +24,8 @@ classdef problem
                 diff(x2(t))*sin(x3(t)) + x2(t)*diff(x3(t))*cos(x3(t)) - x5(t)
             ];
             vars = [x1 x2 x3 x4 x5];
+            pointKeys = [x1, x2, x3, x4, x5, diff(x1), diff(x2), diff(x3), diff(x4), diff(x5)];
+            pointValues = [0.5, 8.5311195044981, -3.03990380183, 0, 0, 0, 0, 0, -4.2435244785437, -2.45];
         end
         
         function [eqs, vars] = roboticArm
