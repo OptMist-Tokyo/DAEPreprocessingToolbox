@@ -4,9 +4,7 @@ nOrigVars = length(eqns);
 
 % Step 1. Preprocess DAEs
 fprintf('Preprocess DAEs.\n');
-pretty(eqns);
 [eqns, vars] = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'zero');
-pretty(eqns);
 
 % Step 2. Reduce Differential Order (do nothing for this DAE because there is no higher order derivatives)
 fprintf('Reduce Differential Order.\n');
