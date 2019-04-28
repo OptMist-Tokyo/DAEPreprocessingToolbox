@@ -18,6 +18,7 @@ daepp::interface := {
     hold(modifyBySubstitution),
     hold(orderMatrix),
     hold(preprocessDAE),
+    hold(substitutePoint),
     hold(systemJacobian),
     null()
 };
@@ -34,6 +35,7 @@ autoload(daepp::modifyByAugmentation);
 autoload(daepp::modifyBySubstitution);
 autoload(daepp::orderMatrix);
 autoload(daepp::preprocessDAE);
+autoload(daepp::substitutePoint);
 autoload(daepp::systemJacobian);
 
 null();

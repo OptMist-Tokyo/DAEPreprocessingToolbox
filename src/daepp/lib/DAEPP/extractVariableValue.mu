@@ -33,7 +33,7 @@ begin
     // check if point contains all vars and its derivaitves
     missing := select(vars . varsp, var -> not contains(point, var));
     if nops(missing) <> 0 then
-        error("Values of the following variables are missing : " . expr2text(var $ var in missing));
+        error("Point values of the following variables are missing: " . expr2text(var $ var in missing));
     end_if;
     
     // get y and yp

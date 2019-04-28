@@ -16,8 +16,10 @@ classdef preprocessDAETest < matlab.unittest.TestCase
         end
         
         function modifiedPendulum(testCase)
-            [eqs, vars] = problem.modifiedPendulum;
+            [eqs, vars, pointKeys, pointValues] = problem.modifiedPendulum;
             [~, ~, value] = preprocessDAE(eqs, vars, 'Method', 'substitution');
+            testCase.verifyEqual(value, 2);
+            [~, ~, value] = preprocessDAE(eqs, vars, pointKeys, pointValues, 'Method', 'substitution');
             testCase.verifyEqual(value, 2);
             [~, ~, value] = preprocessDAE(eqs, vars, 'Method', 'augmentation');
             testCase.verifyEqual(value, 2);

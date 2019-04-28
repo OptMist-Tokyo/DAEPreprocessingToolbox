@@ -1,7 +1,9 @@
 // MuPAD implementation for modifyBySubstiution.m
 
-daepp::modifyBySubstitution := proc(eqs, vars, p, q, r, II, JJ /*, tVar */)
-local m, n, tVar, vars_J, dummy_J, circuit, S, T, vars_T, dummy_T, eqs_I, subseq, out;
+daepp::modifyBySubstitution := proc(eqs, vars, p, q, r, II, JJ)
+local m, n, tVar, point, tTmp, vars_J, dummy_J, circuit, S, T, vars_T, dummy_T,
+      eqs_I, subseq, solutions, sol, s, backsubseq, lhsValue, rhsValue, err,
+      minerror, bestsol;
 begin
     // check number of arguments
     if testargs() then
@@ -12,12 +14,20 @@ begin
     
     // convert to lists
     [eqs, vars, p, q, II, JJ] := map([eqs, vars, p, q, II, JJ], symobj::tolist);
+
+    // get options
+    options := prog::getOptions(8, [args()], table(TimeVariable = NIL, Point = NIL), TRUE)[1];
+    tVar := options[TimeVariable];
+    point := options[Point];
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
-        if args(0) = 8 && tVar <> args(8) then
+        [eqs, vars, tTmp] := daepp::checkDAEInput(eqs, vars);
+        if not tVar in {NIL, tTmp} then
             error("Inconsistency of time variable.");
+        end_if;
+        if point <> NIL then
+            point := daepp::checkPointInput(point);
         end_if;
         
         m := nops(eqs);
@@ -60,10 +70,8 @@ begin
     n := nops(vars);
     
     // retrieve tVar
-    if args(0) = 7 then
-        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
-    else
-        tVar := args(8);
+    if tVar = NIL then
+        tVar := daepp::checkDAEInput(eqs, vars)[3];
     end_if;
     
     // prepare variables
@@ -84,17 +92,41 @@ begin
     [eqs_r, eqs_I] := map([eqs[r], eqs_I], eq -> subs(eq, subseq));
     
     // solve
-    out := solve(eqs_I, dummy_J, IgnoreSpecialCases, IgnoreAnalyticConstraints);
-    if testtype(out, piecewise) then
-        out := out[1];
+    solutions := solve(eqs_I, dummy_J, IgnoreSpecialCases, IgnoreAnalyticConstraints);
+    if testtype(solutions, piecewise) then
+        solutions := solutions[1];
     end_if;
     
-    if nops(out) = 0 then
+    if nops(solutions) = 0 then
         error("Could not solve equation system. Try augmenting method.");
+    elif nops(solutions) > 1 then
+        if point <> NIL then
+            // try to find a solution corresponding to point
+            backsubseq := [dummy_J[k] = vars_J[k] $ k = 1..nops(JJ)] . [dummy_T[k] = vars_T[k] $ k = 1..nops(T)];
+            minerror := infinity;
+            for sol in solutions do
+                s := subs(sol, backsubseq);
+                lhsValue := eval(daepp::substitutePoint(lhs(s), point));
+                rhsValue := eval(daepp::substitutePoint(rhs(s), point));
+                err := norm(matrix(lhsValue) - matrix(rhsValue));
+                if err < minerror then
+                    minerror := err;
+                    bestsol := sol;
+                end_if;
+            end_for;
+            
+            solutions := [bestsol];
+        else
+            warning(
+                  "Multiple solutions obtained and selected one of them. This may "
+                . "shrink the domain of the resulting DAE. Specify initial point to "
+                . "choose the appropriate solution."
+            );
+        end_if;
     end_if;
     
     // substitute
-    eqs[r] := subs(eqs_r, out[1]);
+    eqs[r] := subs(eqs_r, solutions[1]);
     eqs[r] := simplify(collect(eqs[r], dummy_T), IgnoreAnalyticConstraints);
     
     if has(eqs[r], dummy_T) then

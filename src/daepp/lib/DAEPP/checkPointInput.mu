@@ -40,6 +40,9 @@ begin
         // daepp::checkPointInput(pointKeys, pointValues)
         pointKeys := symobj::tolist(args(1));
         pointValues := symobj::tolist(args(2));
+        if nops(pointKeys) <> nops(pointValues) then
+            error("Inconcistency between lengths of pointKeys and pointValues.");
+        end_if;
         if nops(pointKeys) <> nops({op(pointKeys)}) then
             error("Duplicated variables in left hand sides.");
         end_if;
