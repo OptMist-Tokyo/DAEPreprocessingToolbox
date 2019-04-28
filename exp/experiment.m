@@ -1,10 +1,12 @@
-function experiment(eqns, vars, y0est, yp0est, tspan, method)
+function experiment(eqns, vars, pointKeys, pointValues, tspan, method)
 
 nOrigVars = length(eqns);
 
 % Step 1. Preprocess DAEs
 fprintf('Preprocess DAEs.\n');
-[eqns, vars] = preprocessDAE(eqns, vars, 'Method', method, 'Constants', 'zero');
+pretty(eqns);
+[eqns, vars] = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'zero');
+pretty(eqns);
 
 % Step 2. Reduce Differential Order (do nothing for this DAE because there is no higher order derivatives)
 fprintf('Reduce Differential Order.\n');
@@ -38,6 +40,7 @@ F = daeFunction(eqns, vars);
 
 % Step 5. Find Initial Conditions For Solvers
 opt = odeset('jacobian', daeJacobianFunction(eqns, vars));
+[y0est, yp0est] = extractVariableValue(vars, pointKeys, pointValues);
 [y0, yp0] = decic(F, 0, y0est, [], yp0est, [], opt);
 
 
