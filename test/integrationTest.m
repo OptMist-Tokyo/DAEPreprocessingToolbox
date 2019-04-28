@@ -9,7 +9,7 @@ classdef integrationTest < matlab.unittest.TestCase
             S = orderMatrix(F, x);
             testCase.verifyEqual(S, [2 -Inf 0; -Inf 2 0; 0 0 -Inf]);
             
-            [~, ~, ~, p, q] = hungarian(S);
+            [~, ~, ~, p, q] = hungarianTest.hungarian(S);
             testCase.verifyEqual(p, [0, 0, 2]);
             testCase.verifyEqual(q, [2, 2, 0]);
             
@@ -36,7 +36,7 @@ classdef integrationTest < matlab.unittest.TestCase
                 -Inf     1     1  -Inf     0
             ]);
             
-            [~, ~, ~, p, q] = hungarian(S);
+            [~, ~, ~, p, q] = hungarianTest.hungarian(S);
             testCase.verifyEqual(p, [0, 0, 1, 0, 0]);
             testCase.verifyEqual(q, [1, 1, 1, 1, 1]);
             
@@ -68,7 +68,7 @@ classdef integrationTest < matlab.unittest.TestCase
                 0  -Inf     0  -Inf  -Inf
             ]);
             
-            [~, ~, ~, p, q] = hungarian(S);
+            [~, ~, ~, p, q] = hungarianTest.hungarian(S);
             testCase.verifyEqual(p, [0, 0, 0, 2, 2]);
             testCase.verifyEqual(q, [2, 2, 2, 0, 0]);
             
@@ -104,7 +104,7 @@ classdef integrationTest < matlab.unittest.TestCase
                 -Inf  -Inf  -Inf  -Inf  -Inf  -Inf     1     1
             ]);
             
-            [~, ~, ~, p, q] = hungarian(S);
+            [~, ~, ~, p, q] = hungarianTest.hungarian(S);
             testCase.verifyEqual(p, [0, 0, 0, 0, 0, 0, 0, 0]);
             testCase.verifyEqual(q, [1, 1, 1, 1, 1, 1, 1, 1]);
             
@@ -150,7 +150,7 @@ classdef integrationTest < matlab.unittest.TestCase
                 -Inf     0  -Inf  -Inf  -Inf  -Inf  -Inf  -Inf  -Inf  -Inf  -Inf  -Inf  -Inf  -Inf     1
             ]);
             
-            [~, ~, ~, p, q] = hungarian(S);
+            [~, ~, ~, p, q] = hungarianTest.hungarian(S);
             testCase.verifyEqual(p, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
             testCase.verifyEqual(q, [1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
             

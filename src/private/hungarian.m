@@ -19,8 +19,6 @@ function [optval, s, t, p, q] = hungarian(M)
 %                  (t is the inverse of s as a permutation)
 %       -      p : optimal dual solution in rows
 %       -      q : optimal dual solution in columns
-%
-%   See Also: orderMatrix, systemJacobian
 
 % check input
 narginchk(1, 1);

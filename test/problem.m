@@ -1,6 +1,6 @@
 classdef problem
     methods (Static)
-        function [eqs, vars] = pendulum
+        function [eqs, vars, pointKeys, pointValues] = pendulum
             syms y(t) z(t) T(t)
             syms g m L
             
@@ -10,6 +10,9 @@ classdef problem
                 y(t)^2 + z(t)^2 == L^2
             ];
             vars = [y, z, T];
+            
+            pointKeys = [g m L y z T diff(y) diff(z) diff(T) diff(y, 2) diff(z, 2)];
+            pointValues = [9.8 1 1 sin(pi/6) -cos(pi/6) -8.48704895708750 0 0 0 -4.243524478543749 -2.45];
         end
         
         function [eqs, vars, pointKeys, pointValues] = modifiedPendulum
@@ -24,11 +27,12 @@ classdef problem
                 diff(x2(t))*sin(x3(t)) + x2(t)*diff(x3(t))*cos(x3(t)) - x5(t)
             ];
             vars = [x1 x2 x3 x4 x5];
-            pointKeys = [x1, x2, x3, x4, x5, diff(x1), diff(x2), diff(x3), diff(x4), diff(x5)];
-            pointValues = [0.5, 8.5311195044981, -3.03990380183, 0, 0, 0, 0, 0, -4.2435244785437, -2.45];
+            
+            pointKeys = [x1 x2 x3 x4 x5 diff(x1) diff(x2) diff(x3) diff(x4) diff(x5)];
+            pointValues = [0.5 8.5311195044981 -3.03990380183 0 0 0 0 0 -4.2435244785437 -2.45];
         end
         
-        function [eqs, vars] = roboticArm
+        function [eqs, vars, pointKeys, pointValues] = roboticArm
             syms x1(t) x2(t) x3(t) x4(t) x5(t)
             p1 = symfun(cos(1-exp(t)) + cos(1-t), t);
             p2 = symfun(sin(1-exp(t)) + sin(1-t), t);
@@ -45,9 +49,12 @@ classdef problem
                 sin(x1(t)) + sin(x1(t)+x3(t)) - p2(t)
             ];
             vars = [x1 x2 x3 x4 x5];
+            
+            pointKeys = [t x1 x2 x3 x4 x5 diff(x1) diff(x2) diff(x3) diff(x4) diff(x5) diff(x1, 2) diff(x2, 2) diff(x3, 2)];
+            pointValues = [0 0 0.9537503511807 1 -4.2781254864526 -0.7437526892114 -1 -2.5319168790105 0 10.7800085515996 15.9886113811556 -1 -1.147631091390737 1];
         end
         
-        function [eqs, vars] = transistorAmplifier
+        function [eqs, vars, pointKeys, pointValues] = transistorAmplifier
             syms x1(t) x2(t) x3(t) x4(t) x5(t) x6(t) x7(t) x8(t)
             syms C1 C2 C3 C4 C5 R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 alph bet Ub UF positive
             Ue = symfun(0.1*sin(200*pi*t), t);
@@ -64,9 +71,18 @@ classdef problem
                 -C5*(diff(x7(t))-diff(x8(t))) + x8(t)/R9
             ];
             vars = [x1 x2 x3 x4 x5 x6 x7 x8];
+
+            pointKeys = [ ...
+                t C1 C2 C3 C4 C5 R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 alph bet Ub UF ...
+                x1 x2 x3 x4 x5 x6 x7 x8 diff(x1) diff(x2) diff(x3) diff(x4) diff(x5) diff(x6) diff(x7) diff(x8) ...
+            ];
+            pointValues = [ ...
+                0 1e-6 2e-6 3e-6 4e-6 5e-6 1000 9000 9000 9000 9000 9000 9000 9000 9000 9000 0.99 1e-6 6 0.026 ...
+                0 3 3 6 3 3 6 0 51.3392765171807 51.3392765171807 -166.666666666667 24.9703285154063 24.9703285154063 83.3333333333333 10.0002764024563 10.0002764024563 ...
+            ];
         end
         
-        function [eqs, vars] = ringModulator
+        function [eqs, vars, pointKeys, pointValues] = ringModulator
             syms x1(t) x2(t) x3(t) x4(t) x5(t) x6(t) x7(t) x8(t) x9(t) x10(t) x11(t) x12(t) x13(t) x14(t) x15(t)
             syms C Cp Lh Ls1 Ls2 Ls3 gam R Rp Rg1 Rg2 Rg3 Ri Rc del positive
             q = @(y) gam * (exp(del*y) - 1);
@@ -95,6 +111,17 @@ classdef problem
                 diff(x15(t)) - 1/Ls1*(-x2(t) - (Rc+Rg1)*x15(t))
             ];
             vars = [x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15];
+            
+            pointKeys = [ ...
+                t C Cp Lh Ls1 Ls2 Ls3 gam R Rp Rg1 Rg2 Rg3 Ri Rc del ...
+                x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 ...
+                diff(x1) diff(x2) diff(x3) diff(x4) diff(x5) diff(x6) diff(x7) diff(x8) diff(x9) diff(x10) diff(x11) diff(x12) diff(x13) diff(x14) diff(x15)
+            ];
+            pointValues = [ ...
+                0 1.e6-8 1e-8 4.45 0.002 5e-4 5e-4 40.67286402e-9 25000 50 36.3 17.3 17.3 50 600 17.7493332 ...
+                0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ...
+                0 0 6.2831853071796e4 -6.2831853071796e4 -6.2831853071796e4 6.2831853071796e4 0 0 0 0 0 0 0 0 0
+            ];
         end
     end
 end
