@@ -16,7 +16,7 @@ fprintf('Reduce Differential Order.\n');
 % Step 3. Check and Reduce Differential Index
 if ~isLowIndexDAE(eqns, vars)
     fprintf('DAE is high-index. Try index reduction.\n') % this will be printed
-    %[eqns, vars] = reduceDAEIndex(eqns, vars);
+    [eqns, vars] = reduceDAEIndex(eqns, vars);
     [eqns, vars] = reduceRedundancies(eqns, vars);
     
     if isLowIndexDAE(eqns, vars)
