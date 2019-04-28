@@ -1,4 +1,4 @@
-addpath("src", "test");
+addpath('src', 'test');
 
 [eqs, vars, pointKeys, pointValues, tspan] = modifiedPendulum;
 experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution');
@@ -15,11 +15,8 @@ end
 
 
 function [eqs, vars, pointKeys, pointValues, tspan] = modifiedPendulum
-    syms x1(t) x2(t) x3(t) x4(t) x5(t) g;
-    [eqs, vars] = problem.modifiedPendulum;
-    eqs = subs(eqs, g, 9.8);
-    pointKeys = [x1, x2, x3, x4, x5, diff(x1), diff(x2), diff(x3), diff(x4), diff(x5)];
-    pointValues = [0.5, 8.5311195044981, 3.2432815053528, 0, 0, 0, 0, 0, -4.2435244785437, -2.45];
+    [eqs, vars, pointKeys, pointValues] = problem.modifiedPendulum;
+    eqs = subs(eqs, sym('g'), 9.8);
     tspan = [0, 5];
 end
 
