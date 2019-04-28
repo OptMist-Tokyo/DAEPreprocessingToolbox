@@ -1,4 +1,16 @@
-// MuPAD implementation for modifyByAugmentation.m
+/*
+  Modify DAE system by the augmentation method.
+
+  Options:
+      - Constants   : 'sym' (default) or 'zero'
+            Designate how represent constants which will be introduced in the
+            augmentation method. If Constants is 'sym', the contants are
+            represented by symbolic objects and returns a vector of introduced
+            constants as the third return value. If Constants is 'zero', 0 will
+            be substituted for all constants. Designating 'zero' would return
+            a simplier DAE but may cause a failure if 0 is out of the domain of
+            DAEs.
+*/
 
 daepp::modifyByAugmentation := proc(eqs, vars, p, q, r, II, JJ /*, tVar */)
 local hast, oparg, options, m, n, tVar, eqsIndets, genVar, vars_J, newVars_J,
@@ -15,13 +27,13 @@ begin
     [eqs, vars, p, q, II, JJ] := map([eqs, vars, p, q, II, JJ], symobj::tolist);
     
     // get options
-    hast := is(args(0) > 7 && not testtype(args(8), table));
+    hast := is(args(0) > 7 && not testtype(args(8), DOM_TABLE));
     oparg := if hast then 9 else 8 end_if;
     options := prog::getOptions(oparg, [args()], table(Constants = "sym"), TRUE)[1];
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daetools::checkInput(eqs, vars, "AllowOnlyFuncVars");
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
         if hast && tVar <> args(oparg - 1) then
             error("Inconsistency of time variable.");
         end_if;
@@ -45,7 +57,7 @@ begin
         if nops(II) <> nops(JJ) then
             error("Inconsistency between sizes of II and JJ.");
         end_if;
-
+        
         if not (testtype(r, DOM_INT) && 1 <= r && r <= m) then
             error("r is invalid index.");
         end_if;
@@ -65,9 +77,9 @@ begin
     
     n := nops(vars);
     
-    // retrive tVar
+    // retrieve tVar
     if not hast then
-        [eqs, vars, tVar] := daepp::checkInput(eqs, vars);
+        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
     else
         tVar := args(oparg - 1);
     end_if;

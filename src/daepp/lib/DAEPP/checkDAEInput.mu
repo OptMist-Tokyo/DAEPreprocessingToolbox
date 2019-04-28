@@ -1,6 +1,6 @@
-// MuPAD implementation for checkInput.m
+// MuPAD implementation for checkDAEInput.m
 
-daepp::checkInput := proc(eqs, vars)
+daepp::checkDAEInput := proc(eqs, vars)
 begin
     // check number of arguments
     if args(0) <> 2 then

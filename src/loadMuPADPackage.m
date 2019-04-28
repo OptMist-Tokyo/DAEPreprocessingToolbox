@@ -3,7 +3,7 @@ function loadMuPADPackage
 % loadMuPADPackage    Load MuPAD Package 'daepp'.
 %
 %   Load MuPAD package 'daepp' with reload prevension. To force reloading,
-%   reset the loaded flag by 'clear loadMuPADPackage' before calling.
+%   reset the flag by 'clear loadMuPADPackage' before calling this method.
 
 narginchk(0, 0);
 persistent loaded;
@@ -17,6 +17,10 @@ if isempty(loaded)
         % load package
         'package("daepp", Forced);'
     };
-    evalin(symengine, strjoin(command));
+    try
+        evalin(symengine, strjoin(command));
+    catch ME
+        throw(ME);
+    end
     loaded = true;
 end

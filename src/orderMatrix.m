@@ -11,8 +11,12 @@ function S = orderMatrix(eqs, vars)
 
 % check input
 narginchk(2, 2);
-[eqs, vars, ~] = checkInput(eqs, vars);
+[eqs, vars, ~] = checkDAEInput(eqs, vars);
 
 % call MuPAD
 loadMuPADPackage;
-S = double(feval(symengine, 'daepp::orderMatrix', eqs, vars));
+try
+    S = double(feval(symengine, 'daepp::orderMatrix', eqs, vars));
+catch ME
+    throw(ME);
+end

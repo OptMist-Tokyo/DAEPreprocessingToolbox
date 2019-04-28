@@ -16,7 +16,7 @@ classdef integrationTest < matlab.unittest.TestCase
             D = systemJacobian(F, x, p, q);
             testCase.verifyEqual(D, [m 0 -y(t)/L; 0 m -z(t)/L; 2*y(t) 2*z(t) 0]);
             
-            [r, I, J] = findEliminatingSubsystem(D, p);
+            [r, I, J] = findEliminatingSubsystemTest.findEliminatingSubsystem(D, p);
             testCase.verifyEqual(r, 0);
             testCase.verifyEqual(I, zeros(1, 0));
             testCase.verifyEqual(J, zeros(1, 0));
@@ -49,7 +49,7 @@ classdef integrationTest < matlab.unittest.TestCase
             %                                       0,           sin(x3(t)),                cos(x3(t))*x2(t), 0, 0
             % ]);
             
-            [r, I, J] = findEliminatingSubsystem(D, p);
+            [r, I, J] = findEliminatingSubsystemTest.findEliminatingSubsystem(D, p);
             testCase.verifyEqual(r, 4);
             testCase.verifyEqual(I, [3, 5]);
             testCase.verifyEqual(J, [1, 2]);
@@ -81,7 +81,7 @@ classdef integrationTest < matlab.unittest.TestCase
                   cos(x1(t)) + cos(x1(t) + x3(t)), 0,  cos(x1(t) + x3(t)),                                              0,                                            0
             ]);
             
-            [r, I, J] = findEliminatingSubsystem(D, p);
+            [r, I, J] = findEliminatingSubsystemTest.findEliminatingSubsystem(D, p);
             testCase.verifyEqual(r, 1);
             testCase.verifyEqual(I, [3, 4, 5]);
             testCase.verifyEqual(J, [1, 3, 4]);
@@ -120,7 +120,7 @@ classdef integrationTest < matlab.unittest.TestCase
                    0,   0,  0,   0,   0,  0, -C5,  C5
             ]);
             
-            [r, I, J] = findEliminatingSubsystem(D, p);
+            [r, I, J] = findEliminatingSubsystemTest.findEliminatingSubsystem(D, p);
             testCase.verifyEqual(r, 1);
             testCase.verifyEqual(I, 2);
             testCase.verifyEqual(J, 1);
@@ -155,7 +155,7 @@ classdef integrationTest < matlab.unittest.TestCase
             testCase.verifyEqual(q, [1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
             
             D = systemJacobian(F, x, p, q);
-            [r, I, J] = findEliminatingSubsystem(D, p);
+            [r, I, J] = findEliminatingSubsystemTest.findEliminatingSubsystem(D, p);
             testCase.verifyEqual(r, 3);
             testCase.verifyEqual(I, [4, 5, 6]);
             testCase.verifyEqual(J, [3, 4, 5]);

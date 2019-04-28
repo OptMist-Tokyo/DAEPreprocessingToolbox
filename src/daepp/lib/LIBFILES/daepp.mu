@@ -6,9 +6,13 @@ daepp::Name := "daepp";
 daepp::info := "Library for DAE preprocessing";
 
 daepp::interface := {
-    hold(checkInput),
+    hold(checkDAEInput),
+    hold(checkPointInput),
     hold(daeJacobianFunction),
+    hold(extractVariableValue),
     hold(findEliminatingSubsystem),
+    hold(gaussJordan),
+    hold(greedyPivoting),
     hold(hungarian),
     hold(modifyByAugmentation),
     hold(modifyBySubstitution),
@@ -18,9 +22,13 @@ daepp::interface := {
     null()
 };
 
-autoload(daepp::checkInput);
+autoload(daepp::checkDAEInput);
+autoload(daepp::checkPointInput);
 autoload(daepp::daeJacobianFunction);
+autoload(daepp::extractVariableValue);
 autoload(daepp::findEliminatingSubsystem);
+autoload(daepp::gaussJordan);
+autoload(daepp::greedyPivoting);
 autoload(daepp::hungarian);
 autoload(daepp::modifyByAugmentation);
 autoload(daepp::modifyBySubstitution);
