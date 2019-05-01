@@ -1,7 +1,7 @@
 // MuPAD implementation for preprocessDAE.m
 
 daepp::preprocessDAE := proc(eqs, vars)
-local options, tVar, point, tTmp, dof, consts, S, v, ss, tt, p, q, D, r, II, JJ,
+local options, tVar, point, tTmp, dof, consts, S, v, p, q, D, r, II, JJ,
       newConsts;
 begin
     // check number of arguments
@@ -48,7 +48,7 @@ begin
     while TRUE do
         // Phase 1: Solve Assignment Problem
         S := daepp::orderMatrix(eqs, vars);
-        [v, ss, tt, p, q] := daepp::hungarian(S);
+        [v, p, q] := daepp::hungarian(S)[[1, 4, 5]];
         
         if v = -infinity then
             error("There is no perfect matching between equations and variables.");

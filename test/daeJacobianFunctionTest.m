@@ -14,7 +14,7 @@ classdef daeJacobianFunctionTest < matlab.unittest.TestCase
             testCase.verifyEqual(J, 1);
             testCase.verifyEqual(JP, 2);
         end
-
+        
         function test2(testCase)
             syms y(t) z(t)
             jac = daeJacobianFunction([y(t)^2 + z(t)^2, diff(y(t))^2 + diff(z(t))^2], [y, z]);

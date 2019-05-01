@@ -42,9 +42,10 @@ narginchk(2, Inf);
 if nargin >= 3 && isa(varargin{1}, 'sym')
     assert(nargin >= 4, "Fourth argument 'pointValues' is missing.");
     point = checkPointInput(varargin{1}, varargin{2});
+    hasPoint = true;
     startOptArg = 3;
 else
-    point = [];
+    hasPoint = false;
     startOptArg = 1;
 end
 
@@ -56,16 +57,13 @@ parser.parse(varargin{startOptArg:end});
 options = parser.Results;
 
 % pack options into MuPAD table
-append = @(entries, key, value) feval(symengine, 'append', entries, feval(symengine, '_equal', key, value));
-
-entries = evalin(symengine, '[]');
-entries = append(entries, 'TimeVariable', t);
-if ~isempty(point)
-    entries = append(entries, 'Point', point);
+table = feval(symengine, 'table');
+table = addEntry(table, 'TimeVariable', t);
+if hasPoint
+    table = addEntry(table, 'Point', point);
 end
-entries = append(entries, 'Constants', ['"', options.Constants, '"']);
-entries = append(entries, 'Method', ['"', options.Method, '"']);
-table = feval(symengine, 'table', entries);
+table = addEntry(table, 'Constants', options.Constants);
+table = addEntry(table, 'Method', options.Method);
 
 % call MuPAD
 loadMuPADPackage;

@@ -1,9 +1,9 @@
 // MuPAD implementation for modifyBySubstiution.m
 
 daepp::modifyBySubstitution := proc(eqs, vars, p, q, r, II, JJ)
-local m, n, tVar, point, tTmp, vars_J, dummy_J, circuit, S, T, vars_T, dummy_T,
-      eqs_I, subseq, solutions, sol, s, backsubseq, lhsValue, rhsValue, err,
-      minerror, bestsol;
+local options, tVar, point, m, n, tTmp, vars_J, dummy_J, circuit, S, T, vars_T,
+      dummy_T, eqs_I, subseq, solutions, sol, s, backsubseq, lhsValue, rhsValue,
+      err, minerror, bestsol;
 begin
     // check number of arguments
     if testargs() then

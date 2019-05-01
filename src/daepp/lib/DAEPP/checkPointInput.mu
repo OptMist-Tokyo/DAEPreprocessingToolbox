@@ -2,8 +2,6 @@
   Check whether
   point = [y(t) = 0.5, diff(y(t), t) = 0.2, g = 0.8, ...]
   or
-  point = table([y(t) = 0.5, diff(y(t), t) = 0.2, g = 0.8, ...])
-  or
   pointKeys = [y(t), diff(y(t), t), g, ...]
   pointValues = [0.5, 0.2, 0.8, ...]
 */
@@ -21,20 +19,17 @@ begin
         point := args(1);
         
         // format check
-        if not testtype(point, DOM_TABLE) then
-            point := symobj::tolist(point);
-            if not _and(type(v) = "_equal" $ v in point) then
-                error("Equations expected.");
-            end_if;
-            
-            // check LHS
-            pointKeys := map(point, lhs);
-            if nops(pointKeys) <> nops({op(pointKeys)}) then
-                error("Duplicated variables in left hand sides.");
-            end_if;
+        point := symobj::tolist(point);
+        if not _and(type(v) = "_equal" $ v in point) then
+            error("Equations expected.");
         end_if;
         
+        // check LHS
         pointKeys := lhs(point);
+        if nops(pointKeys) <> nops({op(pointKeys)}) then
+            error("Duplicated variables in left hand sides.");
+        end_if;
+        
         pointValues := rhs(point);
     else
         // daepp::checkPointInput(pointKeys, pointValues)
@@ -76,5 +71,5 @@ begin
     end_if;
     
     // return
-    table(zip(pointKeys, pointValues, (l, r) -> l = float(r)));
+    zip(pointKeys, pointValues, (l, r) -> l = float(r));
 end_proc;
