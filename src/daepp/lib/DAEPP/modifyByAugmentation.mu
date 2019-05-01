@@ -13,7 +13,7 @@
 */
 
 daepp::modifyByAugmentation := proc(eqs, vars, p, q, r, II, JJ /*, tVar */)
-local hast, oparg, options, m, n, tVar, eqsIndets, genVar, vars_J, newVars_J,
+local hast, oparg, options, m, n, tVar, ngList, vars_J, newVars_J,
       circuit, S, T, vars_T, consts, eqs_I, subseq;
 begin
     // check number of arguments
@@ -84,34 +84,14 @@ begin
         tVar := args(oparg - 1);
     end_if;
     
-    // procedure for naming new variables
-    eqsIndets := indets(eqs, All);
-    genVar := proc(var, d, prefix)
-        local newName, newVar;
-        begin
-            // make new name
-            newName := expr2text(op(var, 0));
-            if d = 0 then
-                newName := prefix . newName;
-            else
-                newName := prefix . "D" . newName . _concat(expr2text(t) $ d);
-            end_if;
-            
-            // make new var
-            newVar := DOM_IDENT(newName);
-            if domtype(eval(newVar)) <> DOM_IDENT ||
-               showprop(newVar(tVar)) <> [] ||
-               showprop(newVar) <> [] ||
-               contains(eqsIndets, newVar) then
-                newVar := genident(newName);
-            end_if;
-            
-            newVar;
-        end_proc;
-    
     // prepare new variables
     vars_J := [symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in JJ];
-    newVars_J := [genVar(vars[j], q[j] - p[r], "")(tVar) $ j in JJ];
+    ngList := indets(eqs, All);
+    newVars_J := map(JJ, proc(j) local newVar; begin
+        newVar := daepp::generateVariable(vars[j], q[j] - p[r], ngList, TimeVariable = tVar);
+        ngList := ngList union {newVar};
+        newVar;
+    end_proc);
     
     // prepare constants
     circuit := append(II, r);
@@ -125,7 +105,12 @@ begin
     
     case options[Constants]
         of "sym" do 
-            consts := [genVar(vars[j], q[j] - p[r], "const") $ j in T];
+            consts := map(T, proc(j) local newVar; begin
+                newVar := daepp::generateVariable(vars[j], q[j] - p[r], ngList,
+                    TimeVariable = tVar, Prefix = "const", ReturnFunction = FALSE);
+                ngList := ngList union {newVar};
+                newVar;
+            end_proc);
             break;
         of "zero" do
             consts := [0 $ nops(T)];

@@ -22,6 +22,9 @@ begin
         point := daepp::checkPointInput(point);
     end_if;
     
+    // convert point to table
+    point := table(point);
+    
     // retrieve tVar and differentiate vars
     if args(0) = 2 then
         [vars, tVar] := daepp::checkDAEInput([], vars)[[2, 3]];
