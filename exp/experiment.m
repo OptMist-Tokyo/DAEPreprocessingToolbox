@@ -1,52 +1,81 @@
 function experiment(eqns, vars, pointKeys, pointValues, tspan, method)
 
-nOrigVars = length(eqns);
+n = length(eqns);
+tSol = [];
+ySol = zeros(0, n);
 
-% Step 1. Preprocess DAEs
-fprintf('Preprocess DAEs.\n');
-[eqns, vars] = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'zero');
-
-% Step 2. Reduce Differential Order (do nothing for this DAE because there is no higher order derivatives)
-fprintf('Reduce Differential Order.\n');
-[eqns, vars] = reduceDifferentialOrder(eqns, vars);
-
-
-% Step 3. Check and Reduce Differential Index
-if ~isLowIndexDAE(eqns, vars)
-    fprintf('DAE is high-index. Try index reduction.\n') % this will be printed
-    [eqns, vars] = reduceDAEIndex(eqns, vars);
-    [eqns, vars] = reduceRedundancies(eqns, vars);
+while true
+    % Step 1. Preprocess DAEs
+    fprintf('Preprocess DAEs.\n');
+    [newEqns, newVars] = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'zero');
     
-    if isLowIndexDAE(eqns, vars)
-        fprintf('Index is successfully reduced.\n');
+    % Step 2. Reduce Differential Order
+    fprintf('Reduce Differential Order.\n');
+    [newEqns, newVars] = reduceDifferentialOrder(newEqns, newVars);
+    
+    % Step 3. Check and Reduce Differential Index
+    if ~isLowIndexDAE(newEqns, newVars)
+        fprintf('DAE is high-index. Try index reduction.\n') % this will be printed
+        [newEqns, newVars, ~, newPointKeys, newPointValues] = reduceIndex(newEqns, newVars, pointKeys, pointValues);
+        
+        if isLowIndexDAE(newEqns, newVars)
+            fprintf('Index is successfully reduced.\n');
+        else
+            fprintf('Failed to reduce index.\n');
+        end
     else
-        fprintf('Failed to reduce index.\n');
+        fprintf('DAE is already low-index.\n')
     end
-else
-    fprintf('DAE is already low-index.\n')
+    
+    fprintf('DAE = \n');
+    pretty(newEqns)
+    fprintf('vars = ');
+    pretty(newVars)
+    
+    % Step 4. Convert DAE Systems to MATLAB Function Handles
+    F = daeFunction(newEqns, newVars);
+    
+    % Step 5. Find Initial Conditions For Solvers
+    opt = odeset('jacobian', daeJacobianFunction(newEqns, newVars));
+    [y0est, yp0est] = extractVariableValue(newVars, newPointKeys, newPointValues);
+    [y0, yp0] = decic(F, 0, y0est, [], yp0est, [], opt);
+    
+    % Step 6. Solve DAEs Using ode15i
+    sol = ode15i(F, tspan, y0, yp0, opt);
+    
+    if isscalar(sol.x)
+        warning('Integration failed.');
+        break;
+    end
+    
+    % store result
+    tSol = [tSol; sol.x'];
+    ySol = [ySol; sol.y(1:n, :)'];
+    
+    % update tspan
+    tspan(1) = sol.x(end);
+    if tspan(1) >= tspan(2)
+        break;
+    end
+    
+    % update pointValues
+    [yval, ypval] = deval(sol, tspan(1));
+    for j = 1:length(pointKeys)
+        k = find(vars == pointKeys(j), 1);
+        if ~isempty(k)
+            pointValues(j) = yval(k);
+        end
+        k = find(diff(vars) == pointKeys(j), 1);
+        if ~isempty(k)
+            pointValues(j) = ypval(k);
+        end
+    end
 end
 
-fprintf('DAE = \n');
-pretty(eqns)
-fprintf('vars = ');
-pretty(vars.')
+% plot
+plot(tSol, ySol)
 
-
-% Step 4. Convert DAE Systems to MATLAB Function Handles
-F = daeFunction(eqns, vars);
-
-
-% Step 5. Find Initial Conditions For Solvers
-opt = odeset('jacobian', daeJacobianFunction(eqns, vars));
-[y0est, yp0est] = extractVariableValue(vars, pointKeys, pointValues);
-[y0, yp0] = decic(F, 0, y0est, [], yp0est, [], opt);
-
-
-% Step 6. Solve DAEs Using ode15i
-[tSol, ySol] = ode15i(F, tspan, y0, yp0, opt);
-plot(tSol, ySol(:,1:nOrigVars), '-o')
-
-for k = 1:nOrigVars
+for k = 1:n
     S{k} = char(vars(k));
 end
 

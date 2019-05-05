@@ -1,6 +1,8 @@
 addpath('src', 'test');
 
 [eqs, vars, pointKeys, pointValues, tspan] = modifiedPendulum;
+syms t
+pointKeys = pointKeys(t);
 experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution');
 
 
