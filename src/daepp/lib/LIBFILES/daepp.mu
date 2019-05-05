@@ -15,6 +15,7 @@ daepp::interface := {
     hold(gaussJordan),
     hold(generateVariable),
     hold(greedyPivoting),
+    hold(isLowIndex),
     hold(hungarian),
     hold(modifyByAugmentation),
     hold(modifyBySubstitution),
@@ -36,6 +37,7 @@ autoload(daepp::gaussJordan);
 autoload(daepp::generateVariable);
 autoload(daepp::greedyPivoting);
 autoload(daepp::hungarian);
+autoload(daepp::isLowIndex);
 autoload(daepp::modifyByAugmentation);
 autoload(daepp::modifyBySubstitution);
 autoload(daepp::orderMatrix);
