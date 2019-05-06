@@ -18,7 +18,7 @@ begin
             error("Inconsistency of time variable.");
         end_if;
         if nops(eqs) <> nops(vars) then
-            error("Inconcistency of sizes between equations and variables.")
+            error("Inconsistency of sizes between equations and variables.")
         end_if;
     end_if;
     

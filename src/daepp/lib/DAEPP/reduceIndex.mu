@@ -8,7 +8,7 @@ begin
     // check number of arguments
     if testargs() then
         if args(0) < 2 then
-            error("List of equations and list of variables expected.");
+            error("At lest two arguments expected.");
         end_if;
     end_if;
     
