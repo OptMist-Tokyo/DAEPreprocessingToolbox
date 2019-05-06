@@ -9,28 +9,30 @@ while true
     fprintf('Preprocess DAEs.\n');
     [newEqns, newVars] = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'zero');
     
-    % Step 2. Reduce Differential Order
-    fprintf('Reduce Differential Order.\n');
-    [newEqns, newVars] = reduceDifferentialOrder(newEqns, newVars);
-    
-    % Step 3. Check and Reduce Differential Index
-    if ~isLowIndexDAE(newEqns, newVars)
-        fprintf('DAE is high-index. Try index reduction.\n') % this will be printed
+    % Step 2. Check and Reduce Differential Index
+    if ~isLowIndex(newEqns, newVars)
+        fprintf('DAE is high-index. Try index reduction.\n')
         [newEqns, newVars, ~, newPointKeys, newPointValues] = reduceIndex(newEqns, newVars, pointKeys, pointValues);
         
-        if isLowIndexDAE(newEqns, newVars)
+        if isLowIndex(newEqns, newVars)
             fprintf('Index is successfully reduced.\n');
         else
             fprintf('Failed to reduce index.\n');
         end
     else
+        newPointKeys = pointKeys;
+        newPointValues = pointValues;
         fprintf('DAE is already low-index.\n')
     end
     
+    % Step 3. Reduce Differential Order
+    fprintf('Reduce Differential Order.\n');
+    [newEqns, newVars] = reduceDifferentialOrder(newEqns, newVars);
+    
     fprintf('DAE = \n');
-    pretty(newEqns)
+    %pretty(newEqns)
     fprintf('vars = ');
-    pretty(newVars)
+    %pretty(newVars)
     
     % Step 4. Convert DAE Systems to MATLAB Function Handles
     F = daeFunction(newEqns, newVars);
