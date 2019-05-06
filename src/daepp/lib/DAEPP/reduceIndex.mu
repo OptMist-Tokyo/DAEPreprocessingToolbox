@@ -104,7 +104,8 @@ begin
     
     if point <> NIL then
         pointTable := table(point);
-        newPoint := point . [dummyVars[j] = pointTable[diffVars[j]] $ j = 1..N];
+        newPoint := point . [dummyVars[j] = pointTable[diffVars[j]] $ j
+            in select([j $ j = 1..N], j -> contains(pointTable, diffVars[j]))];
         [newEqs, newVars, R, newPoint];
     else;
         [newEqs, newVars, R];
