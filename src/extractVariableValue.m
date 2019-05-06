@@ -1,4 +1,4 @@
-function [y, yp] = extractVariableValue(vars, pointKeys, pointValues)
+function [y, yp] = extractVariableValue(vars, pointKeys, pointValues, varargin)
 
 % extractVariableValue    Extract values of vars and its derivartives from
 % point.
@@ -9,14 +9,25 @@ function [y, yp] = extractVariableValue(vars, pointKeys, pointValues)
 %   MATLAB DAE functions: decic and ode15i.
 
 % check input
-narginchk(3, 3);
+narginchk(3, Inf);
 [~, vars, t] = checkDAEInput(zeros(0, 1, 'sym'), vars);
 point = checkPointInput(pointKeys, pointValues);
+
+% parse parameters
+parser = inputParser;
+addParameter(parser, 'MissingVariable', 'warning', @(x) any(validatestring(x, {'zero', 'warning', 'error'})));
+parser.parse(varargin{:});
+options = parser.Results;
+
+% pack options into MuPAD table
+table = feval(symengine, 'table');
+table = addEntry(table, 'TimeVariable', t);
+table = addEntry(table, 'MissingVariable', options.MissingVariable);
 
 % call MuPAD
 loadMuPADPackage;
 try
-    out = feval(symengine, 'daepp::extractVariableValue', vars, point, t);
+    out = feval(symengine, 'daepp::extractVariableValue', vars, point, table);
 catch ME
     throw(ME);
 end
