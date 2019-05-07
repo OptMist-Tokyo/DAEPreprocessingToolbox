@@ -7,7 +7,11 @@ classdef gaussJordanTest < matlab.unittest.TestCase
             else
                 out = feval(symengine, 'daepp::gaussJordan', A, V);
             end
-            A = out(1);
+            if isequal(out(1), sym(0))
+                A = zeros(size(A), 'sym');
+            else
+                A = out(1);
+            end
             rank = double(out(2));
             pivcol = double(out(3));
         end
@@ -16,11 +20,11 @@ classdef gaussJordanTest < matlab.unittest.TestCase
     methods (Test)
         function test0(testCase)
             [A, rank, pivcol] = gaussJordanTest.gaussJordan(zeros(0, 'sym'));
-            % testCase.verifyEqual(A, zeros(0, 'sym'));
+            testCase.verifyEqual(A, zeros(0, 'sym'));
             testCase.verifyEqual(rank, 0);
             testCase.verifyEqual(pivcol, zeros(1, 0));
         end
-
+        
         function test1(testCase)
             syms y(t) z(t)
             [A, rank, pivcol] = gaussJordanTest.gaussJordan([y(t) z(t); y(t) z(t)]);
@@ -41,7 +45,6 @@ classdef gaussJordanTest < matlab.unittest.TestCase
         
         function test3(testCase)
             syms y(t)
-            values = [t == 1, diff(y(t)) == 2, y(t) == 4];
             A = [
                          t diff(y(t))     0
                          0       y(t)  y(t)
@@ -56,6 +59,13 @@ classdef gaussJordanTest < matlab.unittest.TestCase
             testCase.verifyEqual(A, sym([0 1 0; 0 0 1; 1 0 0]));
             testCase.verifyEqual(rank, 3);
             testCase.verifyEqual(pivcol, [2, 3, 1]);
+        end
+        
+        function test4(testCase)
+            [A, rank, pivcol] = gaussJordanTest.gaussJordan(zeros(2, 'sym'));
+            testCase.verifyEqual(A, zeros(2, 'sym'));
+            testCase.verifyEqual(rank, 0);
+            testCase.verifyEqual(pivcol, zeros(1, 0));
         end
     end
 end

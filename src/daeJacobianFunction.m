@@ -23,7 +23,13 @@ end
 
 % get return values
 J = out(1);
+if isequal(J, sym(0))
+    J = zeros(length(eqs), length(vars), 'sym');
+end
 JP = out(2);
+if isequal(JP, sym(0))
+    JP = zeros(length(eqs), length(vars), 'sym');
+end
 Y = out(3).';
 YP = out(4).';
 
