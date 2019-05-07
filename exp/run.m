@@ -25,7 +25,7 @@ end
 
 function [eqs, vars, pointKeys, pointValues, tspan] = roboticArm
     [eqs, vars, pointKeys, pointValues] = problem.roboticArm;
-    tspan = [0, 1];
+    tspan = [0, 0.5];
 end
 
 

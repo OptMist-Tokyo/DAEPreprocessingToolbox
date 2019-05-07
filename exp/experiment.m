@@ -11,7 +11,7 @@ while true
     
     % Step 2. Check and Reduce Differential Index
     if ~isLowIndex(newEqns, newVars)
-        fprintf('DAE is high-index. Try index reduction.\n')
+        fprintf('DAE is of high index.\n');
         [newEqns, newVars, ~, newPointKeys, newPointValues] = reduceIndex(newEqns, newVars, pointKeys, pointValues);
         
         if isLowIndex(newEqns, newVars)
@@ -22,25 +22,25 @@ while true
     else
         newPointKeys = pointKeys;
         newPointValues = pointValues;
-        fprintf('DAE is already low-index.\n')
+        fprintf('DAE is already low index.\n')
     end
     
     % Step 3. Reduce Differential Order
     fprintf('Reduce Differential Order.\n');
     [newEqns, newVars] = reduceDifferentialOrder(newEqns, newVars);
     
-    fprintf('DAE = \n');
+    %fprintf('DAE = \n');
     %pretty(newEqns)
-    fprintf('vars = ');
+    %fprintf('vars = ');
     %pretty(newVars)
     
     % Step 4. Convert DAE Systems to MATLAB Function Handles
     F = daeFunction(newEqns, newVars);
     
     % Step 5. Find Initial Conditions For Solvers
-    opt = odeset('jacobian', daeJacobianFunction(newEqns, newVars));
+    opt = odeset('Jacobian', daeJacobianFunction(newEqns, newVars));
     [y0est, yp0est] = extractVariableValue(newVars, newPointKeys, newPointValues);
-    [y0, yp0] = decic(F, 0, y0est, [], yp0est, [], opt);
+    [y0, yp0] = decic(F, 0, y0est.', [], yp0est.', [], opt);
     
     % Step 6. Solve DAEs Using ode15i
     sol = ode15i(F, tspan, y0, yp0, opt);
