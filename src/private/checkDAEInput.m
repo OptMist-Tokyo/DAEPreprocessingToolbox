@@ -17,5 +17,5 @@ end
 
 % restore return values
 newEqs = out(1).';
-newVars = out(2);
+newVars = out(2).';
 t = out(3);

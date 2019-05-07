@@ -2,7 +2,7 @@ classdef reduceIndexTest < matlab.unittest.TestCase
     methods (Test)
         function test0(testCase)
             eqs = zeros(0, 1, 'sym');
-            vars = zeros(1, 0, 'sym');
+            vars = zeros(0, 1, 'sym');
             pointKeys = zeros(1, 0, 'sym');
             pointValues = zeros(1, 0);
             [newEqs, newVars, R, newPointKeys, newPointValues] = reduceIndex(eqs, vars, pointKeys, pointValues);
@@ -36,7 +36,7 @@ classdef reduceIndexTest < matlab.unittest.TestCase
                 2*Dyt(t)*y(t) + 2*z(t)*diff(z(t))
                 2*Dytt(t)*y(t) + 2*Dyt(t)^2 + 2*diff(z(t))^2 + 2*z(t)*diff(z(t), 2)
             ]);
-            testCase.verifyEqual(newVars, [y(t) z(t) T(t) Dyt(t) Dytt(t)]);
+            testCase.verifyEqual(newVars, [y(t); z(t); T(t); Dyt(t); Dytt(t)]);
             testCase.verifyEqual(R, [
                 diff(y(t)) Dyt(t)
                 diff(y(t), 2) Dytt(t)
@@ -56,7 +56,7 @@ classdef reduceIndexTest < matlab.unittest.TestCase
                 2*Dzt(t)*z(t) + 2*y(t)*diff(y(t))
                 2*Dztt(t)*z(t) + 2*Dzt(t)^2 + 2*diff(y(t))^2 + 2*y(t)*diff(y(t), 2)
             ]);
-            testCase.verifyEqual(newVars, [y(t) z(t) T(t) Dzt(t) Dztt(t)]);
+            testCase.verifyEqual(newVars, [y(t); z(t); T(t); Dzt(t); Dztt(t)]);
             testCase.verifyEqual(R, [
                 diff(z(t)) Dzt(t)
                 diff(z(t), 2) Dztt(t)

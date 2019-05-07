@@ -75,7 +75,7 @@ end
 
 % restore return values
 varargout{1} = out(1).';       % newEqs
-varargout{2} = out(2);         % newVars
+varargout{2} = out(2).';       % newVars
 varargout{3} = double(out(3)); % degreeOfFreedom
 
 if strcmp(options.Constants, "sym")
