@@ -37,9 +37,9 @@ classdef problem
             p1 = symfun(cos(1-exp(t)) + cos(1-t), t);
             p2 = symfun(sin(1-exp(t)) + sin(1-t), t);
             a = @(y) 2 / (2-cos(y)^2);
-            b = @(y) cos(t) / (2-cos(t)^2);
-            c = @(y) sin(t) / (2-cos(t)^2);
-            d = @(y) sin(t)*cos(t) / (2-cos(t)^2);
+            b = @(y) cos(y) / (2-cos(y)^2);
+            c = @(y) sin(y) / (2-cos(y)^2);
+            d = @(y) sin(y)*cos(y) / (2-cos(y)^2);
             
             eqs = [
                 diff(x1(t), 2) - ( 2*c(x3(t))*(diff(x1(t))+diff(x3(t)))^2 + diff(x1(t))^2*d(x3(t)) + (2*x3(t)-x2(t))*(a(x3(t))+2*b(x3(t))) + a(x3(t))*(x4(t)-x5(t)))
