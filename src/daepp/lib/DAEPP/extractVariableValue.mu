@@ -16,7 +16,7 @@ begin
     // get options
     options := prog::getOptions(3, [args()], table(
         TimeVariable = NIL,
-        MissingVariables = "warning"
+        MissingVariable = "warning"
     ), TRUE)[1];
     tVar := options[TimeVariable];
     
@@ -42,7 +42,7 @@ begin
     missing := select(vars . varsp, var -> not contains(point, var));
     if nops(missing) <> 0 then
         msg := "Point values of the following variables are missing: " . expr2text(var $ var in missing);
-        case options[MissingVariables]
+        case options[MissingVariable]
             of "error" do error(msg); break;
             of "warning" do warning(msg . ". Their values are assumed to be zero."); break;
         end_case;

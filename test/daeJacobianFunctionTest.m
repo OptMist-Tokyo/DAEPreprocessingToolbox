@@ -3,8 +3,8 @@ classdef daeJacobianFunctionTest < matlab.unittest.TestCase
         function test0(testCase)
             jac = daeJacobianFunction(zeros(0, 1, 'sym'), zeros(1, 0, 'sym'));
             [J, JP] = jac(0, 0, 0);
-            testCase.verifyEqual(J, 0);
-            testCase.verifyEqual(JP, 0);
+            testCase.verifyEqual(J, zeros(0));
+            testCase.verifyEqual(JP, zeros(0));
         end
         
         function test1(testCase)
@@ -21,6 +21,14 @@ classdef daeJacobianFunctionTest < matlab.unittest.TestCase
             [J, JP] = jac(1, [2; 3], [4; 5]);
             testCase.verifyEqual(J, [4 6; 0 0]);
             testCase.verifyEqual(JP, [0 0; 8 10]);
+        end
+        
+        function test3(testCase)
+            syms y(t) z(t)
+            jac = daeJacobianFunction(zeros(2, 1, 'sym'), [y, z]);
+            [J, JP] = jac(1, [2; 3], [4; 5]);
+            testCase.verifyEqual(J, zeros(2));
+            testCase.verifyEqual(JP, zeros(2));
         end
     end
 end

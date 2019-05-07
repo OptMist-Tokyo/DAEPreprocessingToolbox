@@ -1,6 +1,6 @@
 function value = substitutePoint(f, pointKeys, pointValues)
 
-% substitutePoint    Matrix storing partial differentiations
+% substitutePoint    Evaluate f at a point.
 %
 %   Return the substituted value of f for the point designated by pointKeys and
 %   pointValues.

@@ -36,7 +36,7 @@ end
 
 % get return values
 newEqs = out(1).';
-newVars = out(2);
+newVars = out(2).';
 R = out(3);
 if R == 0
     R = zeros(0, 2, 'sym');

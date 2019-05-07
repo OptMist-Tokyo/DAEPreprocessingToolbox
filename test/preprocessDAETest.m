@@ -2,7 +2,7 @@ classdef preprocessDAETest < matlab.unittest.TestCase
     methods (Test)
         function test0(testCase)
             eqs = zeros(0, 1, 'sym');
-            vars = zeros(1, 0, 'sym');
+            vars = zeros(0, 1, 'sym');
             [newEqs, newVars, value] = preprocessDAE(eqs, vars);
             testCase.verifyEqual(newEqs, eqs);
             testCase.verifyEqual(newVars, vars);
@@ -11,7 +11,7 @@ classdef preprocessDAETest < matlab.unittest.TestCase
         
         function test1(testCase)
             eqs = zeros(0, 1, 'sym');
-            vars = zeros(1, 0, 'sym');
+            vars = zeros(0, 1, 'sym');
             pointKeys = zeros(1, 0, 'sym');
             pointValues = zeros(1, 0);
             [newEqs, newVars, value] = preprocessDAE(eqs, vars, pointKeys, pointValues);
