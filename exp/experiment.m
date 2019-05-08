@@ -7,12 +7,13 @@ pointKeys = pointKeys(t);
 n = length(eqns);
 tSol = [];
 ySol = zeros(0, n);
+pivotingTime = [];
 
 while true
     % Step 1. Preprocess DAEs
     fprintf('Preprocess DAEs.\n');
     if ~strcmp(method, 'none')
-        [newEqns, newVars, ~, ~, constR, newPointKeys, newPointValues] ...
+        [newEqns, newVars, ~, ~, ~, newPointKeys, newPointValues] ...
             = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'sym');
     else
         newEqns = eqns;
@@ -86,6 +87,8 @@ while true
         break;
     end
     
+    pivotingTime = [pivotingTime tspan(1)];
+    
     % update pointValues
     [yval, ypval] = deval(sol, tspan(1));
     for j = 1:length(pointKeys)
@@ -96,6 +99,9 @@ while true
         k = find(diff(vars) == pointKeys(j), 1);
         if ~isempty(k)
             pointValues(j) = ypval(k);
+        end
+        if pointKeys(j) == t
+            pointValues(j) = tspan(1);
         end
     end
 end
@@ -120,6 +126,12 @@ if ~strcmp(title, "")
             fprintf(fileID, ' %.15f', ySol(i, j));
         end
         fprintf(fileID, '\n');
+    end
+    fclose(fileID);
+    
+    fileID = fopen(sprintf('exp/data/%s_pivoting.txt', title), 'w');
+    for i = 1:length(pivotingTime)
+        fprintf(fileID, '%.15f\n', pivotingTime(i));
     end
     fclose(fileID);
 end

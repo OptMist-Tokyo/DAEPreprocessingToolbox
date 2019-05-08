@@ -19,12 +19,14 @@ plot "../data/pendulum_none.txt" using 1:2 with l ls 1 title "x_1(t)", \
      "../data/pendulum_none.txt" using 1:6 with l ls 5 title "x_5(t)"
 
 set output "../graph/pendulum_sub.png"
+set arrow from 1.278809648973457,-4 to 1.278809648973457,13 nohead lw 2 dt '-'
 plot "../data/pendulum_sub.txt" using 1:2 with l ls 1 title "x_1(t)", \
      "../data/pendulum_sub.txt" using 1:3 with l ls 2 title "x_2(t)", \
      "../data/pendulum_sub.txt" using 1:4 with l ls 3 title "x_3(t)", \
      "../data/pendulum_sub.txt" using 1:5 with l ls 4 title "x_4(t)", \
      "../data/pendulum_sub.txt" using 1:6 with l ls 5 title "x_5(t)"
-     
+unset arrow
+
 set output "../graph/pendulum_aug.png"
 plot "../data/pendulum_aug.txt" using 1:2 with l ls 1 title "x_1(t)", \
      "../data/pendulum_aug.txt" using 1:3 with l ls 2 title "x_2(t)", \
@@ -47,11 +49,13 @@ plot "../data/pendulum_none.txt" using 1:2 with l ls 1 title "$x_1(t)$", \
      "../data/pendulum_none.txt" using 1:6 with l ls 5 title "$x_5(t)$"
 
 set output "../tikz/pendulum_sub.tex"
+set arrow from 1.278809648973457,-4 to 1.278809648973457,13 nohead lw 2 dt (3, 5)
 plot "../data/pendulum_sub.txt" using 1:2 with l ls 1 title "$x_1(t)$", \
      "../data/pendulum_sub.txt" using 1:3 with l ls 2 title "$x_2(t)$", \
      "../data/pendulum_sub.txt" using 1:4 with l ls 3 title "$x_3(t)$", \
      "../data/pendulum_sub.txt" using 1:5 with l ls 4 title "$x_4(t)$", \
      "../data/pendulum_sub.txt" using 1:6 with l ls 5 title "$x_5(t)$"
+unset arrow
      
 set output "../tikz/pendulum_aug.tex"
 plot "../data/pendulum_aug.txt" using 1:2 with l ls 1 title "$x_1(t)$", \

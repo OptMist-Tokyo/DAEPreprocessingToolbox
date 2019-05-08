@@ -29,6 +29,7 @@ plot "../data/ringmod_none.txt" using 1:2 with l ls 1 title "x_1(t)", \
      "../data/ringmod_none.txt" using 1:6 with l ls 15 title "x_{15}(t)"
 
 set output "../graph/ringmod_sub.png"
+set arrow from 0.000501,-1 to 0.000501,1 nohead lw 2 dt '-'
 plot "../data/ringmod_sub.txt" using 1:2 with l ls 1 title "x_1(t)", \
      "../data/ringmod_sub.txt" using 1:3 with l ls 2 title "x_2(t)", \
      "../data/ringmod_sub.txt" using 1:4 with l ls 3 title "x_3(t)", \
@@ -44,6 +45,7 @@ plot "../data/ringmod_sub.txt" using 1:2 with l ls 1 title "x_1(t)", \
      "../data/ringmod_sub.txt" using 1:4 with l ls 13 title "x_{13}(t)", \
      "../data/ringmod_sub.txt" using 1:5 with l ls 14 title "x_{14}(t)", \
      "../data/ringmod_sub.txt" using 1:6 with l ls 15 title "x_{15}(t)"
+unset arrow
 
 set output "../graph/ringmod_aug.png"
 plot "../data/ringmod_aug.txt" using 1:2 with l ls 1 title "x_1(t)", \
@@ -87,6 +89,7 @@ plot "../data/ringmod_none.txt" every 10 using 1:2 with l ls 1 title "$x_1(t)$",
      "../data/ringmod_none.txt" every 10 using 1:16 with l ls 15 title "$x_{15}(t)$"
  
 set output "../tikz/ringmod_sub.tex"
+set arrow from 0.000501,-1 to 0.000501,1 nohead lw 2 dt (3, 5)
 plot "../data/ringmod_sub.txt" every 10 using 1:2 with l ls 1 title "$x_1(t)$", \
      "../data/ringmod_sub.txt" every 10 using 1:3 with l ls 2 title "$x_2(t)$", \
      "../data/ringmod_sub.txt" every 10 using 1:4 with l ls 3 title "$x_3(t)$", \
@@ -102,6 +105,7 @@ plot "../data/ringmod_sub.txt" every 10 using 1:2 with l ls 1 title "$x_1(t)$", 
      "../data/ringmod_sub.txt" every 10 using 1:14 with l ls 13 title "$x_{13}(t)$", \
      "../data/ringmod_sub.txt" every 10 using 1:15 with l ls 14 title "$x_{14}(t)$", \
      "../data/ringmod_sub.txt" every 10 using 1:16 with l ls 15 title "$x_{15}(t)$"
+unset arrow
      
 set output "../tikz/ringmod_aug.tex"
 plot "../data/ringmod_aug.txt" every 10 using 1:2 with l ls 1 title "$x_1(t)$", \
