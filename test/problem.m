@@ -28,8 +28,8 @@ classdef problem
             ];
             vars = [x1 x2 x3 x4 x5];
             
-            pointKeys = [x1 x2 x3 x4 x5 diff(x1) diff(x2) diff(x3) diff(x4) diff(x5)];
-            pointValues = [0.5 8.5311195044981 -3.03990380183 0 0 0 0 0 -4.2435244785437 -2.45];
+            pointKeys = [g x1 x2 x3 x4 x5 diff(x1) diff(x2) diff(x3) diff(x4) diff(x5)];
+            pointValues = [9.8 0.5 8.5311195044981 -3.03990380183 0 0 0 0 0 -4.2435244785437 -2.45];
         end
         
         function [eqs, vars, pointKeys, pointValues] = roboticArm
