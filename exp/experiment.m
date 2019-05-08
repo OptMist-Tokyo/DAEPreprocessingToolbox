@@ -7,12 +7,22 @@ ySol = zeros(0, n);
 while true
     % Step 1. Preprocess DAEs
     fprintf('Preprocess DAEs.\n');
-    [newEqns, newVars] = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'zero');
+    if ~strcmp(method, "none")
+        [newEqns, newVars, ~, ~, ~, newPointKeys, newPointValues] ...
+            = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'zero');
+    else
+        newEqns = eqns;
+        newVars = vars;
+        newPointKeys = pointKeys;
+        newPointValues = pointValues;
+    end
     
     % Step 2. Check and Reduce Differential Index
     if ~isLowIndex(newEqns, newVars)
         fprintf('DAE is of high index.\n');
-        [newEqns, newVars, ~, newPointKeys, newPointValues] = reduceIndex(newEqns, newVars, pointKeys, pointValues);
+        if ~strcmp(method, "none")
+            [newEqns, newVars, ~, newPointKeys, newPointValues] = reduceIndex(newEqns, newVars, newPointKeys, newPointValues);
+        end
         
         if isLowIndex(newEqns, newVars)
             fprintf('Index is successfully reduced.\n');
@@ -43,6 +53,7 @@ while true
     [y0, yp0] = decic(F, 0, y0est.', [], yp0est.', [], opt);
     
     % Step 6. Solve DAEs Using ode15i
+    fprintf('Solving DAE by ode15i.\n');
     sol = ode15i(F, tspan, y0, yp0, opt);
     
     if isscalar(sol.x)
@@ -75,7 +86,7 @@ while true
 end
 
 % plot
-plot(tSol, ySol)
+plot(tSol, ySol, '-o')
 
 for k = 1:n
     S{k} = char(vars(k));

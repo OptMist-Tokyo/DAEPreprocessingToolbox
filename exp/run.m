@@ -1,10 +1,10 @@
 addpath('src', 'test');
 
-[eqs, vars, pointKeys, pointValues, tspan] = roboticArm;
+[eqs, vars, pointKeys, pointValues, tspan] = ringModulator;
 syms t
 vars = vars(t);
 pointKeys = pointKeys(t);
-experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution');
+experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation');
 
 
 function [eqs, vars, pointKeys, pointValues, tspan] = pendulum
@@ -25,7 +25,7 @@ end
 
 function [eqs, vars, pointKeys, pointValues, tspan] = roboticArm
     [eqs, vars, pointKeys, pointValues] = problem.roboticArm;
-    tspan = [0, 1.5];
+    tspan = [0, 1.4];
 end
 
 
