@@ -10,7 +10,6 @@ while true
     if ~strcmp(method, 'none')
         [newEqns, newVars, ~, ~, constR, newPointKeys, newPointValues] ...
             = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'sym');
-        newPointKeys
     else
         newEqns = eqns;
         newVars = vars;
@@ -31,8 +30,6 @@ while true
             fprintf('Failed to reduce index.\n');
         end
     else
-        newPointKeys = pointKeys;
-        newPointValues = pointValues;
         fprintf('DAE is already low index.\n')
     end
     
@@ -66,14 +63,14 @@ while true
     fprintf('Solving DAE by ode15i.\n');
     sol = ode15i(F, tspan, y0, yp0, opt);
     
+    % store result
+    tSol = [tSol; sol.x'];
+    ySol = [ySol; sol.y(1:n, :)'];
+    
     if isscalar(sol.x)
         warning('Integration failed.');
         break;
     end
-    
-    % store result
-    tSol = [tSol; sol.x'];
-    ySol = [ySol; sol.y(1:n, :)'];
     
     % update tspan
     tspan(1) = sol.x(end);
