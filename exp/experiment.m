@@ -1,5 +1,9 @@
 function experiment(eqns, vars, pointKeys, pointValues, tspan, method, usedecic, title)
 
+syms t
+vars = vars(t);
+pointKeys = pointKeys(t);
+
 n = length(eqns);
 tSol = [];
 ySol = zeros(0, n);
@@ -43,9 +47,11 @@ while true
     %pretty(newVars)
     
     % Step 4. Convert DAE Systems to MATLAB Function Handles
-    if strcmp(method, 'augmentation')
-        newEqns = subs(newEqns, constR(:, 1).', substitutePoint(constR(:, 1).', newPointKeys, newPointValues));
-    end
+    pDAEs = symvar(newEqns);
+    pDAEvars = symvar(newVars);
+    extraParams = setdiff(pDAEs, pDAEvars);
+    newPointKeys
+    newEqns = subs(newEqns, extraParams, substitutePoint(extraParams, newPointKeys, newPointValues));
     F = daeFunction(newEqns, newVars);
     
     % Step 5. Find Initial Conditions For Solvers
