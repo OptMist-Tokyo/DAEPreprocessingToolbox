@@ -10,6 +10,7 @@ while true
     if ~strcmp(method, 'none')
         [newEqns, newVars, ~, ~, constR, newPointKeys, newPointValues] ...
             = preprocessDAE(eqns, vars, pointKeys, pointValues, 'Method', method, 'Constants', 'sym');
+        newPointKeys
     else
         newEqns = eqns;
         newVars = vars;
@@ -45,12 +46,14 @@ while true
     %pretty(newVars)
     
     % Step 4. Convert DAE Systems to MATLAB Function Handles
-    newEqns = subs(newEqns, constR(:, 1).', substitutePoint(constR(:, 1).', newPointKeys, newPointValues));
+    if strcmp(method, 'augmentation')
+        newEqns = subs(newEqns, constR(:, 1).', substitutePoint(constR(:, 1).', newPointKeys, newPointValues));
+    end
     F = daeFunction(newEqns, newVars);
     
     % Step 5. Find Initial Conditions For Solvers
     opt = odeset('Jacobian', daeJacobianFunction(newEqns, newVars));
-    [y0est, yp0est] = extractVariableValue(newVars, newPointKeys, newPointValues, 'MissingVariable', 'zero');
+    [y0est, yp0est] = extractVariableValue(newVars, newPointKeys, newPointValues, 'MissingVariable', 'warning');
     
     if usedecic
         [y0, yp0] = decic(F, 0, y0est.', [], yp0est.', [], opt);

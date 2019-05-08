@@ -1,10 +1,10 @@
 addpath('src', 'test');
 
-[eqs, vars, pointKeys, pointValues, tspan] = ringModulator;
-experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation', false, '');
+[eqs, vars, pointKeys, pointValues, tspan] = transistorAmplifier;
+experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation', false, "transamp_aug");
 
 
-function gendata
+function genData
     [eqs, vars, pointKeys, pointValues, tspan] = modifiedPendulum;
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'none', true, "pendulum_none");
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution', true, "pendulum_sub");
@@ -41,7 +41,7 @@ end
 function [eqs, vars, pointKeys, pointValues, tspan] = modifiedPendulum
     [eqs, vars, pointKeys, pointValues] = problem.modifiedPendulum;
     eqs = subs(eqs, sym('g'), 9.8);
-    tspan = [0, 3];
+    tspan = [0, 5];
     syms t
     vars = vars(t);
     pointKeys = pointKeys(t);

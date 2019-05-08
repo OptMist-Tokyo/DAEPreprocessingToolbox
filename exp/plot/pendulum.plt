@@ -4,7 +4,7 @@ set terminal pngcairo
 set key nobox
 set key above
 
-set xrange [0:3]
+set xrange [0:5]
 set xlabel "t"
 
 unset logscale y 
