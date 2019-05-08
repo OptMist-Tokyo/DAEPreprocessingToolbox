@@ -12,9 +12,10 @@
             DAEs.
 */
 
-daepp::modifyByAugmentation := proc(eqs, vars, p, q, r, II, JJ /*, tVar */)
-local hast, oparg, options, m, n, tVar, ngList, vars_J, newVars_J,
-      circuit, S, T, vars_T, consts, eqs_I, subseq;
+daepp::modifyByAugmentation := proc(eqs, vars, p, q, r, II, JJ)
+local options, tVar, point, tTmp, m, n, ngList, vars_J, newVars_J, circuit, S,
+      T, vars_T, existingT, missingT, missingConstOpt, constsForExistingT,
+      constsForMissingT, genConst, eqs_I, subseq, R, constR;
 begin
     // check number of arguments
     if testargs() then
@@ -27,15 +28,23 @@ begin
     [eqs, vars, p, q, II, JJ] := map([eqs, vars, p, q, II, JJ], symobj::tolist);
     
     // get options
-    hast := is(args(0) > 7 && not testtype(args(8), DOM_TABLE));
-    oparg := if hast then 9 else 8 end_if;
-    options := prog::getOptions(oparg, [args()], table(Constants = "sym"), TRUE)[1];
+    options := prog::getOptions(8, [args()], table(
+        TimeVariable = NIL,
+        Point = NIL,
+        Constants = "sym",
+        MissingConstants = "sym"
+    ), TRUE)[1];
+    tVar := options[TimeVariable];
+    point := options[Point];
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
-        if hast && tVar <> args(oparg - 1) then
+        [eqs, vars, tTmp] := daepp::checkDAEInput(eqs, vars);
+        if not tVar in {NIL, tTmp} then
             error("Inconsistency of time variable.");
+        end_if;
+        if point <> NIL then
+            point := daepp::checkPointInput(point);
         end_if;
         
         m := nops(eqs);
@@ -67,33 +76,44 @@ begin
         if contains(II, r) <> 0 then
             error("II sould not contain r.");
         end_if;
+        if nops(II) <> nops({op(II)}) then
+            error("Duplicated indices in II.");
+        end_if;
         if not _and((p[r] <= p[i]) $ i in II) then
             error("p[r] is not minimum in p[i] for i in II.");
         end_if;
         if not _and((testtype(n, DOM_INT) && 1 <= j && j <= n) $ j in JJ) then
             error("Invalid indices in JJ.");
         end_if;
+        if nops(JJ) <> nops({op(JJ)}) then
+            error("Duplicated indices in JJ.");
+        end_if;
     end;
     
     n := nops(vars);
     
     // retrieve tVar
-    if not hast then
-        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
-    else
-        tVar := args(oparg - 1);
+    if tVar = NIL then
+        tVar := daepp::checkDAEInput(eqs, vars)[3];
+    end_if;
+    
+    // convert point to table
+    if point <> NIL then
+        point := table(point);
+    elif options[Constants] = "point" then
+        error("Parameter Constants is set as 'point' but no point is designated.")
     end_if;
     
     // prepare new variables
-    vars_J := [symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in JJ];
+    vars_J := table(j = symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in JJ);
     ngList := indets(eqs, All);
-    newVars_J := map(JJ, proc(j) local newVar; begin
+    newVars_J := table(map(JJ, proc(j) local newVar; begin
         newVar := daepp::generateVariable(vars[j], q[j] - p[r], ngList, TimeVariable = tVar);
         ngList := ngList union {newVar};
-        newVar;
-    end_proc);
+        j = newVar;
+    end_proc));
     
-    // prepare constants
+    // select variables for which constants are needed
     circuit := append(II, r);
     S := daepp::orderMatrix([eqs[i] $ i in circuit], vars);
     T := select([j $ j = 1..n],
@@ -101,40 +121,55 @@ begin
     if nops(T) = 0 then
         error("Something wrong: T is empty.");
     end_if;
-    vars_T := [symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in T];
+    vars_T := table(j = symobj::diff(vars[j], tVar, q[j] - p[r]) $ j in T);
     
-    case options[Constants]
-        of "sym" do 
-            consts := map(T, proc(j) local newVar; begin
-                newVar := daepp::generateVariable(vars[j], q[j] - p[r], ngList,
-                    TimeVariable = tVar, Prefix = "const", ReturnFunction = FALSE);
-                ngList := ngList union {newVar};
-                newVar;
-            end_proc);
-            break;
-        of "zero" do
-            consts := [0 $ nops(T)];
-            break;
-        otherwise
-            error("Invalid parameter of 'Constants'.");
-    end_case;
+    if options[Constants] = "point" then
+        existingT := select(T, j -> contains(point, vars_T[j]));
+        missingT := select(T, j -> not contains(point, vars_T[j]));
+        missingConstOpt := options[MissingConstants];
+    else
+        existingT := [];
+        missingT := T;
+        missingConstOpt := options[Constants];
+    end_if;
+    
+    // prepare constants
+    constsForExistingT := table(map(existingT, j -> j = point[vars_T[j]]));
+    
+    genConst := proc(j)
+        local newVar;
+        begin
+            newVar := daepp::generateVariable(vars[j], q[j] - p[r], ngList,
+                TimeVariable = tVar, Prefix = "const", ReturnFunction = FALSE);
+            ngList := ngList union {newVar};
+            j = newVar;
+        end_proc;
+    
+    constsForMissingT := table(case missingConstOpt
+        of "sym"  do map(missingT, genConst); break;
+        of "zero" do map(missingT, j -> j = 0); break;
+    end_case);
     
     // prepare equations and variables
     eqs_I := [symobj::diff(eqs[i], tVar, p[i] - p[r]) $ i in II];
     
     // substitute
-    subseq := [vars_J[k] = newVars_J[k] $ k = 1..nops(JJ)]
-            . [vars_T[k] = consts[k] $ k = 1..nops(T)];
+    subseq := map(JJ, j -> vars_J[j] = newVars_J[j])
+            . map(existingT, j -> vars_T[j] = constsForExistingT[j])
+            . map(missingT, j -> vars_T[j] = constsForMissingT[j]);
     [eqs_r, eqs_I] := map([eqs[r], eqs_I], eq -> subs(eq, subseq));
     
     // append new equations and variables
     newEqs := eqs . eqs_I;
     newEqs[r] := eqs_r;
-    newVars := vars . newVars_J;
+    newVars := vars . rhs(newVars_J);
     
-    if options[Constants] = "sym" then
-        [newEqs, newVars, consts];
-    else
-        [newEqs, newVars];
-    end_if;
+    // make R and constR
+    R := map(JJ, j -> newVars_J[j] = vars_J[j]);
+    constR := case missingConstOpt
+        of "sym"  do map(missingT, j -> constsForMissingT[j] = vars_T[j]); break;
+        of "zero" do []; break;
+    end_case;
+    
+    [newEqs, newVars, R, constR];
 end_proc;

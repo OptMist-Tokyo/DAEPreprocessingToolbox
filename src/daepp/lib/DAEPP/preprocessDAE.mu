@@ -1,8 +1,8 @@
 // MuPAD implementation for preprocessDAE.m
 
 daepp::preprocessDAE := proc(eqs, vars)
-local options, tVar, point, tTmp, dof, consts, S, v, p, q, D, r, II, JJ,
-      newConsts;
+local options, tVar, point, tTmp, dof, R, constR, S, v, p, q, D, r, II, JJ,
+      newR, newConstR, tableR, i;
 begin
     // check number of arguments
     if testargs() then
@@ -18,6 +18,7 @@ begin
     options := prog::getOptions(3, [args()], table(
         Method = "augmentation",
         Constants = "sym",
+        MissingConstants = "sym",
         TimeVariable = NIL,
         Point = NIL
     ), TRUE)[1];
@@ -42,7 +43,7 @@ begin
     end_if;
     
     dof := infinity;
-    consts := [];
+    [R, constR] := [[], []];
     
     // main loop
     while TRUE do
@@ -79,31 +80,25 @@ begin
                 );
                 break;
             of "augmentation" do
-                case options[Constants]
-                    of "sym" do
-                        [eqs, vars, newConsts] := daepp::modifyByAugmentation(
-                            eqs, vars, p, q, r, II, JJ, tVar, Constants = "sym"
-                        );
-                        consts := consts . newConsts;
-                        break;
-                    of "zero" do
-                        [eqs, vars] := daepp::modifyByAugmentation(
-                            eqs, vars, p, q, r, II, JJ, tVar, Constants = "zero"
-                        ); 
-                        break;
-                    otherwise
-                        error("Invalid parameter of 'Constants'.");
-                end_case;
+                [eqs, vars, newR, newConstR] := daepp::modifyByAugmentation(
+                    eqs, vars, p, q, r, II, JJ,
+                    TimeVariable = tVar,
+                    Point = point,
+                    Constants = options[Constants],
+                    MissingConstants = options[MissingConstants]
+                );
+                if point <> NIL then
+                    point := daepp::updatePoint(point, newR);
+                    point := daepp::updatePoint(point, newConstR);
+                end_if;
+                constR := constR . daepp::updateRelation(newConstR, R);
+                R := R . daepp::updateRelation(newR, R);
                 break;
             otherwise
-                error("Invalid parameter of 'Method'.");
+                error("Invalid parameter of Method.");
         end_case;
     end_while;
     
     // return
-    case options[Constants]
-        of "sym" do [eqs, vars, dof, consts]; break;
-        of "zero" do [eqs, vars, dof]; break;
-        otherwise error("Invalid parameter of 'Constants'.");
-    end_case;
+    [eqs, vars, dof, R, constR, point];
 end_proc;

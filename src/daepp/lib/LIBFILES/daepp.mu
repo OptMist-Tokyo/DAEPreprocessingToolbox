@@ -24,6 +24,8 @@ daepp::interface := {
     hold(reduceIndex),
     hold(substitutePoint),
     hold(systemJacobian),
+    hold(updatePoint),
+    hold(updateRelation),
     null()
 };
 
@@ -45,5 +47,7 @@ autoload(daepp::preprocessDAE);
 autoload(daepp::reduceIndex);
 autoload(daepp::substitutePoint);
 autoload(daepp::systemJacobian);
+autoload(daepp::updatePoint);
+autoload(daepp::updateRelation);
 
 null();
