@@ -1,4 +1,4 @@
-function experiment(eqns, vars, pointKeys, pointValues, tspan, method)
+function experiment(eqns, vars, pointKeys, pointValues, tspan, method, usedecic, title)
 
 n = length(eqns);
 tSol = [];
@@ -49,8 +49,13 @@ while true
     
     % Step 5. Find Initial Conditions For Solvers
     opt = odeset('Jacobian', daeJacobianFunction(newEqns, newVars));
-    [y0est, yp0est] = extractVariableValue(newVars, newPointKeys, newPointValues);
-    [y0, yp0] = decic(F, 0, y0est.', [], yp0est.', [], opt);
+    [y0est, yp0est] = extractVariableValue(newVars, newPointKeys, newPointValues, 'MissingVariable', 'zero');
+    if usedecic
+        [y0, yp0] = decic(F, 0, y0est.', [], yp0est.', [], opt);
+    else
+        y0 = y0est.';
+        yp0 = yp0est.';
+    end
     
     % Step 6. Solve DAEs Using ode15i
     fprintf('Solving DAE by ode15i.\n');
@@ -86,7 +91,7 @@ while true
 end
 
 % plot
-plot(tSol, ySol, '-o')
+plot(tSol, ySol)
 
 for k = 1:n
     S{k} = char(vars(k));
@@ -94,3 +99,17 @@ end
 
 legend(S, 'Location', 'Best')
 grid on
+%saveas(gcf, sprintf('exp/data/%s.png', title));
+
+% write to file
+if ~strcmp(title, "")
+    fileID = fopen(sprintf('exp/data/%s.txt', title), 'w');
+    for i = 1:length(tSol)
+        fprintf(fileID, '%.15f', tSol(i));
+        for j = 1:n
+            fprintf(fileID, ' %.15f', ySol(i, j));
+        end
+        fprintf(fileID, '\n');
+    end
+    fclose(fileID);
+end

@@ -64,6 +64,7 @@ begin
             select(j $ j = 1..n, j -> not linalg::zeroTest(expr(A[i, j]))),
             j -> pivrow[j]
         )} union {i};
+        circuitCand := circuitCand union {c};
         if nops(c) < circuitCandSize then
             circuitCand := {c};
             circuitCandSize := nops(c);
