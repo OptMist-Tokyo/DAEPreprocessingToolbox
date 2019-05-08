@@ -59,11 +59,17 @@ begin
         if contains(II, r) <> 0 then
             error("II sould not contain r.");
         end_if;
+        if nops(II) <> nops({op(II)}) then
+            error("Duplicated indices in II.");
+        end_if;
         if not _and((p[r] <= p[i]) $ i in II) then
             error("p[r] is not minimum in p[i] for i in II.");
         end_if;
         if not _and((testtype(n, DOM_INT) && 1 <= j && j <= n) $ j in JJ) then
             error("Invalid indices in JJ.");
+        end_if;
+        if nops(JJ) <> nops({op(JJ)}) then
+            error("Duplicated indices in JJ.");
         end_if;
     end;
     

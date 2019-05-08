@@ -74,11 +74,11 @@ classdef integrationTest < matlab.unittest.TestCase
             
             D = systemJacobian(F, x);
             testCase.verifyEqual(D, [
-                                                1, 0,                   0,                           2/(cos(x3(t))^2 - 2),                        -2/(cos(x3(t))^2 - 2)
-                                                0, 1,                   0,                          -2/(cos(x3(t))^2 - 2),                     2/(cos(x3(t))^2 - 2) - 1
-                                                0, 0,                   1, - cos(t)/(cos(t)^2 - 2) - 2/(cos(x3(t))^2 - 2), cos(t)/(cos(t)^2 - 2) + 2/(cos(x3(t))^2 - 2)
-                - sin(x1(t)) - sin(x1(t) + x3(t)), 0, -sin(x1(t) + x3(t)),                                              0,                                            0
-                  cos(x1(t)) + cos(x1(t) + x3(t)), 0,  cos(x1(t) + x3(t)),                                              0,                                            0
+                                                1, 0,                   0,                                   2/(cos(x3(t))^2 - 2),                                -2/(cos(x3(t))^2 - 2)
+                                                0, 1,                   0,                                  -2/(cos(x3(t))^2 - 2),                             2/(cos(x3(t))^2 - 2) - 1
+                                                0, 0,                   1, - cos(x3(t))/(cos(x3(t))^2 - 2) - 2/(cos(x3(t))^2 - 2), cos(x3(t))/(cos(x3(t))^2 - 2) + 2/(cos(x3(t))^2 - 2)
+                - sin(x1(t)) - sin(x1(t) + x3(t)), 0, -sin(x1(t) + x3(t)),                                              0,                                                            0
+                  cos(x1(t)) + cos(x1(t) + x3(t)), 0,  cos(x1(t) + x3(t)),                                              0,                                                            0
             ]);
             
             [r, I, J] = findEliminatingSubsystemTest.findEliminatingSubsystem(D, p);

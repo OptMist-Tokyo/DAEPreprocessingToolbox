@@ -1,4 +1,4 @@
-function varargout = preprocessDAE(eqs, vars, varargin)
+function [newEqs, newVars, degreeOfFreedom, R, constR, newPointKeys, newPointValues] = preprocessDAE(eqs, vars, varargin)
 
 % preprocessDAE    Preprocess DAE system for structural analysis.
 %
@@ -52,7 +52,8 @@ end
 % parse parameters
 parser = inputParser;
 addParameter(parser, 'Method', 'augmentation', @(x) any(validatestring(x, {'substitution', 'augmentation'})));
-addParameter(parser, 'Constants', 'sym', @(x) any(validatestring(x, {'zero', 'sym'})));
+addParameter(parser, 'Constants', 'sym', @(x) any(validatestring(x, {'zero', 'sym', 'point'})));
+addParameter(parser, 'MissingConstants', 'sym', @(x) any(validatestring(x, {'zero', 'sym'})));
 parser.parse(varargin{startOptArg:end});
 options = parser.Results;
 
@@ -63,6 +64,7 @@ if hasPoint
     table = addEntry(table, 'Point', point);
 end
 table = addEntry(table, 'Constants', options.Constants);
+table = addEntry(table, 'MissingConstants', options.MissingConstants);
 table = addEntry(table, 'Method', options.Method);
 
 % call MuPAD
@@ -74,10 +76,12 @@ catch ME
 end
 
 % restore return values
-varargout{1} = out(1).';       % newEqs
-varargout{2} = out(2).';       % newVars
-varargout{3} = double(out(3)); % degreeOfFreedom
-
-if strcmp(options.Constants, "sym")
-    varargout{4} = out(4);     % constants
+newEqs = out(1).';
+newVars = out(2).';
+degreeOfFreedom = double(out(3));
+R = [lhs(out(4)).' rhs(out(4)).'];
+constR = [lhs(out(5)).' rhs(out(5)).'];
+if hasPoint
+    newPointKeys = lhs(out(6));
+    newPointValues = double(rhs(out(6)));
 end

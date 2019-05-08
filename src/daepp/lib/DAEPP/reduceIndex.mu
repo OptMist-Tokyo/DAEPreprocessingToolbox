@@ -100,14 +100,13 @@ begin
     // substitute
     newEqs := subs(newEqs, [diffVars[j] = dummyVars[j] $ j = 1..N]);
     newVars := vars . dummyVars;
-    R := matrix(N, 2, (j, i) -> if i = 1 then diffVars[j] else dummyVars[j] end_if);
+    R := [dummyVars[j] = diffVars[j] $ j = 1..N];
     
+    // update point
     if point <> NIL then
-        pointTable := table(point);
-        newPoint := point . [dummyVars[j] = pointTable[diffVars[j]] $ j
-            in select([j $ j = 1..N], j -> contains(pointTable, diffVars[j]))];
-        [newEqs, newVars, R, newPoint];
-    else;
-        [newEqs, newVars, R];
+        point := daepp::updatePoint(point, R);
     end_if;
+    
+    // return
+    [newEqs, newVars, R, point];
 end_proc;

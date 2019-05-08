@@ -37,11 +37,8 @@ end
 % get return values
 newEqs = out(1).';
 newVars = out(2).';
-R = out(3);
-if R == 0
-    R = zeros(0, 2, 'sym');
-end
+R = [lhs(out(3)).' rhs(out(3)).'];
 if hasPoint
-    newPointKeys = feval(symengine, 'lhs', out(4));
-    newPointValues = double(feval(symengine, 'rhs', out(4)));
+    newPointKeys = lhs(out(4));
+    newPointValues = double(rhs(out(4)));
 end
