@@ -1,11 +1,12 @@
 addpath('src', 'test');
 
-gendata;
+[eqs, vars, pointKeys, pointValues, tspan] = ringModulator;
+experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation', false, '');
 
 
 function gendata
     [eqs, vars, pointKeys, pointValues, tspan] = modifiedPendulum;
-    %experiment(eqs, vars, pointKeys, pointValues, tspan, 'none', true, "pendulum_none");
+    experiment(eqs, vars, pointKeys, pointValues, tspan, 'none', true, "pendulum_none");
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution', true, "pendulum_sub");
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation', true, "pendulum_aug");
 
@@ -73,7 +74,7 @@ function [eqs, vars, pointKeys, pointValues, tspan] = ringModulator
     params = [C Cp Lh Ls1 Ls2 Ls3 gam R Rp Rg1 Rg2 Rg3 Ri Rc del];
     [eqs, vars, pointKeys, pointValues] = problem.ringModulator;
     eqs = subs(eqs, params, substitutePoint(params, pointKeys, pointValues));
-    tspan = [0, 5e-4];
+    tspan = [0, 1e-3];
     syms t
     vars = vars(t);
     pointKeys = pointKeys(t);
