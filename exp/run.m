@@ -1,31 +1,42 @@
 addpath('src', 'test');
 
-genData
-
+genData;
 
 function genData
-    disp('Modified Pendulum');
+    fprintf('\n--------\nModified Pendulum\n--------\n');
     [eqs, vars, pointKeys, pointValues, tspan] = modifiedPendulum;
+    fprintf('- none:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'none', true, "pendulum_none");
+    fprintf('- sub:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution', true, "pendulum_sub");
+    fprintf('- aug:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation', true, "pendulum_aug");
 
-    disp('Robotic Arm');
+    fprintf('\n--------\nRobotic Arm\n--------\n');
     [eqs, vars, pointKeys, pointValues, tspan] = roboticArm;
+    fprintf('- none:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'none', true, "robot_none");
+    fprintf('- sub:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution', true, "robot_sub");
+    fprintf('- aug:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation', true, "robot_aug");
 
-    disp('Transistor Amplifier');
+    fprintf('\n--------\nTransistor Amplifier\n--------\n');
     [eqs, vars, pointKeys, pointValues, tspan] = transistorAmplifier;
+    fprintf('- none:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'none', true, "transamp_none");
+    fprintf('- sub:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution', true, "transamp_sub");
+    fprintf('- aug:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation', false, "transamp_aug");
 
-    disp('Ring Modulator');
+    fprintf('\n--------\nRing Modulator\n--------\n');
     [eqs, vars, pointKeys, pointValues, tspan] = ringModulator;
+    fprintf('- none:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'none', false, "ringmod_none");
+    %fprintf('- sub:\n');
     %experiment(eqs, vars, pointKeys, pointValues, tspan, 'substitution', false, "ringmod_sub");
+    fprintf('- aug:\n');
     experiment(eqs, vars, pointKeys, pointValues, tspan, 'augmentation', false, "ringmod_aug");
 end
 

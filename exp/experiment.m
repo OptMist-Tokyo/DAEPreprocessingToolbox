@@ -50,13 +50,15 @@ while true
     pDAEs = symvar(newEqns);
     pDAEvars = symvar(newVars);
     extraParams = setdiff(pDAEs, pDAEvars);
-    newPointKeys
-    newEqns = subs(newEqns, extraParams, substitutePoint(extraParams, newPointKeys, newPointValues));
-    F = daeFunction(newEqns, newVars);
+    extraParamValues = num2cell(substitutePoint(extraParams, newPointKeys, newPointValues));
+    extraParams = num2cell(extraParams);
+    f = daeFunction(newEqns, newVars, extraParams{:});
+    F = @(t, Y, YP) f(t, Y, YP, extraParamValues{:});
     
     % Step 5. Find Initial Conditions For Solvers
-    opt = odeset('Jacobian', daeJacobianFunction(newEqns, newVars));
-    [y0est, yp0est] = extractVariableValue(newVars, newPointKeys, newPointValues, 'MissingVariable', 'warning');
+    jac = daeJacobianFunction(newEqns, newVars, extraParams{:});
+    opt = odeset('Jacobian', @(t, Y, YP) jac(t, Y, YP, extraParamValues{:}));
+    [y0est, yp0est] = extractVariableValue(newVars, newPointKeys, newPointValues, 'MissingVariable', 'zero');
     
     if usedecic
         [y0, yp0] = decic(F, 0, y0est.', [], yp0est.', [], opt);
