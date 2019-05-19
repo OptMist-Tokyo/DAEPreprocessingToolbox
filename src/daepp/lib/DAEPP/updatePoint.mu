@@ -1,7 +1,7 @@
 // Update point using R.
 
 daepp::updatePoint := proc(point, R)
-local tablePoint, p, lh, rh, var, order, pointKeys, r, dvar, newPoint, duplicated;
+local tablePoint, p, lh, rh, var, order, newPoint, r, pointKeys, duplicated;
 begin
     // check number of arguments
     if testargs() then

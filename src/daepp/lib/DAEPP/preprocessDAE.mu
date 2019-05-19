@@ -2,7 +2,7 @@
 
 daepp::preprocessDAE := proc(eqs, vars)
 local options, tVar, point, tTmp, dof, R, constR, S, v, p, q, D, r, II, JJ,
-      newR, newConstR, tableR, i;
+      newR, newConstR;
 begin
     // check number of arguments
     if testargs() then

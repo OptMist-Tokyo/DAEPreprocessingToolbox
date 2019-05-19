@@ -1,7 +1,7 @@
 // Substitute point for f.
 
 daepp::substitutePoint := proc(f, point)
-local value, diffs, dummy1, funcNames, funcs, tmp, dummy2, vars, missing;
+local value, diffs, dummy1, funcNames, funcs, dummy2, vars, missing;
 begin
     // check input
     if testargs() then

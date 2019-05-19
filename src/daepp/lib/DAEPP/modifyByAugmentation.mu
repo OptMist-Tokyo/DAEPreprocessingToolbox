@@ -13,9 +13,10 @@
 */
 
 daepp::modifyByAugmentation := proc(eqs, vars, p, q, r, II, JJ)
-local options, tVar, point, tTmp, m, n, ngList, vars_J, newVars_J, circuit, S,
+local options, tVar, point, tTmp, m, n, vars_J, ngList, newVars_J, circuit, S,
       T, vars_T, existingT, missingT, missingConstOpt, constsForExistingT,
-      constsForMissingT, genConst, eqs_I, subseq, R, constR;
+      genConst, constsForMissingT, eqs_I, subseq, eqs_r, newEqs, newVars, R,
+      constR;
 begin
     // check number of arguments
     if testargs() then

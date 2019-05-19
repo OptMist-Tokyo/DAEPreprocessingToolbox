@@ -2,8 +2,7 @@
 
 daepp::reduceIndex := proc(eqs, vars)
 local options, tVar, point, tTmp, m, n, S, v, p, q, D, V, II, JJ, h, k, subD,
-      rank, piv, newJJ, j, newEqs, diffVars, N, ngList, dummyVars, newVars, R,
-      pointTable, newPoint;
+      rank, piv, newJJ, j, newEqs, diffVars, N, ngList, dummyVars, newVars, R;
 begin
     // check number of arguments
     if testargs() then

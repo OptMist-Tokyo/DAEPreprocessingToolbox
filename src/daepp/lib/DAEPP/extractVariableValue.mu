@@ -1,7 +1,7 @@
 // MuPAD implementation for extractVariableValue.m
 
 daepp::extractVariableValue := proc(vars, point)
-local tVar, tTmp, varsp, missing, msg, y, yp;
+local options, tVar, tTmp, varsp, missing, msg, y, yp;
 begin
     // check number of arguments
     if testargs() then

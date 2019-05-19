@@ -2,7 +2,7 @@
 // of var.
 
 daepp::generateVariable := proc(var, order, ngList)
-local options, tVar, prefix, point, genfun, newName, newVar;
+local options, tVar, prefix, genfun, tTmp, newName, newVar;
 begin
     // check number of arguments
     if testargs() then

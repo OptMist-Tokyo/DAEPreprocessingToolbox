@@ -8,8 +8,8 @@
 */
 
 daepp::findEliminatingSubsystem := proc(D, p /*, V */)
-local V, m, n, A, rank, pivrow, nonpiv, circuit, i, circuitCand,
-      circuitCandSize, c, maxAbsDet, tmpr, tmpII, pmin, rcand, r, II, subD, JJ;
+local V, m, n, A, rank, pivrow, nonpiv, circuitCand, circuitCandSize, i, c,
+      circuit, pmin, rcand, r, II, maxAbsDet, tmpr, tmpII, absDet, subD, JJ;
 begin
     // check number of arguments
     if args(0) < 2 || 3 < args(0) then
