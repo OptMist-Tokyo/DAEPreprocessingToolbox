@@ -32,7 +32,7 @@ function [newEqs, newVars, degreeOfFreedom, R, constR, newPointKeys, newPointVal
 %     Taihei Oki. Improved structural methods for nonlinear differential-
 %     algebraic equations via combinatorial relaxation. In Proceedings of the
 %     44th International Symposium on Symbolic and Algebraic Computation
-%     (ISSAC 2019).
+%     (ISSAC '19).
 
 % check input
 narginchk(2, Inf);

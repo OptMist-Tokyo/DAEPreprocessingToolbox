@@ -7,7 +7,7 @@ classdef systemJacobianTest < matlab.unittest.TestCase
         end
         
         function test1(testCase)
-            syms z(t) y(t) f(t)
+            syms y(t) z(t) f(t)
             F = [
                 z(t)^2 + diff(z(t))^2 + y(t) + diff(f(t), 3)
                 diff(z(t)) + y(t) + diff(y(t), 5) + f(t)
