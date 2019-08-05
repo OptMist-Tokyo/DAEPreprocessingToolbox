@@ -1,6 +1,6 @@
 function loadMuPADPackage
 
-% loadMuPADPackage    Load MuPAD Package 'daepp'.
+% LOADMUPADPACKAGE    Load MuPAD Package 'daepp'.
 %
 %   Load MuPAD package 'daepp' with reload prevension. To force reloading,
 %   reset the flag by 'clear loadMuPADPackage' before calling this method.

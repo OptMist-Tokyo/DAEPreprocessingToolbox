@@ -51,7 +51,7 @@ end
 
 % parse parameters
 parser = inputParser;
-addParameter(parser, 'Method', 'augmentation', @(x) any(validatestring(x, {'substitution', 'augmentation'})));
+addParameter(parser, 'Method', 'substitution', @(x) any(validatestring(x, {'substitution', 'augmentation'})));
 addParameter(parser, 'Constants', 'sym', @(x) any(validatestring(x, {'zero', 'sym', 'point'})));
 addParameter(parser, 'MissingConstants', 'sym', @(x) any(validatestring(x, {'zero', 'sym'})));
 parser.parse(varargin{startOptArg:end});
