@@ -2,11 +2,10 @@ function D = systemJacobian(eqs, vars)
 
 %SYSTEMJACOBIAN    System Jacobian matrix of DAE system.
 %
-%   Return the system Jacobian matrix of the vector eqs with respect to the
-%   vector vars. The (i, j)th entry of the resulting matrix is the derivative
-%   of eqs(i)^(p(i)) by vars(j)^(q(j)), where p and q are a dual optimal
-%   solution of the assignment problem obtained from the order matrix of the
-%   DAE system.
+%   Return the system Jacobian matrix of eqs with respect to the vars. The
+%   (i, j)th entry of the resulting matrix is the derivative of eqs(i)^(p(i)) by
+%   vars(j)^(q(j)), where p and q are a dual optimal solution of the assignment
+%   problem obtained from the order matrix of the DAE system.
 %
 %   Example:
 %     >> syms x(t) y(t)

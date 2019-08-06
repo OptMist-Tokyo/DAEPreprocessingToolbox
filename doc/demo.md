@@ -19,19 +19,19 @@ vars = [x, y];
 and then define the equation system as follows:
 
 ```matlab
-eqns = [
+eqs = [
     -diff(x(t), t, 2)        - y(t) == sin(t)
      diff(x(t), t, 2) + x(t) + y(t) == t
 ];
 ```
 
-Since procedures for DAEs in MALTAB cannot handle higher order systems, reduce `eqns` to the first-order system.
+Since procedures for DAEs in MALTAB cannot handle higher order systems, reduce `eqs` to the first-order system.
 
 ``` matlab
-[eqns, vars] = reduceDifferentialOrder(eqns, vars)
+[eqs, vars] = reduceDifferentialOrder(eqs, vars)
 ```
 >```
-> eqns =
+> eqs =
 > 
 >  - diff(Dxt(t), t) - sin(t) - y(t)
 >  x(t) - t + y(t) + diff(Dxt(t), t)
@@ -47,7 +47,7 @@ Since procedures for DAEs in MALTAB cannot handle higher order systems, reduce `
 
 Next check if this system is of low-index.
 ``` matlab
-isLowIndexDAE(eqns, vars)
+isLowIndexDAE(eqs, vars)
 ```
 >```
 > ans =
@@ -61,7 +61,7 @@ Since `isLowIndexDAE` reports that the system is of high-index, try to reduce th
 *However, this function yields a warning and returns the same DAE system without any modification.*
 
 ``` matlab
-[eqns, vars] = reduceDAEIndex(eqns, vars)
+[eqs, vars] = reduceDAEIndex(eqs, vars)
 ```
 >```
 > Warning: Index of reduced DAEs is larger than 1.
@@ -70,7 +70,7 @@ Since `isLowIndexDAE` reports that the system is of high-index, try to reduce th
 >   In mupadengine/feval (line 190)
 >   In sym/reduceDAEIndex (line 98)
 > 
-> eqns =
+> eqs =
 > 
 >  - diff(Dxt(t), t) - sin(t) - y(t)
 >  x(t) - t + y(t) + diff(Dxt(t), t)
@@ -95,7 +95,7 @@ First define the DAE in the same way as follows:
 ```matlab
 syms x(t) x(t)
 vars = [x, y];
-eqns = [
+eqs = [
     -diff(x(t), t, 2)        - y(t) == sin(t)
      diff(x(t), t, 2) + x(t) + y(t) == t
 ];
@@ -104,10 +104,10 @@ eqns = [
 Next call `preprocessDAE` to modify the system so that it satisfies the validity condition of the MS-method.
 
 ```matlab
-[eqns, vars] = preprocessDAE(eqns, vars)
+[eqs, vars] = preprocessDAE(eqs, vars)
 ```
 > ```
-> eqns =
+> eqs =
 >
 >                        x(t) - sin(t) - t
 >  x(t) - cos(t) + y(t) + diff(x(t), t, t)
@@ -123,10 +123,10 @@ Since the first equation is the sum of two equations in the original system, the
 The MS-method is applicable to the resulting DAE as follows: 
 
 ```matlab
-[eqns, vars] = reduceIndex(eqns, vars)
+[eqs, vars] = reduceIndex(eqs, vars)
 ```
 > ```
-> eqns =
+> eqs =
 > 
 >          x(t) - sin(t) - t
 >  Dxtt(t) - t + x(t) + y(t)
@@ -143,7 +143,7 @@ The MS-method is applicable to the resulting DAE as follows:
 > ```
 
 ```matlab
-isLowIndex(eqns, vars)
+isLowIndex(eqs, vars)
 ```
 >```
 > ans =

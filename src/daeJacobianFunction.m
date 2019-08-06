@@ -1,11 +1,12 @@
 function jac = daeJacobianFunction(eqs, vars, varargin)
 
-% daeJacobianFunction    Function handle of jacobian matrices
+% DAEJACOBIANFUNCTION    Function handle of jacobian matrices
 %
 %   Get a function handle that returns a cell array of jacobian matrices. The
 %   output is intended to be set as 'Jacobian' option of odeset for ode15i.
 %   Symbolic parameters in the DAE can be designated in the same way as
-%   'daeFunction'. The input DAE should not contain higher order derivatives.
+%   the 'daeFunction' function. The input DAE should not contain higher order
+%   derivatives.
 
 % check input
 narginchk(2, Inf);
