@@ -12,7 +12,7 @@ with initial condition <img height=15pt src="https://latex.codecogs.com/png.late
 According to the [procedure](https://www.mathworks.com/help/symbolic/solve-differential-algebraic-equations.html) for solving DAEs provided by Symbolic Math Toolbox, first specify variables 
 
 ```matlab
-syms x(t) x(t)
+syms x(t) y(t)
 vars = [x, y];
 ```
 
@@ -57,7 +57,7 @@ isLowIndexDAE(eqs, vars)
 >    0
 >```
 
-Since `isLowIndexDAE` reports that the system is of high-index, try to reduce the index by `reduceDAEIndex`.
+Since [`isLowIndexDAE`](https://www.mathworks.com/help/symbolic/islowindexdae.html) reports that the system is of high-index, try to reduce the index by [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html).
 *However, this function yields a warning and returns the same DAE system without any modification.*
 
 ``` matlab
@@ -84,8 +84,8 @@ Since `isLowIndexDAE` reports that the system is of high-index, try to reduce th
 >  Dxt(t)
 >```
 
-This is because the DAE do no satisfy the validity condition of the Mattsson−Söderlind index reduction method (MS-method), which is implemented in `reduceDAEIndex`.
-Without index reduction, the DAE solver `ode15i` cannot output a numerical solution for the system as it has index-2.
+This is because the DAE do no satisfy the validity condition of the Mattsson−Söderlind index reduction method (MS-method), which is implemented in [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html).
+Without index reduction, the DAE solver [`ode15i`](https://www.mathworks.com/help/matlab/ref/ode15i.html) cannot output a numerical solution for the system as it is index-2.
 
 ## Using DAEPreprocessingToolbox
 
@@ -93,7 +93,7 @@ DAEPreprocessingToolbox can help solving the DAE system.
 First define the DAE in the same way as follows:
 
 ```matlab
-syms x(t) x(t)
+syms x(t) y(t)
 vars = [x, y];
 eqs = [
     -diff(x(t), t, 2)        - y(t) == sin(t)
@@ -101,7 +101,20 @@ eqs = [
 ];
 ```
 
-Next call `preprocessDAE` to modify the system so that it satisfies the validity condition of the MS-method.
+The applicability of the MS-method is determined by the nonsingularity of the *system Jacobian*, which can be computed by [`systemJacobian`](document.md#systemJacobian).
+
+```matlab
+D = systemJacobian(eqs, vars)
+```
+> ```
+> D =
+> 
+> [ -1, -1]
+> [  1,  1]
+> ```
+
+This is obviously singular.
+So call [`preprocessDAE`](document.md#preprocessDAE) to modify the system so that it satisfies the validity condition.
 
 ```matlab
 [eqs, vars] = preprocessDAE(eqs, vars)
@@ -120,7 +133,19 @@ Next call `preprocessDAE` to modify the system so that it satisfies the validity
 > ```
 
 Since the first equation is the sum of two equations in the original system, the resulting DAE is equivalent to the original one.
-The MS-method is applicable to the resulting DAE as follows: 
+We can check the new DAE has a nonsingular system Jacobian as follows:
+
+```matlab
+D = systemJacobian(eqs, vars)
+```
+> ```
+> D =
+> 
+> [ 1, 0]
+> [ 1, 1]
+> ```
+
+Apply the MS-method to the resulting DAE.
 
 ```matlab
 [eqs, vars] = reduceIndex(eqs, vars)
@@ -142,6 +167,8 @@ The MS-method is applicable to the resulting DAE as follows:
 >  Dxtt(t)
 > ```
 
+Let's check the low-indexness of the DAE.
+
 ```matlab
 isLowIndex(eqs, vars)
 ```
@@ -153,5 +180,4 @@ isLowIndex(eqs, vars)
 >    1
 >```
 
-Here, `reduceIndex` and `isLowIndex` are alternatives of `reduceDAEIndex` and `isLowIndexDAE`, respectively, for higher-order DAE systems.
-If the resulting DAE contains higher order derivatives, we
+Here, [`reduceIndex`](document.md/#reduceIndex) and [`isLowIndex`](document.md/#isLowIndex) are alternatives of [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html) and [`isLowIndexDAE`](https://www.mathworks.com/help/symbolic/islowindexdae.html) in the Symbolic Math Toolbox, respectively, for higher-order DAE systems.

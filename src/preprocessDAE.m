@@ -19,10 +19,10 @@ function [newEqs, newVars, degreeOfFreedom, R, constR, newPointKeys, newPointVal
 %           nonlinear equations. The augmentatioin method enlarges the number of
 %           equations and variables, and introduces constants.
 %     
-%     - Constants : 'sym' (default) or 'zero'
+%     - Constants : 'zero' (default) or 'sym'
 %           Designate how represent constants which will be introduced in the
 %           augmentation method. If Constants is 'sym', the contants are
-%           represented by symbolic objects and returns a vector of introduced
+%           represented as symbolic objects and returns a vector of introduced
 %           constants as the fourth return value. If Constants is 'zero', 0 will
 %           be substituted for all constants. Designating 'zero' would return
 %           a simplier DAE but may cause a failure if 0 as the constants is out
@@ -52,7 +52,7 @@ end
 % parse parameters
 parser = inputParser;
 addParameter(parser, 'Method', 'substitution', @(x) any(validatestring(x, {'substitution', 'augmentation'})));
-addParameter(parser, 'Constants', 'sym', @(x) any(validatestring(x, {'zero', 'sym', 'point'})));
+addParameter(parser, 'Constants', 'zero', @(x) any(validatestring(x, {'zero', 'sym', 'point'})));
 addParameter(parser, 'MissingConstants', 'sym', @(x) any(validatestring(x, {'zero', 'sym'})));
 parser.parse(varargin{startOptArg:end});
 options = parser.Results;

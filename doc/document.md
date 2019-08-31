@@ -4,6 +4,7 @@ Document
 * [daeJacobianFunction](#daeJacobianFunction) : MALTAB function handle that returns the Jacobian matrices.
 * [isLowIndex](#isLowIndex) : check if a DAE is of low index (0 or 1).
 * [orderMatrix](#orderMatrix) : matrix storing differential orders of variables in DAE system.
+* [preprocessDAE](#preprocessDAE) : convert DAEs so that `reduceIndex` can be applied to.
 * [reduceIndex](#reduceIndex) : reduce the differential index of DAEs.
 * [systemJacobian](#systemJacobian) : system Jacobian matrix of DAE system.
 
@@ -135,14 +136,136 @@ orderMatrix(eqs, vars)
 >      1     1
 > ```
 
+## preprocessDAE
+
+### Syntax
+```matlab
+[newEqs, newVars] = preprocessDAE(eqs, vars)
+[newEqs, newVars, degreeOfFreedom] = preprocessDAE(eqs, vars)
+[newEqs, newVars, degreeOfFreedom, R] = preprocessDAE(eqs, vars, 'Method', 'augmentation')
+[newEqs, newVars, degreeOfFreedom, R, constR] = preprocessDAE(eqs, vars, 'Method', 'augmentation', 'Constants', 'sym')
+```
+
+### Description
+* `[newEqs, newVars] = preprocessDAE(eqs, vars)` converts a DAE `eqs` into an equivalent DAE `newEqs` to which [`reduceIndex`](#reduceIndex) can be applied.
+* `[newEqs, newVars, degreeOfFreedom] = preprocessDAE(eqs, vars)` returns the degree of freedom of DAE's solutions, which is the dimension of the solution manifold.
+* `[newEqs, newVars, degreeOfFreedom, R] = preprocessDAE(eqs, vars, 'Method', 'augmentation')` returns a matrix `R` that expresses the new variables in `newVars` as derivatives of the original variables `vars`.
+* `[newEqs, newVars, degreeOfFreedom, R, constR] = preprocessDAE(eqs, vars, 'Method', 'augmentation', 'Constants', 'sym')` returns a matrix `constR` that expresses the constants as derivatives of the original variables `vars`.
+
+### Options
+
+|Option      |Description                       |Possible Values  |
+|------------|----------------------------------|-----------------|
+|`Method`    |Designate a modification method. The substitution method retains the size of the DAE system but is inapplicable to some DAEs. The augmentation method enlarges the system but is applicable to almost DAEs. |`substitution` (default) or `augmentation` |
+|`Constants` |Designate how constants which are introduced in the augmentation method should be treated. If `Constants` is `zero`, 0 is plugged in for all the constants. If `Constants` is `sym`, symbolic objects are substituted. |`zero` (default) or `sym` |
+
+### Examples
+
+```matlab
+syms x(t) y(t)
+vars = [x, y];
+eqs = [
+    -diff(x(t), t, 2)        - y(t) == sin(t)
+     diff(x(t), t, 2) + x(t) + y(t) == t
+];
+[newEqs, newVars, degreeOfFreedom] = preprocessDAE(eqs, vars)
+```
+> ```
+> newEqs =
+> 
+>                   x(t) - sin(t) - t
+>  x(t) - t + y(t) + diff(x(t), t, t)
+> 
+> 
+> newVars =
+> 
+>  x(t)
+>  y(t)
+>
+> degreeOfFreedom =
+> 
+>      0
+> ```
+
+```matlab
+syms x(t) y(t)
+vars = [x, y];
+eqs = [
+    -diff(x(t), t, 2)        - y(t) == sin(t)
+     diff(x(t), t, 2) + x(t) + y(t) == t
+];
+[newEqs, newVars, degreeOfFreedom, R] = preprocessDAE(eqs, vars, 'Method', 'augmentation')
+```
+> ```
+> newEqs =
+> 
+>                  - Dxtt(t) - sin(t)
+>  x(t) - t + y(t) + diff(x(t), t, t)
+>                  Dxtt(t) - t + x(t)
+> 
+> 
+> newVars =
+> 
+>     x(t)
+>     y(t)
+>  Dxtt(t)
+> 
+> 
+> degreeOfFreedom =
+> 
+>      0
+> 
+> 
+> R =
+> 
+> [ Dxtt(t), diff(x(t), t, t)]
+> ```
+
+```matlab
+syms x(t) y(t)
+vars = [x, y];
+eqs = [
+    -diff(x(t), t, 2)        - y(t) == sin(t)
+     diff(x(t), t, 2) + x(t) + y(t) == t
+];
+[newEqs, newVars, degreeOfFreedom, R, constR] = preprocessDAE(eqs, vars, 'Method', 'augmentation', 'Constants', 'sym')
+```
+> ```
+> newEqs =
+> 
+>         - consty - Dxtt(t) - sin(t)
+>  x(t) - t + y(t) + diff(x(t), t, t)
+>         consty - t + Dxtt(t) + x(t)
+> 
+> 
+> newVars =
+> 
+>     x(t)
+>     y(t)
+>  Dxtt(t)
+> 
+> 
+> degreeOfFreedom =
+> 
+>      0
+> 
+> 
+> R =
+> 
+> [ Dxtt(t), diff(x(t), t, t)]
+> 
+> 
+> constR =
+> 
+> [ consty, y(t)]
+> ```
+
 ## reduceIndex
 
 ### Syntax
 ```matlab
 [newEqs, newVars] = reduceIndex(eqs, vars)
 [newEqs, newVars, R] = reduceIndex(eqs, vars)
-[newEqs, newVars] = reduceIndex(eqs, vars, pointKeys, pointValues)
-[newEqs, newVars, R, newPointKeys, newPointValues] = reduceIndex(eqs, vars, pointKeys, pointValues)
 ```
 
 ### Description
@@ -151,10 +274,6 @@ If a given DAE does not satisfy the validity condition of the MS-method, this fu
 In this case, modify the DAE using [`preprocessDAE`](#preprocessDAE) beforehand.
 The function `reduceIndex` can be applied to higher-order DAEs.
 * `[newEqs, newVars, R] = reduceIndex(eqs, vars)` returns a matrix `R` that expresses the new variables in `newVars` as derivatives of the original variables `vars`.
-* `[newEqs, newVars] = reduceIndex(eqs, vars, pointKeys, pointValues)` lets you specify numerical values of symbols in DAEs, where `pointValues(k)` is the numerical value of `pointKeys(k)` for every `k`.
-The index reduction algorithm chooses pivots taking into account of the provided numerical values.
-The values of all the symbols in `systemJacobian(eqs, vars)` must be provided.
-* `[newEqs, newVars, R, newPointKeys, newPointValues] = reduceIndex(eqs, vars, pointKeys, pointValues)` returns the updated vector of numerical values that contains the values of newly introduced symbols or derivatives of `vars`.
 
 ### Examples
 
@@ -196,59 +315,6 @@ vars = [y, z, T];
 
 Since `y` is chosen as a pivot, the returned DAE is not valid when `y = 0`.
 
-```matlab
-syms y(t) z(t) T(t) g
-eqs = [
-    diff(y(t), 2) == y(t)*T(t)
-    diff(z(t), 2) == z(t)*T(t) - g
-    y(t)^2 + z(t)^2 == 1
-];
-vars = [y, z, T];
-
-% designate a point (y, z, diff(z)) = (0, 1, 2)
-pointKeys = [y, z, diff(z)];
-pointValues = [0, 1, 2]; 
-
-[newEqs, newVars, R, newPointKeys, newPointValues] = reduceIndex(eqs, vars, pointKeys, pointValues)
-```
-
-> ```
-> newEqs =
-> 
->                                               diff(y(t), t, t) - T(t)*y(t)
->                                                    g + Dztt(t) - T(t)*z(t)
->                                                        y(t)^2 + z(t)^2 - 1
->                                       2*Dzt(t)*z(t) + 2*y(t)*diff(y(t), t)
->  2*Dztt(t)*z(t) + 2*Dzt(t)^2 + 2*diff(y(t), t)^2 + 2*y(t)*diff(y(t), t, t)
-> 
-> 
-> newVars =
-> 
->     y(t)
->     z(t)
->     T(t)
->   Dzt(t)
->  Dztt(t)
-> 
-> 
-> R =
-> 
-> [  Dzt(t),    diff(z(t), t)]
-> [ Dztt(t), diff(z(t), t, t)]
-> 
-> 
-> newPointKeys =
-> 
-> [ y(t), z(t), diff(z(t), t), Dzt(t)]
-> 
-> 
-> newPointValues =
-> 
->      0     1     2     2
-> ```
-
-In this example, `z` is chosen as a pivot instead of `y` because `abs(z)` is larger than `abs(y)` at the designated point.
-Thus the resulting DAE is valid unless `z = 0`.
 
 ## systemJacobian
 
@@ -261,6 +327,7 @@ J = systemJacobian(eqs, vars)
 
 `J = systemJacobian(eqs, vars)` returns the system Jacobian matrix of a DAE `eqs` with respect to `vars`. The `(i, j)`th entry of the resulting matrix is the derivative of `eqs(i)^(p(i))` by `vars(j)^(q(j))`, where `p` and `q` are a dual optimal solution of the assignment problem obtained from the order matrix of the DAE system
 (here, `x^k` means the `k`th-order time derivative `d^k x(t)/dt^k` of `x(t)`).
+`reduceIndex` can be applied to a DAE system only if its system Jacobian is nonsingular.
 
 ### Examples
 ```matlab
