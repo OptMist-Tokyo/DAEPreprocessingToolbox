@@ -313,8 +313,6 @@ vars = [y, z, T];
 > [ Dytt(t), diff(y(t), t, t)]
 > ```
 
-Since `y` is chosen as a pivot, the returned DAE is not valid when `y = 0`.
-
 
 ## systemJacobian
 

@@ -181,3 +181,20 @@ isLowIndex(eqs, vars)
 >```
 
 Here, [`reduceIndex`](document.md/#reduceIndex) and [`isLowIndex`](document.md/#isLowIndex) are alternatives of [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html) and [`isLowIndexDAE`](https://www.mathworks.com/help/symbolic/islowindexdae.html) in the Symbolic Math Toolbox, respectively, for higher-order DAE systems.
+
+Now we can compute a numerical solution.
+
+```matlab
+F = daeFunction(eqs, vars);
+y0est = zeros(4, 1);
+yp0est = zeros(4, 1);
+[y0, yp0] = decic(F, 0, y0est, [], yp0est, []);
+[tSol, ySol] = ode15i(F, [0 10], y0, yp0);
+plot(tSol, ySol(:, 1:2));
+```
+
+![Graph](graph.png)
+
+The numerical solution agrees with the following exact solution:
+
+<img height=45pt src="https://latex.codecogs.com/png.latex?\dpi{300}\begin{cases}x(t)=t+\sin(t)\\y(t)=0\end{cases}"/></a>
