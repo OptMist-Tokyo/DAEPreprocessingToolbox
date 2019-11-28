@@ -10,6 +10,7 @@ persistent loaded;
 
 if isempty(loaded)
     packagepath = [fileparts(mfilename('fullpath')), filesep];
+    packagepath = strrep(packagepath, '\', '\\');
     command = {
         % add packagepath to PACKAGEPATH
         ['if not contains({PACKAGEPATH}, "', packagepath, '") then PACKAGEPATH := "', packagepath, '", PACKAGEPATH; end_if;']
