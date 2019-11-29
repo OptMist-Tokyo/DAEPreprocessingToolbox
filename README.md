@@ -16,7 +16,14 @@ This toolbox provides a preprocessing function that modifies a given DAE system 
 See [doc/demo.md](doc/demo.md) and [doc/document.md](doc/document.md).
 
 ### Install
-Add the `src` directory to the search path in MATLAB as follows:
+Download and add `src` directory to the search path in MATLAB as follows:
+
+* Windows:
+```matlab
+addpath('c:\path\to\DAEPreprocessingToolbox\src') 
+```
+
+* Mac, Linux:
 ```matlab
 addpath('/path/to/DAEPreprocessingToolbox/src') 
 ```
