@@ -25,7 +25,7 @@ eqs = [
 ];
 ```
 
-Since procedures for DAEs in MALTAB cannot handle higher order systems, reduce `eqs` to the first-order system.
+Since procedures for DAEs in MATLAB cannot handle higher order systems, reduce `eqs` to the first-order system.
 
 ``` matlab
 [eqs, vars] = reduceDifferentialOrder(eqs, vars)
@@ -84,7 +84,7 @@ Since [`isLowIndexDAE`](https://www.mathworks.com/help/symbolic/islowindexdae.ht
 >  Dxt(t)
 >```
 
-This is because the DAE do no satisfy the validity condition of the Mattsson−Söderlind index reduction method (MS-method), which is implemented in [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html).
+This is because the DAE does no satisfy the validity condition of the Mattsson−Söderlind index reduction method (MS-method), which is implemented in [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html).
 Without index reduction, the DAE solver [`ode15i`](https://www.mathworks.com/help/matlab/ref/ode15i.html) cannot output a numerical solution for the system as it is index-2.
 
 ## Using DAEPreprocessingToolbox

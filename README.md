@@ -4,8 +4,8 @@ DAEPreprocessingToolbox
 MATLAB toolbox for structural preprocessing of differential-algebraic equations (DAEs).
 
 ### Description
-In solving high-index DAEs using [`ode15i`](https://www.mathworks.com/help/matlab/ref/ode15i.html), index reduction are important preprocessing prior to numerical integration.
-The Mattsson–Söderlind index reduction method (MS-method), which is implemented as [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html), is effective and commonly used; however, it is known to fail for some DAEs.
+In solving high-index DAEs using [`ode15i`](https://www.mathworks.com/help/matlab/ref/ode15i.html), index reduction is important preprocessing prior to numerical integration.
+The Mattsson–Söderlind index reduction method (MS-method), which is implemented as [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html) in MATLAB, is effective and commonly used; however, it is known to fail for some DAEs.
 This toolbox provides a preprocessing function that modifies a given DAE system to an equivalent system that can be handled by the MS-method.
 
 ### Requirement

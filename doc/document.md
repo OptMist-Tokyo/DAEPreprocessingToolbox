@@ -1,12 +1,12 @@
 Document
 ====
 
-* [daeJacobianFunction](#daeJacobianFunction) : MALTAB function handle that returns the Jacobian matrices.
+* [daeJacobianFunction](#daeJacobianFunction) : return a MATLAB function handle that returns the Jacobian matrices.
 * [isLowIndex](#isLowIndex) : check if a DAE is of low index (0 or 1).
-* [orderMatrix](#orderMatrix) : matrix storing differential orders of variables in DAE system.
-* [preprocessDAE](#preprocessDAE) : convert DAEs so that `reduceIndex` can be applied to.
+* [orderMatrix](#orderMatrix) : return the matrix storing differential orders of variables in DAE system.
+* [preprocessDAE](#preprocessDAE) : convert a DAE to another DAE to which `reduceIndex` can be applied.
 * [reduceIndex](#reduceIndex) : reduce the differential index of DAEs.
-* [systemJacobian](#systemJacobian) : system Jacobian matrix of DAE system.
+* [systemJacobian](#systemJacobian) : return the system Jacobian matrix of DAE system.
 
 ## daeJacobianFunction
 ### Syntax
