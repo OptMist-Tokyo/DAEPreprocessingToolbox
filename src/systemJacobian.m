@@ -1,4 +1,4 @@
-function D = systemJacobian(eqs, vars)
+function [D, p, q] = systemJacobian(eqs, vars)
 
 %SYSTEMJACOBIAN    System Jacobian matrix of DAE system.
 %

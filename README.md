@@ -39,7 +39,7 @@ See [MATLAB `addpath` help page](https://www.mathworks.com/help/matlab/ref/addpa
 https://dl.acm.org/citation.cfm?id=3326236
 
 Cite as:
-> Improved structural methods for nonlinear differential-algebraic equations via combinatorial relaxation. In Proceedings of the 44th International Symposium on Symbolic and Algebraic Computation (ISSAC ’19), pp. 315−322, 2019.
+> T. Oki. Improved structural methods for nonlinear differential-algebraic equations via combinatorial relaxation. In Proceedings of the 44th International Symposium on Symbolic and Algebraic Computation (ISSAC ’19), pp. 315−322, 2019.
 
 ### Acknowledgment
 

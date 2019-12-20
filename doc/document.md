@@ -319,25 +319,38 @@ vars = [y, z, T];
 ### Syntax
 ```matlab
 J = systemJacobian(eqs, vars)
+[J, p, q] = systemJacobian(eqs, vars)
 ```
 
 ### Description
 
-`J = systemJacobian(eqs, vars)` returns the system Jacobian matrix of a DAE `eqs` with respect to `vars`. The `(i, j)`th entry of the resulting matrix is the derivative of `eqs(i)^(p(i))` by `vars(j)^(q(j))`, where `p` and `q` are a dual optimal solution of the assignment problem obtained from the order matrix of the DAE system
+* `J = systemJacobian(eqs, vars)` returns the system Jacobian matrix of a DAE `eqs` with respect to `vars`. The `(i, j)`th entry of the resulting matrix is the derivative of `eqs(i)^(p(i))` by `vars(j)^(q(j))`, where `p` and `q` are a dual optimal solution of the assignment problem obtained from the order matrix of the DAE system
 (here, `x^k` means the `k`th-order time derivative `d^k x(t)/dt^k` of `x(t)`).
 `reduceIndex` can be applied to a DAE system only if its system Jacobian is nonsingular.
+* `[J, p, q] = systemJacobian(eqs, vars)` returns the values of `p` and `q`.
+
 
 ### Examples
 ```matlab
 syms x(t) y(t)
 eqs = [x(t)*y(t), diff(x(t))+diff(y(t))];
 vars = [x, y];
-systemJacobian(eqs, vars)
+[J, p, q] = systemJacobian(eqs, vars)
 ```
 
 > ```
-> ans =
+> J =
 > 
 > [ y(t), x(t)]
 > [    1,    1]
+> 
+> 
+> p =
+> 
+>      1     0
+> 
+> 
+> q =
+> 
+>      1     1
 > ```
