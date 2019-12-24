@@ -43,5 +43,22 @@ classdef updateRelationTest < matlab.unittest.TestCase
                 constz2 == diff(y(t), 3);
             ].');
         end
+        
+        function test3(testCase)
+            syms a x(t) y(t) z(t) w(t)
+            R = [
+                y(t) == 2*a
+                z(t) == x(t)^2 + x(t)
+            ];
+            refR = [
+                a == 3
+                x(t) == w(t) + 1
+            ];
+            newR = updateRelationTest.updateRelation(R, refR);
+            testCase.verifyEqual(newR, [
+                y(t) == 6
+                z(t) == w(t) + (w(t)+1)^2 + 1
+            ].');
+        end
     end
 end

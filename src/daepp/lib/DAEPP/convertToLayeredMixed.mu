@@ -12,7 +12,7 @@
 daepp::convertToLayeredMixed := proc(eqs, vars /*, tVar */)
 local tVar, S, m, n, orders, J, dummy, dummy_eqs, k, J_k, subseqs, Q, T, s, i,
       one_j, one_k, j, deriv, Q_eqs, T_eqs, Q_rows, T_rows, subm, Qi, Ti,
-      ngList, nint, cnt, gen_name, newVar;
+      ngList, nint, cnt, gen_name, R, newVar;
 begin
     // check number of arguments
     if testargs() then
@@ -123,21 +123,22 @@ begin
     // connect corresponding rows
     [Qi, Ti] := [1, 1];
     ngList := indets(eqs, All);
-    nint := nops(coerce(Q_rows, DOM_SET) intersect coerce(T_rows, DOM_SET));
+    nint := nops({op(Q_rows)} intersect {op(T_rows)});
     cnt := 0;
     gen_name := () -> "aux" . (if nint = 1 then "" else cnt := cnt + 1; expr2text(cnt) end_if);
+    R := table();
     
     while Qi <= nops(Q_rows) and Ti <= nops(T_rows) do
         if Q_rows[Qi] = T_rows[Ti] then
-            Q := Q . matrix(nops(Q_rows), 1, (i, j) -> if i = Qi then  1 else 0 end_if);
-            T := T . matrix(nops(T_rows), 1, (i, j) -> if i = Ti then -1 else 0 end_if);
+            Q := Q . matrix(nops(Q_rows), 1, (i, j) -> if i = Qi then -1 else 0 end_if);
+            T := T . matrix(nops(T_rows), 1, (i, j) -> if i = Ti then  1 else 0 end_if);
             newVar := daepp::generateVariable(NIL, 0, ngList, TimeVariable = tVar, Prefix = gen_name());
             ngList := ngList union indets(newVar, All);
-            Q_eqs[Qi] := Q_eqs[Qi] + newVar;
-            T_eqs[Ti] := T_eqs[Qi] - newVar;
+            R[newVar] := Q_eqs[Qi];
+            Q_eqs[Qi] := Q_eqs[Qi] - newVar;
+            T_eqs[Ti] := T_eqs[Qi] + newVar;
             vars := vars . [newVar];
-            Qi := Qi + 1;
-            Ti := Ti + 1;
+            [Qi, Ti] := [Qi + 1, Ti + 1];
         elif Q_rows[Qi] < T_rows[Ti] then
             Qi := Qi + 1;
         else
@@ -146,5 +147,5 @@ begin
     end_while;
     
     // return
-    [Q_eqs.T_eqs, vars, Q, T]
+    [Q_eqs.T_eqs, vars, Q, T, R]
 end_proc;
