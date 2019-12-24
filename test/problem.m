@@ -123,5 +123,15 @@ classdef problem
                 0 0 6.2831853071796e4 -6.2831853071796e4 -6.2831853071796e4 6.2831853071796e4 0 0 0 0 0 0 0 0 0
             ];
         end
+        
+        function [eqs, vars, pointKeys, pointValues] = JACMnonlinear
+            syms x1(t) x2(t) x3(t)
+            eqs = [
+                diff(x1(t)) + x2(t)^2 == sin(t)
+                diff(x1(t)) + x1(t) + x3(t) == cos(t)
+                diff(x1(t)) + x3(t) == t
+            ];
+            vars = [x1, x2, x3];
+        end
     end
 end

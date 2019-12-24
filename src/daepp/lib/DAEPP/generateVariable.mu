@@ -20,9 +20,19 @@ begin
     
     // check input
     if testargs() then
-        tTmp := daepp::checkDAEInput([], [var])[3];
-        if not tVar in {NIL, tTmp} then
-            error("Inconsistency of time variable.");
+        if var <> NIL then
+            tTmp := daepp::checkDAEInput([], [var])[3];
+            if not tVar in {NIL, tTmp} then
+                error("Inconsistency of time variable.");
+            end_if;
+        else
+            if prefix = "" then
+                error("Non-empty Prefix must be set when var = NIL.");
+            elif genfun and tVar = NIL then
+                error("TimeVariable should be designated when var = NIL and ReturnFunction = TRUE.");
+            elif order <> 0 then
+                error("order must be 0 when var = NIL.");
+            end_if;
         end_if;
         if not testtype(order, Type::NonNegInt) then
             error("Second argument must be nonnegative integer.");
@@ -30,15 +40,21 @@ begin
         if not testtype(ngList, DOM_SET) then
             error("Third argument must be a set.");
         end_if;
+        if not testtype(prefix, DOM_STRING) then
+            error("Option 'Prefix' must be string.");
+        end_if;
+        if not testtype(genfun, DOM_BOOL) then
+            error("Option 'ReturnFunction' must be boolean.");
+        end_if;
     end_if;
     
     // retrieve tVar
-    if tVar = NIL then
+    if var <> NIL and tVar = NIL then
         tVar := daepp::checkDAEInput([], [var])[3];
     end_if;
     
     // make new name
-    newName := expr2text(op(var, 0));
+    newName := if var <> NIL then expr2text(op(var, 0)) else "" end_if;
     if order = 0 then
         newName := prefix . newName;
     else

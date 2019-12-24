@@ -7,8 +7,10 @@ daepp::info := "Library for DAE preprocessing";
 
 daepp::interface := {
     hold(addEntry),
+    hold(applyPolynomialMatrix),
     hold(checkDAEInput),
     hold(checkPointInput),
+    hold(convertToLayeredMixed),
     hold(daeJacobianFunction),
     hold(extractVariableValue),
     hold(findEliminatingSubsystem),
@@ -30,8 +32,10 @@ daepp::interface := {
 };
 
 autoload(daepp::addEntry);
+autoload(daepp::applyPolynomialMatrix);
 autoload(daepp::checkDAEInput);
 autoload(daepp::checkPointInput);
+autoload(daepp::convertToLayeredMixed);
 autoload(daepp::daeJacobianFunction);
 autoload(daepp::extractVariableValue);
 autoload(daepp::findEliminatingSubsystem);
