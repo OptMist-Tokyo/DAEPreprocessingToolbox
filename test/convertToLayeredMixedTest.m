@@ -1,8 +1,15 @@
 classdef convertToLayeredMixedTest < matlab.unittest.TestCase
     methods (Static)
-        function [eqs, vars, Q, T, R] = convertToLayeredMixed(eqs, vars)
+        function [eqs, vars, Q, T, R] = convertToLayeredMixed(eqs, vars, t, s)
             loadMuPADPackage;
-            out = feval(symengine, 'daepp::convertToLayeredMixed', eqs, vars);
+            if nargin == 2
+                out = feval(symengine, 'daepp::convertToLayeredMixed', eqs, vars);
+            elseif nargin == 3
+                out = feval(symengine, 'daepp::convertToLayeredMixed', eqs, vars, t);
+            else
+                out = feval(symengine, 'daepp::convertToLayeredMixed', eqs, vars, t, s);
+            end
+
             eqs = out(1).';
             vars = out(2).';
             
@@ -157,6 +164,18 @@ classdef convertToLayeredMixedTest < matlab.unittest.TestCase
                 aux1(t), diff(x(t), t) + diff(y(t), t)
                 aux2(t), diff(x(t), t) + w(t)
             ]);
+        end
+        
+        function test9(testCase)
+            syms x(t) sss
+            eqs = 300*diff(x(t), 5) + 2*x(t);
+            vars = x(t);
+            [newEqs, newVars, Q, T, R] = convertToLayeredMixedTest.convertToLayeredMixed(eqs, vars, t, sss);
+            testCase.verifyEqual(newEqs - eqs, zeros('sym'));
+            testCase.verifyEqual(newVars, vars);
+            testCase.verifyEqual(Q, 300*sss^5 + 2);
+            testCase.verifyEqual(T, zeros(0, 1, 'sym'));
+            testCase.verifyEqual(R, zeros(0, 2, 'sym'));
         end
     end
 end

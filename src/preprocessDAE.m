@@ -14,7 +14,7 @@ function [newEqs, newVars, degreeOfFreedom, R, constR, newPointKeys, newPointVal
 %   Also returns the vector of constants if 'Constants' is set to 'sym'.
 %   
 %   Parameters:
-%     - Method : 'augmentation' (default) or 'substitution'
+%     - Method : 'substitutiion' (default) or 'augmentation'
 %           The method which we use. The substitution method repeatedly solves
 %           nonlinear equations. The augmentatioin method enlarges the number of
 %           equations and variables, and introduces constants.
@@ -51,7 +51,7 @@ end
 
 % parse parameters
 parser = inputParser;
-addParameter(parser, 'Method', 'substitution', @(x) any(validatestring(x, {'substitution', 'augmentation'})));
+addParameter(parser, 'Method', 'substitution', @(x) any(validatestring(x, {'substitution', 'augmentation', 'mixedmatrix'})));
 addParameter(parser, 'Constants', 'zero', @(x) any(validatestring(x, {'zero', 'sym', 'point'})));
 addParameter(parser, 'MissingConstants', 'sym', @(x) any(validatestring(x, {'zero', 'sym'})));
 parser.parse(varargin{startOptArg:end});

@@ -124,7 +124,7 @@ classdef problem
             ];
         end
         
-        function [eqs, vars, pointKeys, pointValues] = JACMnonlinear
+        function [eqs, vars] = JACMnonlinear
             syms x1(t) x2(t) x3(t)
             eqs = [
                 diff(x1(t)) + x2(t)^2 == sin(t)
@@ -132,6 +132,34 @@ classdef problem
                 diff(x1(t)) + x3(t) == t
             ];
             vars = [x1, x2, x3];
+        end
+        
+        function [eqs, vars] = JACMexample1
+            syms x1(t) x2(t) x3(t) x4(t) a1 a2 a3 a4 a5 f1(t) f2(t) f3(t) f4(t)
+            eqs = [
+                diff(x1(t), 2) - diff(x1(t)) + diff(x2(t), 2) - diff(x2(t)) + x4(t) == f1(t)
+                                            diff(x1(t), 2) + diff(x2(t), 2) + x3(t) == f2(t)
+                                      a1*x2(t) + a2*diff(x3(t), 2) + a3*diff(x4(t)) == f3(t)
+                                                          a4*x3(t) + a5*diff(x4(t)) == f4(t)
+            ];
+            vars = [x1, x2, x3, x4];
+        end
+        
+        function [eqs, vars] = JACMexample2
+            syms i1(t) i2(t) i3(t) i4(t) i5(t) v1(t) v2(t) v3(t) v4(t) v5(t) Volt(t) R1 R2 L C
+            eqs = [
+                -i1(t) - i4(t) + i5(t)
+                i2(t) + i3(t) + i4(t) - i5(t)
+                v1(t) + v3(t) - v5(t)
+                -v1(t) - v2(t) + v4(t)
+                v2(t) - v3(t)
+                R1*i1(t) - v1(t)
+                R2*i2(t) - v2(t)
+                L*diff(i3(t)) - v3(t)
+                -i4(t) + C*diff(v4(t))
+                v5(t) - Volt(t)
+            ];
+            vars = [i1 i2 i3 i4 i5 v1 v2 v3 v4 v5];
         end
     end
 end

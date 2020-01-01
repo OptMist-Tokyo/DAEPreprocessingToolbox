@@ -70,6 +70,27 @@ classdef preprocessDAETest < matlab.unittest.TestCase
             testCase.verifyEqual(newPointValues, [0 1 0 1]);
         end
         
+        function test4(testCase)
+            eqs = zeros(0, 1, 'sym');
+            vars = zeros(0, 1, 'sym');
+            [newEqs, newVars, dof, R] = preprocessDAE(eqs, vars, 'Method', 'mixedmatrix');
+            testCase.verifyEqual(newEqs, eqs);
+            testCase.verifyEqual(newVars, vars);
+            testCase.verifyEqual(dof, 0);
+            testCase.verifyEqual(R, zeros(0, 2, 'sym'));
+        end
+        
+        function test5(testCase)
+            syms x(t);
+            eqs = x(t);
+            vars = x;
+            [newEqs, newVars, dof, R] = preprocessDAE(eqs, vars, 'Method', 'mixedmatrix');
+            testCase.verifyEqual(newEqs, eqs);
+            testCase.verifyEqual(newVars, vars(t));
+            testCase.verifyEqual(dof, 0);
+            testCase.verifyEqual(R, zeros(0, 2, 'sym'));
+        end
+        
         function pendulum(testCase)
             [eqs, vars, pointKeys, pointValues] = problem.pendulum;
             dof = 2;
@@ -157,6 +178,38 @@ classdef preprocessDAETest < matlab.unittest.TestCase
             testCase.verifyEqual(value, dof);
             [~, ~, value] = preprocessDAE(eqs, vars, pointKeys, pointValues, 'Method', 'augmentation', 'Constants', 'point');
             testCase.verifyEqual(value, dof);
+        end
+        
+        function JACMnonlinear(testCase)
+            syms x1(t) x2(t) x3(t)
+            [eqs, vars] = problem.JACMnonlinear;
+            [newEqs, newVars, dof, R] = preprocessDAE(eqs, vars, 'Method', 'mixedmatrix');
+            testCase.verifyEqual(newEqs - [
+                x1(t) + x3(t) + diff(x1(t), t) - cos(t)
+                cos(t) - x1(t) - t
+                x2(t)^2 + diff(x1(t), t) - sin(t)
+            ], zeros(3, 1, 'sym'));
+            testCase.verifyEqual(newVars, [x1(t); x2(t); x3(t)]);
+            testCase.verifyEqual(dof, 0);
+            testCase.verifyEqual(R, zeros(0, 2, 'sym'));
+        end
+        
+        function JACMexample1(testCase)
+            syms x1(t) x2(t) x3(t) x4(t)
+            [eqs, vars] = problem.JACMexample1;
+            [newEqs, newVars, dof, R] = preprocessDAE(eqs, vars, 'Method', 'mixedmatrix');
+            testCase.verifyEqual(newVars, [x1(t); x2(t); x3(t); x4(t)]);
+            testCase.verifyEqual(dof, 3);
+            testCase.verifyEqual(R, zeros(0, 2, 'sym'));
+        end
+        
+        function JACMexample2(testCase)
+            syms t
+            [eqs, vars] = problem.JACMexample2;
+            [newEqs, newVars, dof, R] = preprocessDAE(eqs, vars, 'Method', 'mixedmatrix');
+            testCase.verifyEqual(newVars, vars(t).');
+            testCase.verifyEqual(dof, 1);
+            testCase.verifyEqual(R, zeros(0, 2, 'sym'));
         end
     end
 end

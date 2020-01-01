@@ -9,15 +9,15 @@
   The coefficients of entries in T(s) should be treated as algebraically independent.
 */
 
-daepp::convertToLayeredMixed := proc(eqs, vars /*, tVar */)
-local tVar, S, m, n, orders, J, dummy, dummy_eqs, k, J_k, subseqs, Q, T, s, i,
-      one_j, one_k, j, deriv, Q_eqs, T_eqs, Q_rows, T_rows, subm, Qi, Ti,
+daepp::convertToLayeredMixed := proc(eqs, vars /*, tVar, sVar */)
+local tVar, sVar, S, m, n, orders, J, dummy, dummy_eqs, k, J_k, subseqs, Q, T,
+      i, one_j, one_k, j, deriv, Q_eqs, T_eqs, Q_rows, T_rows, subm, Qi, Ti,
       ngList, nint, cnt, gen_name, R, newVar;
 begin
     // check number of arguments
     if testargs() then
-        if args(0) < 2 || 3 < args(0) then
-            error("Two or three arguments expected.");
+        if args(0) < 2 || 4 < args(0) then
+            error("Two, three or four arguments expected.");
         end_if;
     end_if;
     
@@ -27,7 +27,7 @@ begin
     // check input
     if testargs() then
         [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
-        if args(0) = 3 && tVar <> args(3) then
+        if args(0) >= 3 && tVar <> args(3) then
             error("Inconsistency of time variable.");
         end_if;
     end_if;
@@ -37,6 +37,17 @@ begin
         [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
     else
         tVar := args(3);
+    end_if;
+    
+    // retrieve sVar
+    if args(0) <= 3 then
+        ngList := indets(eqs, All);
+        sVar := daepp::generateVariable(NIL, 0, ngList, Prefix = "s", ReturnFunction = FALSE);
+    else
+        sVar := args(4);
+        if not testtype(sVar, DOM_IDENT) then
+            error("Fourth argument must be an identifier.");
+        end_if;
     end_if;
     
     // compute differential order of each variable
@@ -65,7 +76,6 @@ begin
     // make an LM-polynomial matrix [Q; T]
     Q := matrix(m, n);
     T := matrix(m, n);
-    s := daepp::generateVariable(NIL, 0, {}, Prefix = "s", ReturnFunction = FALSE);
     
     for i from 1 to m do
         [one_j, one_k] := [0, 0];
@@ -74,11 +84,11 @@ begin
                 deriv := diff(dummy_eqs[i], dummy[j][k+1]);
                 if deriv <> 0 then
                     if testtype(deriv, Dom::Rational) then
-                        Q[i, j] := Q[i, j] + deriv*s^k;
+                        Q[i, j] := Q[i, j] + deriv*sVar^k;
                         one_j := if one_j = 0 then j else -1 end_if;
                         one_k := k;
                     else
-                        T[i, j] := s^k;  // no need to keep lower degree terms
+                        T[i, j] := sVar^k;  // no need to keep lower degree terms
                     end_if;
                 end_if;
             end_for;
@@ -87,7 +97,7 @@ begin
         // move a row of Q to T if it has only one monomial
         if one_j > 0 then
             Q[i, one_j] := 0;
-            T[i, one_j] := s^(max(one_k, degree(T[i, one_j])));
+            T[i, one_j] := sVar^(max(one_k, degree(T[i, one_j])));
         end_if;
     end_for;
     
@@ -122,7 +132,6 @@ begin
     
     // connect corresponding rows
     [Qi, Ti] := [1, 1];
-    ngList := indets(eqs, All);
     nint := nops({op(Q_rows)} intersect {op(T_rows)});
     cnt := 0;
     gen_name := () -> "aux" . (if nint = 1 then "" else cnt := cnt + 1; expr2text(cnt) end_if);
