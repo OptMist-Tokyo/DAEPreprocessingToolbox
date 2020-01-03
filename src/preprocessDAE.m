@@ -6,18 +6,22 @@ function [newEqs, newVars, degreeOfFreedom, R, constR, newPointKeys, newPointVal
 %   Soederlind's index-reduction method, Sigma method) fail into an amenable
 %   form, using the substitution or the augmentation method.
 %   
-%   This method returns [newEqs, newVars, value], where
+%   This method returns [newEqs, newVars, dof, R, constR], where
 %     - newEqs and newVars are vectors of equations and variables, resp., in the
 %       new DAE.
-%     - value is the optimal value of the assignment problem. This represents
-%       the dimension of the solution manifold.
-%   Also returns the vector of constants if 'Constants' is set to 'sym'.
+%     - dof is the dimension of the solution manifold.
+%     - R expresses the new variables in newVars as derivatives of the original
+%       variables vars.
+%     - constR expresses the constants as derivatives of the original variables
+%       vars.
 %   
 %   Parameters:
-%     - Method : 'substitutiion' (default) or 'augmentation'
+%     - Method : 'substitutiion' (default), 'augmentation' or 'mixedmatrix'
 %           The method which we use. The substitution method repeatedly solves
 %           nonlinear equations. The augmentatioin method enlarges the number of
-%           equations and variables, and introduces constants.
+%           equations and variables, and introduces constants. The mixed-matrix
+%           method does not use symbolic computatition on DAE modification, but
+%           might return an unamenable DAE system for index reduction.
 %     
 %     - Constants : 'zero' (default) or 'sym'
 %           Designate how represent constants which will be introduced in the
@@ -28,11 +32,14 @@ function [newEqs, newVars, degreeOfFreedom, R, constR, newPointKeys, newPointVal
 %           a simplier DAE but may cause a failure if 0 as the constants is out
 %           of the domain of DAEs.
 %   
-%   Reference:
-%     Taihei Oki. Improved structural methods for nonlinear differential-
-%     algebraic equations via combinatorial relaxation. In Proceedings of the
-%     44th International Symposium on Symbolic and Algebraic Computation
-%     (ISSAC '19).
+%   References:
+%     * T. Oki. Improved structural methods for nonlinear differential-algebraic
+%       equations via combinatorial relaxation. In Proceedings of the 44th
+%       International Symposium on Symbolic and Algebraic Computation
+%       (ISSAC '19), pp. 315--322, 2019.
+%     * S. Iwata, T. Oki, and M. Takamatsu. Index reduction for differential-
+%       algebraic equations with mixed matrices. Journal of the ACM, 66(5),
+%       2019.
 
 % check input
 narginchk(2, Inf);

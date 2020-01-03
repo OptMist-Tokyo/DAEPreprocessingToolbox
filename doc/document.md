@@ -156,7 +156,7 @@ orderMatrix(eqs, vars)
 
 |Option      |Description                       |Possible Values  |
 |------------|----------------------------------|-----------------|
-|`Method`    |Designate a modification method. The substitution method retains the size of the DAE system but is inapplicable to some DAEs. The augmentation method enlarges the system by introducing new variables and constants but is applicable to almost DAEs. |`substitution` (default) or `augmentation` |
+|`Method`    |Designate a modification method. The substitution method retains the size of the DAE system but is inapplicable to some DAEs. The augmentation method enlarges the system by introducing new variables and constants but is applicable to almost DAEs. The mixed-matrix method might run faster for large-scale DAEs but might return a DAE to which `reduceIndex` cannot be applied again with the input is highly nonlinear. |`substitution` (default), `augmentation`, or `mixedmatrix` |
 |`Constants` |Designate how constants introduced in the augmentation method should be treated. If `Constants` is `zero`, 0 is plugged in for all the constants. If `Constants` is `sym`, symbolic objects representing the constants are substituted. |`zero` (default) or `sym` |
 
 ### Examples

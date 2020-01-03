@@ -161,5 +161,46 @@ classdef problem
             ];
             vars = [i1 i2 i3 i4 i5 v1 v2 v3 v4 v5];
         end
+        
+        function [eqs, vars] = cauer(K)
+            syms I(t) [1 K+1]
+            syms v(t) [1 K+1]
+            syms I0(t) v0(t)
+            syms C [1 K-1]
+            syms L [2 K]
+            syms R Volt(t)
+            I = I(t);
+            v = v(t);
+            
+            eqs1 = zeros(K/2, 1, 'sym');
+            eqs1(1) = -I0 + I(1) + I(2);
+            for k = 3:2:(K-1)
+                eqs1((k+1)/2) = -I(k-1) + I(k) + I(k+1);
+            end
+            eqs2 = -I0 + sum(I);
+            
+            eqs3 = v0 + sum(v);
+            eqs4 = zeros(K/2, 1, 'sym');
+            for k = 2:2:K
+                eqs4(k/2) = -v(k-1) + v(k) + v(k+1);
+            end
+            
+            eqs5 = v0(t) - Volt(t);
+            
+            eqs6 = zeros(K/2, 1, 'sym');
+            for k = 1:2:(K-1)
+                eqs6((k+1)/2) = -I(k) + C(k)*diff(v(k));
+            end
+            
+            eqs7 = zeros(K/2, 1, 'sym');
+            for k = 2:2:K
+                eqs7(k/2) = L(k)*diff(I(k)) - v(k);
+            end
+            
+            eqs8 = R*I(K+1) - v(k+1);
+            
+            eqs = [eqs1; eqs2; eqs3; eqs4; eqs5; eqs6; eqs7; eqs8];
+            vars = [I0 I v0 v];
+        end
     end
 end

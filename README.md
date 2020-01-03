@@ -8,7 +8,7 @@ In solving high-index DAEs using [`ode15i`](https://www.mathworks.com/help/matla
 The Mattsson–Söderlind index reduction method (MS-method), which is implemented as [`reduceDAEIndex`](https://www.mathworks.com/help/symbolic/reducedaeindex.html) in MATLAB, is effective and commonly used; however, it is known to fail for some DAEs.
 This toolbox provides a preprocessing function that modifies a given DAE system to an equivalent system that can be handled by the MS-method.
 
-### Requirement
+### Requirements
 * MATLAB R2019a (this toolbox might work on older MATLAB versions, but not confirmed)
 * [Symbolic Math Toolbox](https://www.mathworks.com/products/symbolic.html)&trade;
 
@@ -35,11 +35,15 @@ See [MATLAB `addpath` help page](https://www.mathworks.com/help/matlab/ref/addpa
 ### Author
 [Taihei Oki](https://www.opt.mist.i.u-tokyo.ac.jp/~oki/en/) (University of Tokyo)
 
-### Reference
-https://dl.acm.org/citation.cfm?id=3326236
+### References
+* Substituion and augmentation methods: https://dl.acm.org/citation.cfm?id=3326236
+* Mixed matrix method: https://dl.acm.org/doi/10.1145/3341499
 
 Cite as:
-> T. Oki. Improved structural methods for nonlinear differential-algebraic equations via combinatorial relaxation. In Proceedings of the 44th International Symposium on Symbolic and Algebraic Computation (ISSAC ’19), pp. 315−322, 2019.
+
+> T. Oki. Improved structural methods for nonlinear differential-algebraic equations via combinatorial relaxation. In *Proceedings of the 44th International Symposium on Symbolic and Algebraic Computation (ISSAC ’19)*, pp. 315−322, 2019.
+
+> S. Iwata, T. Oki, and M. Takamatsu. Index reduction for differential-algebraic equations with mixed matrices. *Journal of the ACM*, 66(5), 2019.
 
 ### Acknowledgment
 
