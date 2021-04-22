@@ -49,7 +49,7 @@ begin
     // main loop
     while TRUE do
         // Phase 1: Solve Assignment Problem
-        A := linalg::stackMatrix(Q, T);
+        A := vertcat(Q, T);
         S := map(A, v -> if v = 0 then -infinity else degree(v) end_if);
         [v, p, q] := daepp::hungarian(S)[[1, 4, 5]];
         
@@ -78,7 +78,7 @@ begin
         end_if;
         
         // Phase 3: Modify Matrix
-        Utmp := daepp::computeModifyingMatrix(tcf_Q[1..m_Q, J]), p, sVar);
+        Utmp := daepp::computeModifyingMatrix(tcf_Q[1..m_Q, J], p, sVar);
         Q := Utmp * Q;
         U_Q := Utmp * U_Q;
     end_while;
