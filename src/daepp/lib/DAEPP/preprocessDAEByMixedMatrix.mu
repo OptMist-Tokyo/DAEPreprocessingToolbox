@@ -84,7 +84,8 @@ begin
     end_while;
     
     // Modify DAE
-    U := linalg::substitute(matrix::identity(n), U_Q, 1, 1);
+    U := matrix::identity(n);
+    U[1..m_Q, 1..m_Q] := U_Q;
     eqs := daepp::applyPolynomialMatrix(eqs, vars, U, tVar);
     
     // return
