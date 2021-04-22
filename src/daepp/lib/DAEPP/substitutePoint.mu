@@ -12,7 +12,7 @@ begin
     end_if;
     
     // substitute
-    value := subs(f, point);
+    value := float(subs(f, point));
     
     // check if value has no symbols
     if not _and(testtype(v, Type::Real) $ v in value) then
