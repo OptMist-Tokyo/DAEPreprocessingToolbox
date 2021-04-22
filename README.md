@@ -9,7 +9,7 @@ The Mattsson–Söderlind index reduction method (MS-method), which is implement
 This toolbox provides a preprocessing function that modifies a given DAE system to an equivalent system that can be handled by the MS-method.
 
 ### Requirements
-* MATLAB R2019a (this toolbox might work on older MATLAB versions, but not confirmed)
+* MATLAB R2020b
 * [Symbolic Math Toolbox](https://www.mathworks.com/products/symbolic.html)&trade;
 
 ### Usage
@@ -20,12 +20,12 @@ Download and add `src` directory to the search path in MATLAB as follows:
 
 * Windows:
 ```matlab
-addpath('c:\path\to\DAEPreprocessingToolbox\src') 
+addpath('c:\path\to\DAEPreprocessingToolbox\src')
 ```
 
 * Mac, Linux:
 ```matlab
-addpath('/path/to/DAEPreprocessingToolbox/src') 
+addpath('/path/to/DAEPreprocessingToolbox/src')
 ```
 See [MATLAB `addpath` help page](https://www.mathworks.com/help/matlab/ref/addpath.html) and [MATLAB help page for adding a search path at startup](https://www.mathworks.com/help/matlab/matlab_env/add-folders-to-matlab-search-path-at-startup.html).
 

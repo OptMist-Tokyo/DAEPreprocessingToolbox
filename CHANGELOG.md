@@ -1,4 +1,7 @@
 # Change Log
+## [1.2] - 2021-04-22
+* Follow the breaking changes of MuPAD in MATLAB 2020a. Requirement MATLAB version is updated to >= 2020b.
+
 ## [1.1.0] - 2020-01-03
 * Add mixed-matrix method.
 
