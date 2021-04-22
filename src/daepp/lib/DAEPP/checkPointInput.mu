@@ -60,7 +60,7 @@ begin
     end_if;
     
     // check RHS
-    if not _and(testtype(r, Dom::Real) $ r in pointValues) then
+    if not _and(testtype(r, Type::Real) $ r in pointValues) then
         error("Real values expected in values (right hand side).");
     end_if;
     

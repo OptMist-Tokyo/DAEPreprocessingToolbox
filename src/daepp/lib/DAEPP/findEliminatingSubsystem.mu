@@ -34,7 +34,7 @@ begin
     if args(0) = 3 then
         V := args(3);
         if testargs() then
-            if not _and(testtype(v, Dom::Real) $ v in V) then
+            if not _and(testtype(v, Type::Real) $ v in V) then
                 error("Expected V not contains symbols.");
             end_if;
         end_if;

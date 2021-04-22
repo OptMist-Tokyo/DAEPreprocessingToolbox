@@ -32,7 +32,7 @@ begin
     // retrieve V
     V := args(2);
     if testargs() then
-        if not _and(testtype(v, Dom::Real) $ v in V) then
+        if not _and(testtype(v, Type::Real) $ v in V) then
             error("Expected V not contains symbols.");
         end_if;
     end_if;

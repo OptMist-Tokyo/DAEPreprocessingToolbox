@@ -15,7 +15,7 @@ begin
     value := subs(f, point);
     
     // check if value has no symbols
-    if not _and(testtype(v, Dom::Real) $ v in value) then
+    if not _and(testtype(v, Type::Real) $ v in value) then
         
         // obtain differentiations and replace by indeterminates
         diffs := misc::subExpressions(value, "diff");
