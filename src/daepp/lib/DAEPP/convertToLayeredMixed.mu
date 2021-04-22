@@ -123,7 +123,7 @@ begin
         elif nops(cols) = 0 then
             matrix(nops(rows), 0)
         else
-            linalg::submatrix(A, rows, cols)
+            A[rows, cols]
         end_if;
     Q := subm(Q, Q_rows, [j $ j = 1..n]);
     T := subm(T, T_rows, [j $ j = 1..n]);

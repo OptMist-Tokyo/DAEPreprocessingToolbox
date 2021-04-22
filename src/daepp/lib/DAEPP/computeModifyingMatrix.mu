@@ -48,7 +48,7 @@ begin
     
     // Permute rows of Q in descending order of p
     perm := [data[2] $ data in sort([[-p[i], i] $ i = 1..m])];
-    Q := linalg::submatrix(Q, perm, [j $ j = 1..n]);
+    Q := Q[perm, 1..n];
     
     // Gaussian elimination
     U := matrix::identity(m);

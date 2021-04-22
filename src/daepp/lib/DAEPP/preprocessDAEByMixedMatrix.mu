@@ -69,8 +69,8 @@ begin
         
         // Phase 2: Check the Nonsingularity of Tight Coefficient Matrix
         tcf := matrix(n, n, (i, j) -> if q[j] - p[i] = degree(A[i, j]) then lcoeff(A[i, j]) else 0 end_if);
-        tcf_Q := linalg::submatrix(tcf, [i $ i = 1..m_Q], [j $ j = 1..n]);
-        tcf_T := linalg::submatrix(tcf, [i $ i = (m_Q+1)..n], [j $ j = 1..n]);
+        tcf_Q := tcf[1..m_Q, 1..n];
+        tcf_T := tcf[(m_Q+1)..n, 1..n];
         [rk, J] := daepp::LMMatrixRank(tcf_Q, tcf_T);
         
         if rk = n then
@@ -78,7 +78,7 @@ begin
         end_if;
         
         // Phase 3: Modify Matrix
-        Utmp := daepp::computeModifyingMatrix(linalg::submatrix(tcf_Q, [i $ i = 1..m_Q], J), p, sVar);
+        Utmp := daepp::computeModifyingMatrix(tcf_Q[1..m_Q, J]), p, sVar);
         Q := Utmp * Q;
         U_Q := Utmp * U_Q;
     end_while;

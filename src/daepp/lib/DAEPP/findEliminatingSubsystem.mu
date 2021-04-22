@@ -87,7 +87,7 @@ begin
             rcand := select(circuit, i -> p[i] = pmin);
             for tmpr in rcand do
                 tmpII := coerce(circuit minus {tmpr}, DOM_LIST);
-                absDet := daepp::greedyPivoting(linalg::submatrix(V, tmpII, [j $ j = 1..n]))[3];
+                absDet := daepp::greedyPivoting(V[tmpII, 1..n])[3];
                 if absDet > maxAbsDet then
                     maxAbsDet := absDet;
                     r := tmpr;
@@ -99,12 +99,12 @@ begin
     end_if;
     
     // determine JJ
-    subD := linalg::submatrix(D, II, [j $ j = 1..n]);
+    subD := D[II, 1..n];
     
     if args(0) = 2 then
         JJ := daepp::gaussJordan(subD)[3];
     else
-        JJ := daepp::gaussJordan(subD, linalg::submatrix(V, II, [j $ j = 1..n]))[3];
+        JJ := daepp::gaussJordan(subD, V[II, 1..n])[3];
     end_if;
     JJ := sort(JJ);
     

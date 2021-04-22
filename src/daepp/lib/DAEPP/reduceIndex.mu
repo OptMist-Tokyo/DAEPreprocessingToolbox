@@ -60,9 +60,9 @@ begin
             break;
         end_if;
         
-        subD := linalg::submatrix(D, II, JJ);
+        subD := D[II, JJ];
         if point <> NIL then
-            [rank, piv] := daepp::gaussJordan(subD, linalg::submatrix(V, II, JJ))[[2, 3]];
+            [rank, piv] := daepp::gaussJordan(subD, V[II, JJ])[[2, 3]];
         else
             [rank, piv] := daepp::gaussJordan(subD)[[2, 3]];
         end_if;
