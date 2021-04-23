@@ -30,11 +30,11 @@ begin
             error("Duplicated variables in left hand sides.");
         end_if;
         
-        pointValues := rhs(point);
+        pointValues := float(rhs(point));
     else
         // daepp::checkPointInput(pointKeys, pointValues)
         pointKeys := symobj::tolist(args(1));
-        pointValues := symobj::tolist(args(2));
+        pointValues := float(symobj::tolist(args(2)));
         if nops(pointKeys) <> nops(pointValues) then
             error("Inconsistency between lengths of pointKeys and pointValues.");
         end_if;
@@ -60,7 +60,7 @@ begin
     end_if;
     
     // check RHS
-    if not _and(testtype(r, Dom::Real) $ r in pointValues) then
+    if not _and(testtype(r, Type::Real) $ r in pointValues) then
         error("Real values expected in values (right hand side).");
     end_if;
     

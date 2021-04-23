@@ -2,8 +2,7 @@
 
 daepp::reduceIndex := proc(eqs, vars)
 local options, tVar, point, tTmp, m, n, S, v, p, q, D, V, II, JJ, h, k, subD,
-      rank, piv, newJJ, j, newEqs, diffVars, N, ngList, dummyVars, newVars, R,
-      pointTable, newPoint;
+      rank, piv, newJJ, j, newEqs, diffVars, N, ngList, dummyVars, newVars, R;
 begin
     // check number of arguments
     if testargs() then
@@ -61,9 +60,9 @@ begin
             break;
         end_if;
         
-        subD := linalg::submatrix(D, II, JJ);
+        subD := D[II, JJ];
         if point <> NIL then
-            [rank, piv] := daepp::gaussJordan(subD, linalg::submatrix(V, II, JJ))[[2, 3]];
+            [rank, piv] := daepp::gaussJordan(subD, V[II, JJ])[[2, 3]];
         else
             [rank, piv] := daepp::gaussJordan(subD)[[2, 3]];
         end_if;

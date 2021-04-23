@@ -18,7 +18,7 @@ begin
     
     // check input
     if testargs() then
-        if not _and(testtype(v, Dom::Real) $ v in V) then
+        if not _and(testtype(v, Type::Real) $ v in V) then
             error("Float or real entries expected.");
         end_if;
     end_if;

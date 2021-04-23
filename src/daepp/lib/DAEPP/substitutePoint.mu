@@ -1,7 +1,7 @@
 // Substitute point for f.
 
 daepp::substitutePoint := proc(f, point)
-local value, diffs, dummy1, funcNames, funcs, tmp, dummy2, vars, missing;
+local value, diffs, dummy1, funcNames, funcs, dummy2, vars, missing;
 begin
     // check input
     if testargs() then
@@ -12,10 +12,10 @@ begin
     end_if;
     
     // substitute
-    value := subs(f, point);
+    value := float(subs(f, point));
     
     // check if value has no symbols
-    if not _and(testtype(v, Dom::Real) $ v in value) then
+    if not _and(testtype(v, Type::Real) $ v in value) then
         
         // obtain differentiations and replace by indeterminates
         diffs := misc::subExpressions(value, "diff");

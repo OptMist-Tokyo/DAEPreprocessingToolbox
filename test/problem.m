@@ -123,5 +123,84 @@ classdef problem
                 0 0 6.2831853071796e4 -6.2831853071796e4 -6.2831853071796e4 6.2831853071796e4 0 0 0 0 0 0 0 0 0
             ];
         end
+        
+        function [eqs, vars] = JACMnonlinear
+            syms x1(t) x2(t) x3(t)
+            eqs = [
+                diff(x1(t)) + x2(t)^2 == sin(t)
+                diff(x1(t)) + x1(t) + x3(t) == cos(t)
+                diff(x1(t)) + x3(t) == t
+            ];
+            vars = [x1, x2, x3];
+        end
+        
+        function [eqs, vars] = JACMexample1
+            syms x1(t) x2(t) x3(t) x4(t) a1 a2 a3 a4 a5 f1(t) f2(t) f3(t) f4(t)
+            eqs = [
+                diff(x1(t), 2) - diff(x1(t)) + diff(x2(t), 2) - diff(x2(t)) + x4(t) == f1(t)
+                                            diff(x1(t), 2) + diff(x2(t), 2) + x3(t) == f2(t)
+                                      a1*x2(t) + a2*diff(x3(t), 2) + a3*diff(x4(t)) == f3(t)
+                                                          a4*x3(t) + a5*diff(x4(t)) == f4(t)
+            ];
+            vars = [x1, x2, x3, x4];
+        end
+        
+        function [eqs, vars] = JACMexample2
+            syms i1(t) i2(t) i3(t) i4(t) i5(t) v1(t) v2(t) v3(t) v4(t) v5(t) Volt(t) R1 R2 L C
+            eqs = [
+                -i1(t) - i4(t) + i5(t)
+                i2(t) + i3(t) + i4(t) - i5(t)
+                v1(t) + v3(t) - v5(t)
+                -v1(t) - v2(t) + v4(t)
+                v2(t) - v3(t)
+                R1*i1(t) - v1(t)
+                R2*i2(t) - v2(t)
+                L*diff(i3(t)) - v3(t)
+                -i4(t) + C*diff(v4(t))
+                v5(t) - Volt(t)
+            ];
+            vars = [i1 i2 i3 i4 i5 v1 v2 v3 v4 v5];
+        end
+        
+        function [eqs, vars] = cauer(K)
+            syms I(t) [1 K+1]
+            syms v(t) [1 K+1]
+            syms I0(t) v0(t)
+            syms C [1 K-1]
+            syms L [2 K]
+            syms R Volt(t)
+            I = I(t);
+            v = v(t);
+            
+            eqs1 = zeros(K/2, 1, 'sym');
+            eqs1(1) = -I0 + I(1) + I(2);
+            for k = 3:2:(K-1)
+                eqs1((k+1)/2) = -I(k-1) + I(k) + I(k+1);
+            end
+            eqs2 = -I0 + sum(I);
+            
+            eqs3 = v0 + sum(v);
+            eqs4 = zeros(K/2, 1, 'sym');
+            for k = 2:2:K
+                eqs4(k/2) = -v(k-1) + v(k) + v(k+1);
+            end
+            
+            eqs5 = v0(t) - Volt(t);
+            
+            eqs6 = zeros(K/2, 1, 'sym');
+            for k = 1:2:(K-1)
+                eqs6((k+1)/2) = -I(k) + C(k)*diff(v(k));
+            end
+            
+            eqs7 = zeros(K/2, 1, 'sym');
+            for k = 2:2:K
+                eqs7(k/2) = L(k)*diff(I(k)) - v(k);
+            end
+            
+            eqs8 = R*I(K+1) - v(k+1);
+            
+            eqs = [eqs1; eqs2; eqs3; eqs4; eqs5; eqs6; eqs7; eqs8];
+            vars = [I0 I v0 v];
+        end
     end
 end

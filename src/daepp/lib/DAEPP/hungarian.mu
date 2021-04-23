@@ -20,7 +20,7 @@
 
 daepp::hungarian := proc(M)
 local m, n, optval, s, t, p, q, updateSlack, r, slack, slackid, prev,
-      findAugmentingPath, v, nextv, jj;
+      findAugmentingPath, v, nextv;
 begin
     // check number of arguments
     if testargs() then

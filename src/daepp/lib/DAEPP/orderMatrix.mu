@@ -1,7 +1,7 @@
 // MuPAD implementation for orderMatrix.m
 
 daepp::orderMatrix := proc(eqs, vars)
-local m, n, tVar, sub;
+local m, n, sub;
 begin
     // check number of arguments
     if testargs() then
@@ -15,7 +15,7 @@ begin
     
     // check input
     if testargs() then
-        [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
+        [eqs, vars] := daepp::checkDAEInput(eqs, vars)[[1, 2]];
     end_if;
     
     [m, n] := [nops(eqs), nops(vars)];

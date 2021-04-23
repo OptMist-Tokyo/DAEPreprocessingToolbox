@@ -1,7 +1,6 @@
 // Update relation table R using refR.
 
 daepp::updateRelation := proc(R, refR)
-local tableRefR, i, rh, var;
 begin
     // check number of arguments
     if testargs() then
@@ -29,21 +28,6 @@ begin
         end_if;
     end_if;
     
-    tableRefR := table(refR);
-    
     // update R
-    for i from 1 to nops(R) do
-        rh := rhs(R[i]);
-        var := if type(rh) = "diff" then op(rh, 1) else rh end_if;
-        if contains(tableRefR, var) then
-            R[i] := lhs(R[i]) = (if type(rh) = "diff" then
-                symobj::diff(tableRefR[var], op(rh, nops(rh)), nops(rh) - 1)
-            else
-                tableRefR[var]
-            end_if);
-        end_if;
-    end_for;
-    
-    // return
-    R;
+    simplify(rewrite(subs(R, table(refR)), diff))
 end_proc;

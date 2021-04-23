@@ -8,8 +8,8 @@
 */
 
 daepp::findEliminatingSubsystem := proc(D, p /*, V */)
-local V, m, n, A, rank, pivrow, nonpiv, circuit, i, circuitCand,
-      circuitCandSize, c, maxAbsDet, tmpr, tmpII, pmin, rcand, r, II, subD, JJ;
+local V, m, n, A, rank, pivrow, nonpiv, circuitCand, circuitCandSize, i, c,
+      circuit, pmin, rcand, r, II, maxAbsDet, tmpr, tmpII, absDet, subD, JJ;
 begin
     // check number of arguments
     if args(0) < 2 || 3 < args(0) then
@@ -34,7 +34,7 @@ begin
     if args(0) = 3 then
         V := args(3);
         if testargs() then
-            if not _and(testtype(v, Dom::Real) $ v in V) then
+            if not _and(testtype(v, Type::Real) $ v in V) then
                 error("Expected V not contains symbols.");
             end_if;
         end_if;
@@ -88,7 +88,7 @@ begin
             rcand := select(circuit, i -> p[i] = pmin);
             for tmpr in rcand do
                 tmpII := coerce(circuit minus {tmpr}, DOM_LIST);
-                absDet := daepp::greedyPivoting(linalg::submatrix(V, tmpII, [j $ j = 1..n]))[3];
+                absDet := daepp::greedyPivoting(V[tmpII, 1..n])[3];
                 if absDet > maxAbsDet then
                     maxAbsDet := absDet;
                     r := tmpr;
@@ -100,12 +100,12 @@ begin
     end_if;
     
     // determine JJ
-    subD := linalg::submatrix(D, II, [j $ j = 1..n]);
+    subD := D[II, 1..n];
     
     if args(0) = 2 then
         JJ := daepp::gaussJordan(subD)[3];
     else
-        JJ := daepp::gaussJordan(subD, linalg::submatrix(V, II, [j $ j = 1..n]))[3];
+        JJ := daepp::gaussJordan(subD, V[II, 1..n])[3];
     end_if;
     JJ := sort(JJ);
     

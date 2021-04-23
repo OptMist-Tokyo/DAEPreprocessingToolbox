@@ -2,7 +2,7 @@
 
 daepp::preprocessDAE := proc(eqs, vars)
 local options, tVar, point, tTmp, dof, R, constR, S, v, p, q, D, r, II, JJ,
-      newR, newConstR, tableR, i;
+      newR, newConstR;
 begin
     // check number of arguments
     if testargs() then
@@ -32,6 +32,9 @@ begin
         if not tVar in {NIL, tTmp} then
             error("Inconsistency of time variable.");
         end_if;
+        if nops(eqs) <> nops(vars) then
+            error("Inconsistency of sizes between equations and variables.");
+        end_if;
         if point <> NIL then
             point := daepp::checkPointInput(point);
         end_if;
@@ -40,6 +43,11 @@ begin
     // retrieve tVar
     if tVar = NIL then
         tVar := daepp::checkDAEInput(eqs, vars)[3];
+    end_if;
+    
+    // By mixed matrix method
+    if options[Method] = "mixedmatrix" then
+        return([op(daepp::preprocessDAEByMixedMatrix(eqs, vars, tVar)), [], NIL]);
     end_if;
     
     dof := infinity;
@@ -52,7 +60,8 @@ begin
         [v, p, q] := daepp::hungarian(S)[[1, 4, 5]];
         
         if v = -infinity then
-            error("There is no perfect matching between equations and variables.");
+            error("There is no perfect matching between equations and variables. "
+                . "This means that the solution space might be of infinite dimensional.");
         end_if;
         if dof <= v then
             error("The optimal value of the assignment problem does not decrease.");
