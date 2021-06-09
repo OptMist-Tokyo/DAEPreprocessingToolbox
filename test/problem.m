@@ -3,22 +3,22 @@ classdef problem
         function [eqs, vars, pointKeys, pointValues] = pendulum
             syms y(t) z(t) T(t)
             syms g m L
-            
+
             eqs = [
                 m*diff(y(t), 2) == y(t)*T(t)/L
                 m*diff(z(t), 2) == z(t)*T(t)/L - m*g
                 y(t)^2 + z(t)^2 == L^2
             ];
             vars = [y, z, T];
-            
+
             pointKeys = [g m L y z T diff(y) diff(z) diff(T) diff(y, 2) diff(z, 2)];
             pointValues = [9.8 1 1 sin(pi/6) -cos(pi/6) -8.48704895708750 0 0 0 -4.243524478543749 -2.45];
         end
-        
+
         function [eqs, vars, pointKeys, pointValues] = modifiedPendulum
             syms x1(t) x2(t) x3(t) x4(t) x5(t)
             syms g positive
-            
+
             eqs = [
                 diff(x4(t)) - x1(t)*x2(t)*cos(x3(t))
                 diff(x5(t)) - x2(t)^2*cos(x3(t))*sin(x3(t)) + g
@@ -27,11 +27,11 @@ classdef problem
                 diff(x2(t))*sin(x3(t)) + x2(t)*diff(x3(t))*cos(x3(t)) - x5(t)
             ];
             vars = [x1 x2 x3 x4 x5];
-            
+
             pointKeys = [g x1 x2 x3 x4 x5 diff(x1) diff(x2) diff(x3) diff(x4) diff(x5)];
             pointValues = [9.8 0.5 8.5311195044981 -3.03990380183 0 0 0 0 0 -4.2435244785437 -2.45];
         end
-        
+
         function [eqs, vars, pointKeys, pointValues] = roboticArm
             syms x1(t) x2(t) x3(t) x4(t) x5(t)
             p1 = symfun(cos(1-exp(t)) + cos(1-t), t);
@@ -40,7 +40,7 @@ classdef problem
             b = @(y) cos(y) / (2-cos(y)^2);
             c = @(y) sin(y) / (2-cos(y)^2);
             d = @(y) sin(y)*cos(y) / (2-cos(y)^2);
-            
+
             eqs = [
                 diff(x1(t), 2) - ( 2*c(x3(t))*(diff(x1(t))+diff(x3(t)))^2 + diff(x1(t))^2*d(x3(t)) + (2*x3(t)-x2(t))*(a(x3(t))+2*b(x3(t))) + a(x3(t))*(x4(t)-x5(t)))
                 diff(x2(t), 2) - (-2*c(x3(t))*(diff(x1(t))+diff(x3(t)))^2 - diff(x1(t))^2*d(x3(t)) + (2*x3(t)-x2(t))*(1-3*a(x3(t))-2*b(x3(t))) - a(x3(t))*x4(t) + (a(x3(t))+1)*x5(t))
@@ -49,17 +49,17 @@ classdef problem
                 sin(x1(t)) + sin(x1(t)+x3(t)) - p2(t)
             ];
             vars = [x1 x2 x3 x4 x5];
-            
+
             pointKeys = [t x1 x2 x3 x4 x5 diff(x1) diff(x2) diff(x3) diff(x4) diff(x5) diff(x1, 2) diff(x2, 2) diff(x3, 2)];
             pointValues = [0 0 0.9537503511807 1 -4.2781254864526 -0.7437526892114 -1 -2.5319168790105 0 10.7800085515996 15.9886113811556 -1 -1.147631091390737 1];
         end
-        
+
         function [eqs, vars, pointKeys, pointValues] = transistorAmplifier
             syms x1(t) x2(t) x3(t) x4(t) x5(t) x6(t) x7(t) x8(t)
             syms C1 C2 C3 C4 C5 R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 alph bet Ub UF positive
             Ue = symfun(0.1*sin(200*pi*t), t);
             g  = @(y) bet*(exp(y/UF) - 1);
-            
+
             eqs = [
                  C1*(diff(x1(t))-diff(x2(t))) + (x1(t)-Ue(t)) / R0
                 -C1*(diff(x1(t))-diff(x2(t))) - Ub/R2 + x2(t)*(1/R1+1/R2) - (alph-1)*g(x2(t)-x3(t))
@@ -81,7 +81,7 @@ classdef problem
                 0 3 3 6 3 3 6 0 51.3392765171807 51.3392765171807 -166.666666666667 24.9703285154063 24.9703285154063 83.3333333333333 10.0002764024563 10.0002764024563 ...
             ];
         end
-        
+
         function [eqs, vars, pointKeys, pointValues] = ringModulator
             syms x1(t) x2(t) x3(t) x4(t) x5(t) x6(t) x7(t) x8(t) x9(t) x10(t) x11(t) x12(t) x13(t) x14(t) x15(t)
             syms C Cp Lh Ls1 Ls2 Ls3 gam R Rp Rg1 Rg2 Rg3 Ri Rc del positive
@@ -111,7 +111,7 @@ classdef problem
                 diff(x15(t)) - 1/Ls1*(-x2(t) - (Rc+Rg1)*x15(t))
             ];
             vars = [x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15];
-            
+
             pointKeys = [ ...
                 t C Cp Lh Ls1 Ls2 Ls3 gam R Rp Rg1 Rg2 Rg3 Ri Rc del ...
                 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 ...
@@ -123,7 +123,7 @@ classdef problem
                 0 0 6.2831853071796e4 -6.2831853071796e4 -6.2831853071796e4 6.2831853071796e4 0 0 0 0 0 0 0 0 0
             ];
         end
-        
+
         function [eqs, vars] = JACMnonlinear
             syms x1(t) x2(t) x3(t)
             eqs = [
@@ -133,7 +133,7 @@ classdef problem
             ];
             vars = [x1, x2, x3];
         end
-        
+
         function [eqs, vars] = JACMexample1
             syms x1(t) x2(t) x3(t) x4(t) a1 a2 a3 a4 a5 f1(t) f2(t) f3(t) f4(t)
             eqs = [
@@ -144,7 +144,7 @@ classdef problem
             ];
             vars = [x1, x2, x3, x4];
         end
-        
+
         function [eqs, vars] = JACMexample2
             syms i1(t) i2(t) i3(t) i4(t) i5(t) v1(t) v2(t) v3(t) v4(t) v5(t) Volt(t) R1 R2 L C
             eqs = [
@@ -161,7 +161,7 @@ classdef problem
             ];
             vars = [i1 i2 i3 i4 i5 v1 v2 v3 v4 v5];
         end
-        
+
         function [eqs, vars] = cauer(K)
             syms I(t) [1 K+1]
             syms v(t) [1 K+1]
@@ -171,34 +171,34 @@ classdef problem
             syms R Volt(t)
             I = I(t);
             v = v(t);
-            
+
             eqs1 = zeros(K/2, 1, 'sym');
             eqs1(1) = -I0 + I(1) + I(2);
             for k = 3:2:(K-1)
                 eqs1((k+1)/2) = -I(k-1) + I(k) + I(k+1);
             end
             eqs2 = -I0 + sum(I);
-            
+
             eqs3 = v0 + sum(v);
             eqs4 = zeros(K/2, 1, 'sym');
             for k = 2:2:K
                 eqs4(k/2) = -v(k-1) + v(k) + v(k+1);
             end
-            
+
             eqs5 = v0(t) - Volt(t);
-            
+
             eqs6 = zeros(K/2, 1, 'sym');
             for k = 1:2:(K-1)
                 eqs6((k+1)/2) = -I(k) + C(k)*diff(v(k));
             end
-            
+
             eqs7 = zeros(K/2, 1, 'sym');
             for k = 2:2:K
                 eqs7(k/2) = L(k)*diff(I(k)) - v(k);
             end
-            
+
             eqs8 = R*I(K+1) - v(k+1);
-            
+
             eqs = [eqs1; eqs2; eqs3; eqs4; eqs5; eqs6; eqs7; eqs8];
             vars = [I0 I v0 v];
         end
