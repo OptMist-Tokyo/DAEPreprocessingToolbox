@@ -1,6 +1,6 @@
 classdef problem
     methods (Static)
-        function [eqs, vars, pointKeys, pointValues] = pendulum
+        function [eqs, vars, pointKeys, pointValues, tspan, referenceSolution] = pendulum
             syms y(t) z(t) T(t)
             syms g m L
 
@@ -13,9 +13,18 @@ classdef problem
 
             pointKeys = [g m L y z T diff(y) diff(z) diff(T) diff(y, 2) diff(z, 2)];
             pointValues = [9.8 1 1 sin(pi/6) -cos(pi/6) -8.48704895708750 0 0 0 -4.243524478543749 -2.45];
+
+            tspan = [0 5];
+            referenceSolution = [
+                -0.4765787255820404449051881483671808175310190131935338638724
+                -0.8791317980386093328392175917201879108650401147541437706746
+                -8.8723769481601169089040230498159753833926878864300967028860
+                -0.4455778958506808251612922669802248770662391620443767763307
+                 0.2415484756959258448790801007721578055672399521464239042122
+            ];
         end
 
-        function [eqs, vars, pointKeys, pointValues] = modifiedPendulum
+        function [eqs, vars, pointKeys, pointValues, tspan, referenceSolution] = modifiedPendulum
             syms x1(t) x2(t) x3(t) x4(t) x5(t)
             syms g positive
 
@@ -30,6 +39,15 @@ classdef problem
 
             pointKeys = [g x1 x2 x3 x4 x5 diff(x1) diff(x2) diff(x3) diff(x4) diff(x5)];
             pointValues = [9.8 0.5 8.5311195044981 -3.03990380183 0 0 0 0 0 -4.2435244785437 -2.45];
+
+            tspan = [0 5];
+            referenceSolution = [
+                -0.4765787255820404449051881483671808175310190131935338638724
+                 8.9158255606850916021648230473949926189451437408058833654955
+                -3.0428286475386896777823169167618287751047802490105421166889
+                -0.4455778958506808251612922669802248770662391620443767763307
+                 0.2415484756959258448790801007721578055672399521464239042122
+            ];
         end
 
         function [eqs, vars, pointKeys, pointValues] = roboticArm
@@ -54,7 +72,7 @@ classdef problem
             pointValues = [0 0 0.9537503511807 1 -4.2781254864526 -0.7437526892114 -1 -2.5319168790105 0 10.7800085515996 15.9886113811556 -1 -1.147631091390737 1];
         end
 
-        function [eqs, vars, pointKeys, pointValues] = transistorAmplifier
+        function [eqs, vars, pointKeys, pointValues, tspan, referenceSolution] = transistorAmplifier
             syms x1(t) x2(t) x3(t) x4(t) x5(t) x6(t) x7(t) x8(t)
             syms C1 C2 C3 C4 C5 R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 alph bet Ub UF positive
             Ue = symfun(0.1*sin(200*pi*t), t);
@@ -78,7 +96,19 @@ classdef problem
             ];
             pointValues = [ ...
                 0 1e-6 2e-6 3e-6 4e-6 5e-6 1000 9000 9000 9000 9000 9000 9000 9000 9000 9000 0.99 1e-6 6 0.026 ...
-                0 3 3 6 3 3 6 0 51.3392765171807 51.3392765171807 -166.666666666667 24.9703285154063 24.9703285154063 83.3333333333333 10.0002764024563 10.0002764024563 ...
+                0 3 3 6 3 3 6 0 51.3392765171807 51.3392765171807 -166.666666666667 -24.9703285154063 -24.9703285154063 83.3333333333333 -10.0002764024563 -10.0002764024563 ...
+            ];
+
+            tspan = [0 0.2];
+            referenceSolution = [
+                -5.562145012262709e-3
+                3.006522471903042
+                2.849958788608128
+                2.926422536206241
+                2.704617865010554
+                2.761837778393145
+                4.770927631616772
+                1.236995868091548
             ];
         end
 

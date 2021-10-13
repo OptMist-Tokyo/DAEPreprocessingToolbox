@@ -9,10 +9,10 @@ begin
             error("Two or three arguments expected.");
         end_if;
     end_if;
-    
+
     // convert to lists and retrieve tVar
     [eqs, vars] := map([eqs, vars], symobj::tolist);
-    
+
     // check input
     if testargs() then
         [eqs, vars, tVar] := daepp::checkDAEInput(eqs, vars);
@@ -30,17 +30,17 @@ begin
     else
         tVar := args(3);
     end_if;
-    
+
     // change symbolic functions to variables
     n := nops(vars);
     YP := [genident("YP") $ j = 1..n];
     eqs := subs(eqs, [diff(vars[j], tVar) = YP[j] $ j = 1..n]);
     Y := [genident("Y") $ j = 1..n];
     eqs := subs(eqs, [vars[j] = Y[j] $ j = 1..n]);
-    
+
     // get jacobians
     J := jacobian(eqs, Y);
     JP := jacobian(eqs, YP);
-    
+
     [J, JP, Y, YP];
 end_proc;
