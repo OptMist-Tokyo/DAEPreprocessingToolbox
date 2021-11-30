@@ -41,10 +41,10 @@ See [MATLAB `addpath` help page](https://www.mathworks.com/help/matlab/ref/addpa
 
 Cite as:
 
-> T. Oki. Improved structural methods for nonlinear differential-algebraic equations via combinatorial relaxation. In *Proceedings of the 44th International Symposium on Symbolic and Algebraic Computation (ISSAC ’19)*, pp. 315−322, 2019.
+> T. Oki. Improved structural methods for nonlinear differential-algebraic equations via combinatorial relaxation. *IMA Journal of Numerical Analysis*, to appear.
 
 > S. Iwata, T. Oki, and M. Takamatsu. Index reduction for differential-algebraic equations with mixed matrices. *Journal of the ACM*, 66(5), 2019.
 
 ### Acknowledgment
 
-This project is supported by [JST CREST “Developing Optimal Modeling Methods for Large-Scale Complex Systems” Team](https://www.opt.mist.i.u-tokyo.ac.jp/crest-model/).
+This project is supported by [JST CREST “Developing Optimal Modeling Methods for Large-Scale Complex Systems” Team](https://www.opt.mist.i.u-tokyo.ac.jp/crest-model/) and by [JST ACT-I JST ACT-I “Information and Future”](https://www.jst.go.jp/kisoken/act-i/en/index.html).
