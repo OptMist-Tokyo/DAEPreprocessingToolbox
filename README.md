@@ -36,7 +36,7 @@ See [MATLAB `addpath` help page](https://www.mathworks.com/help/matlab/ref/addpa
 [Taihei Oki](https://www.opt.mist.i.u-tokyo.ac.jp/~oki/en/) (University of Tokyo)
 
 ### References
-* Substituion and augmentation methods: https://dl.acm.org/citation.cfm?id=3326236
+* Substituion and augmentation methods: https://academic.oup.com/imajna/advance-article/doi/10.1093/imanum/drab094/6470741
 * Mixed matrix method: https://dl.acm.org/doi/10.1145/3341499
 
 Cite as:
